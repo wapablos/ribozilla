@@ -1,0 +1,10 @@
+{
+  "name": "default",
+  "type": "sqlite",
+  "database": "rz_cmd.db",
+  "synchronize": true,
+  "logging": false,
+  "entities": [
+    "build/entity/**/*.js"
+  ]
+}
