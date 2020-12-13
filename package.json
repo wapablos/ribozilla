@@ -1,0 +1,91 @@
+{
+  "name": "ribozilla",
+  "version": "1.0.0",
+  "description": "Flexible architecure for RNA-Seq analysis",
+  "main": "./dist/main.js",
+  "scripts": {
+    "clean": "rimraf ./dist",
+    "start": "electron .",
+    "build:main": "cross-env NODE_ENV=production webpack --config webpack/webpack.config.main.js",
+    "build:renderer": "cross-env NODE_ENV=production webpack --config webpack/webpack.config.renderer.js",
+    "build:all": "yarn build:main && yarn build:renderer",
+    "dev:main": "cross-env NODE_ENV=development webpack --config webpack/webpack.config.main.js",
+    "dev:renderer": "cross-env NODE_ENV=development webpack --config webpack/webpack.config.renderer.js",
+    "server:main": "cross-env NODE_ENV='development' DEV_SERVER=enable webpack --color --progress --config webpack/webpack.config.main.js",
+    "server:renderer": "cross-env NODE_ENV='development' webpack-dev-server --color --progress --config webpack/webpack.config.server.js",
+    "server:all": "concurrently \"yarn server:renderer\" \"wait-on http://localhost:4000 && yarn server:main\""
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "lint-staged": {
+    "{src, extensions}/**/*.{ts,tsx}": [
+      "eslint --fix"
+    ]
+  },
+  "repository": "git+https://github.com/wapablos/ribozilla.git",
+  "keywords": [
+    "rna-seq",
+    "bioinformatics",
+    "gui",
+    "ux"
+  ],
+  "author": "Pablo Wesley",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wapablos/ribozilla/issues"
+  },
+  "homepage": "https://github.com/wapablos/ribozilla#readme",
+  "dependencies": {
+    "@material-ui/core": "^4.11.2",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-icons": "^3.10.0",
+    "react-redux": "^7.2.2",
+    "react-router-dom": "^5.2.0",
+    "redux": "^4.0.5"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^9.1.1",
+    "@commitlint/config-conventional": "^9.1.1",
+    "@types/node": "^12.12.6",
+    "@types/react": "^16.9.35",
+    "@types/react-dom": "^16.9.8",
+    "@types/react-redux": "^7.1.11",
+    "@types/react-router-dom": "^5.1.5",
+    "@types/ssh2": "^0.5.44",
+    "@types/styled-components": "^5.1.0",
+    "@typescript-eslint/eslint-plugin": "^3.6.1",
+    "@typescript-eslint/parser": "^3.6.1",
+    "concurrently": "^5.3.0",
+    "cross-env": "^7.0.2",
+    "electron": "8.3.0",
+    "eslint": "^7.4.0",
+    "eslint-config-airbnb": "^18.2.0",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-jsx-a11y": "^6.3.1",
+    "eslint-plugin-react": "^7.20.3",
+    "eslint-plugin-react-hooks": "^4.0.8",
+    "fork-ts-checker-webpack-plugin": "^5.0.13",
+    "html-webpack-plugin": "^4.3.0",
+    "husky": "^4.2.5",
+    "lint-staged": "^10.2.11",
+    "react-hot-loader": "^4.12.21",
+    "rimraf": "^3.0.2",
+    "ssh2": "^0.8.9",
+    "styled-components": "^5.1.1",
+    "ts-loader": "^7.0.5",
+    "tsconfig-paths-webpack-plugin": "^3.2.0",
+    "typesafe-actions": "^5.1.0",
+    "typescript": "3.8.3",
+    "wait-on": "^5.2.0",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.11.0",
+    "webpack-electron-reload": "^1.0.1",
+    "webpack-merge": "^5.4.1"
+  }
+}
