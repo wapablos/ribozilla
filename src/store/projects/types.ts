@@ -1,12 +1,8 @@
 /* eslint-disable no-unused-vars */
-export enum ProjectsActionTypes {
-  NEW_PROJECT='@@projects/NEW_PROJECT',
-  DELETE_PROJECT='@@projects/DELETE_PROJECT'
+export enum ProjectsCardActionTypes {
+  SHOW_CARD='@@projects/SHOW_CARD'
 }
 
-export interface IProject {
-  id: string
-  name: string
-  description?: string
-  projectPath?: string
+export interface ProjectCardState {
+  readonly toggle: boolean
 }

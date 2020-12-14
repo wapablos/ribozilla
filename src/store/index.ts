@@ -1,15 +1,19 @@
 import { combineReducers, createStore, Store } from 'redux'
+import { projectCardReducer, ProjectCardState } from '@store/projects'
 
 /**
  * Top-level state
  */
 export interface ApplicationState {
+  projects: ProjectCardState
 }
 
 /**
  * Root reducer
  */
-const createRootReducer = combineReducers({})
+const createRootReducer = combineReducers({
+  projects: projectCardReducer
+})
 
 /**
  * Root saga
