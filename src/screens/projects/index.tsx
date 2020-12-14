@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { IoIosAdd } from 'react-icons/io'
 import { MuiThemeProvider } from '@material-ui/core/styles'
 import {
@@ -8,11 +8,15 @@ import {
   CardActions, CardHeader, CardMedia, Grid
 } from '@material-ui/core'
 
+import { FileBrowserEvents, ReadWriteEvents, ProjectsEvents } from '@constants/events'
+import { useSelector, useDispatch } from 'react-redux'
+import { ProjectCardState, projectActions } from '@store/projects'
+import { ApplicationState } from '@store'
 import {
   theme, themeMini, StyledBox, StyledButton, StyledCard,
   StyledInput, StyledMiniButton, StyledMiniGrid
 } from './styles'
-import { handleInfo } from './internals'
+import getProjects, { handleInfo, toggleProjectCard } from './internals'
 
 interface IZillaInput extends StandardTextFieldProps {
   label?: string,
@@ -28,12 +32,12 @@ export interface IProjectData {
 }
 
 function ZillaInput({
-  label, miniButtonLabel, miniButtonAction, placeholder, ...props
+  label, miniButtonLabel, miniButtonAction, placeholder, id, ...props
 }: IZillaInput) {
   return (
     <StyledMiniGrid item>
       {label}
-      <StyledInput id="input-with-icon-grid" placeholder={placeholder} {...props} />
+      <StyledInput id={id} placeholder={placeholder} {...props} />
       { miniButtonLabel
         ? <StyledMiniButton onClick={miniButtonAction}>{miniButtonLabel}</StyledMiniButton>
         : null }
@@ -48,13 +52,24 @@ function NewProjectCard() {
     handleInfo(e, projectData, setProjectData)
   }
 
+  const handleProjectFolder = async () => {
+    window.electron.send(FileBrowserEvents.CHOOSE_DIR)
+    window.electron.on(FileBrowserEvents.PROJECT_PATH, (event, args) => {
+      setProjectData({ ...projectData, projectPath: args[0] })
+    })
+  }
+
+  const handleSaveProject = async () => {
+    window.electron.send(ReadWriteEvents.WRITE_FILE_NEW, projectData)
+  }
+
   return (
     <MuiThemeProvider theme={themeMini}>
       <FormControl>
         <StyledCard>
           <CardContent>
             <Grid>
-              <ZillaInput id="name" label="Name" placeholder="Meu projeto" value={projectData.name} onChange={handleProjectData} />
+              <ZillaInput required id="name" label="Name" placeholder="Meu projeto" value={projectData.name} onChange={handleProjectData} />
               <ZillaInput
                 id="description"
                 label="Description"
@@ -63,10 +78,12 @@ function NewProjectCard() {
                 onChange={handleProjectData}
               />
               <ZillaInput
+                required
+                disabled
                 id="projectPath"
                 label="Project Path"
                 miniButtonLabel="Browser"
-                miniButtonAction={() => window.electron.send('choose-dir')}
+                miniButtonAction={handleProjectFolder}
                 placeholder="/usr/proj/folder"
                 value={projectData.projectPath}
                 onChange={handleProjectData}
@@ -74,8 +91,8 @@ function NewProjectCard() {
             </Grid>
           </CardContent>
           <CardActions>
-            <StyledMiniButton>Save</StyledMiniButton>
-            <StyledMiniButton>Cancel</StyledMiniButton>
+            <StyledMiniButton onClick={handleSaveProject}>Save</StyledMiniButton>
+            <StyledMiniButton onClick={toggleProjectCard(false)}>Cancel</StyledMiniButton>
           </CardActions>
           {JSON.stringify(projectData)}
         </StyledCard>
@@ -105,11 +122,27 @@ function ProjectCard() {
 }
 
 export default function Projects() {
+  const { toggle } = useSelector<ApplicationState, ApplicationState['projects']>((state) => state.projects)
+
+  const [projects, setProjects] = useState([] as IProjectData[])
+
+  useEffect(() => {
+    const fetchProject = async () => {
+      window.electron.send(ProjectsEvents.REQUEST, 'projects')
+      const res = await getProjects()
+      console.log('Projects: ', res)
+    }
+    fetchProject()
+  })
+
   return (
     <MuiThemeProvider theme={theme}>
+      {console.log('Card: ', toggle)}
       <StyledBox>
-        <NewProjectCard />
-        <StyledButton startIcon={<IoIosAdd />}>  New Project </StyledButton>
+        <ProjectCard />
+        { toggle
+          ? <NewProjectCard />
+          : <StyledButton startIcon={<IoIosAdd />} onClick={toggleProjectCard(true)}>  New Project </StyledButton>}
       </StyledBox>
     </MuiThemeProvider>
   )
