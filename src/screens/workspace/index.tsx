@@ -19,6 +19,7 @@ import Routes from './routes'
 const taskList: ITask[] = [
   { title: 'Projects', href: '/', component: Projects },
   { title: 'Pipelines', href: '/pipelines', component: Pipeline },
+  { title: 'Learn', href: '?' },
   { title: 'System Info', href: '/sysinfo', component: SystemInfo },
   { title: 'DevTools', href: '?', onClick: () => window.electron.send(DevToolsEvents.TOOGLE) }
 ]
