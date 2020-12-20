@@ -1,4 +1,5 @@
 import { contextBridge, ipcRenderer } from 'electron'
+import { eventNames } from 'cluster'
 
 console.log('Oizão')
 
@@ -17,7 +18,8 @@ const api : Partial<Window> = {
     sendSync: (channel, args: any[]) => ipcRenderer.sendSync(channel, args),
     sendToHost: (channel, args: any[]) => ipcRenderer.sendToHost(channel, args),
     removeListener: (channel, listener) => ipcRenderer.removeListener(channel, listener),
-    removeAllListeners: (channel) => ipcRenderer.removeAllListeners(channel)
+    removeAllListeners: (channel) => ipcRenderer.removeAllListeners(channel),
+    eventNames: () => ipcRenderer.eventNames()
   }
 }
 
