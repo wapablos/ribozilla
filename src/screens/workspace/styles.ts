@@ -9,7 +9,7 @@ const styles = (theme : Theme) => createStyles({
     zIndex: 1,
     position: 'relative',
     overflow: 'hidden',
-    backgroundColor: theme.palette.background.default
+    backgroundColor: theme.palette.background.paper
   }
 })
 

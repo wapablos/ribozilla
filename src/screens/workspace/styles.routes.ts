@@ -5,7 +5,7 @@ const styles = (theme : Theme) => createStyles({
   root: {
     flexGrow: 1,
     flexWrap: 'nowrap',
-    backgroundColor: 'grey',
+    backgroundColor: '#c2c2c2',
     padding: theme.spacing(1)
   }
 })
