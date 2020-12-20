@@ -1,0 +1,59 @@
+{
+  "name": "Trimmomatic",
+  "version": "0.39",
+  "commands": [
+    {
+      "name": "trimmomatic.jar",
+      "category": "trimming",
+      "flags": [
+        {
+          "signature": "-threads",
+          "label": "Threads",
+          "places": 1,
+          "input": [
+            {
+              "type": "number"
+            }
+          ],
+          "required": false,
+          "description": "No description"
+        }
+      ],
+      "args": [
+        {
+          "signature": "trimm_mode",
+          "label": "Trimm mode",
+          "places": 0,
+          "input": [
+            {
+              "type": "enum",
+              "values": [
+                "SE",
+                "PE"
+              ]
+            }
+          ],
+          "required": true,
+          "after": "main",
+          "description": "No description"
+        },
+        {
+          "signature": "phred_encoding",
+          "label": "Phred encoding",
+          "places": 0,
+          "input": [
+            {
+              "type": "enum",
+              "values": [
+                "-phred33",
+                "-phred64"
+              ]
+            }
+          ],
+          "required": true,
+          "description": "No description"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,152 @@
+{
+  "name": "STAR",
+  "version": "2.7.6a",
+  "commands": [
+    {
+      "name": "STAR",
+      "category": "genindex",
+      "flags": [
+        {
+          "signature": "--runThreadN",
+          "label": "Threads",
+          "places": 1,
+          "input": [
+            {
+              "type": "number"
+            }
+          ],
+          "required": false,
+          "description": "No description"
+        },
+        {
+          "signature": "--runMode",
+          "label": "Task",
+          "places": 1,
+          "input": [
+            {
+              "type": "enum",
+              "values": [
+                "alignReads",
+                "genomeGenerate"
+              ]
+            }
+          ],
+          "required": true,
+          "description": "No description"
+        },
+        {
+          "signature": "--genomeDir",
+          "label": "Genome",
+          "places": 1,
+          "input": [
+            {
+              "type": "dir"
+            }
+          ],
+          "required": true,
+          "description": "No description"
+        },
+        {
+          "signature": "--genomeFastaFile",
+          "label": "Fasta files",
+          "places": -1,
+          "input": [
+            {
+              "type": "file"
+            }
+          ],
+          "required": true,
+          "description": "No description"
+        },
+        {
+          "signature": "--sjdbGTFfile",
+          "label": "Annotation file",
+          "places": 1,
+          "input": [
+            {
+              "type": "file"
+            }
+          ],
+          "required": true,
+          "description": "No description"
+        },
+        {
+          "signature": "--sjdbOverhang",
+          "label": "Reads length",
+          "places": 1,
+          "input": [
+            {
+              "type": "number"
+            }
+          ],
+          "required": true,
+          "description": "No description"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "STAR",
+      "category": "alignment",
+      "flags": [
+        {
+          "signature": "--runThreadN",
+          "label": "Threads",
+          "places": 1,
+          "input": [
+            {
+              "type": "number"
+            }
+          ],
+          "required": false,
+          "description": "No description"
+        },
+        {
+          "signature": "--genomeDir",
+          "label": "Genome",
+          "places": 1,
+          "input": [
+            {
+              "type": "dir"
+            }
+          ],
+          "required": true,
+          "description": "No description"
+        },
+        {
+          "signature": "--readFilesIn",
+          "label": "Read files",
+          "places": -1,
+          "input": [
+            {
+              "type": "file"
+            }
+          ],
+          "required": true,
+          "description": "No description"
+        },
+        {
+          "signature": "--alignEndsProtrude",
+          "label": "Protrusion ends",
+          "places": 2,
+          "input": [
+            {
+              "type": "number",
+              "values": []
+            },
+            {
+              "type": "enum",
+              "values": [
+                "ConcordantPair",
+                "DiscordantPair"
+              ]
+            }
+          ],
+          "required": false,
+          "description": "No description"
+        }
+      ],
+      "args": []
+    }
+  ]
+}
