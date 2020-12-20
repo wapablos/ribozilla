@@ -1,5 +1,5 @@
 import { SystemInfoEvents } from '@constants/events'
-import { ISystemInfo } from 'src/electron/utils'
+import { ISystemInfo } from '@constants/interfaces'
 
 export default async function getSystemInfo(): Promise<ISystemInfo> {
   return new Promise((resolve, reject) => {

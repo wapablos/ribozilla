@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { ISystemInfo } from 'src/electron/utils'
+
+import { ISystemInfo } from '@constants/interfaces'
 import { SystemInfoEvents } from '@constants/events'
 import getSystemInfo from './internals'
 
