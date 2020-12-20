@@ -16,6 +16,9 @@ export function toggleProjectCard(toggle:boolean) {
 
 export default async function getProjects(): Promise<IProjectData[]> {
   return new Promise((resolve, reject) => {
-    window.electron.on(ProjectsEvents.RESPONSE, (event, projectData) => resolve(projectData))
+    window.electron.once(ProjectsEvents.RESPONSE, (event, projectData) => {
+      window.electron.removeAllListeners(ProjectsEvents.RESPONSE)
+      resolve(projectData)
+    })
   })
 }

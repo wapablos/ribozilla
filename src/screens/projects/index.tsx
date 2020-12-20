@@ -1,13 +1,16 @@
 /* eslint-disable max-len */
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useState, useEffect } from 'react'
+import ReactDOM, { render } from 'react-dom'
 import { IoIosAdd } from 'react-icons/io'
 import { MuiThemeProvider } from '@material-ui/core/styles'
 import {
   StandardTextFieldProps, CardContent, FormControl,
-  CardActions, CardHeader, CardMedia, Grid
+  CardActions, CardHeader, CardMedia, Grid, Snackbar
 } from '@material-ui/core'
+import { SnackbarProvider, useSnackbar } from 'notistack'
 
+import { IReadWrite } from '@constants/interfaces'
 import { FileBrowserEvents, ReadWriteEvents, ProjectsEvents } from '@constants/events'
 import { useSelector, useDispatch } from 'react-redux'
 import { ProjectCardState, projectActions } from '@store/projects'
@@ -46,21 +49,46 @@ function ZillaInput({
 }
 
 function NewProjectCard() {
-  const [projectData, setProjectData] = useState({} as IProjectData)
+  const { enqueueSnackbar } = useSnackbar()
+  const dispatch = useDispatch()
+
+  const [projectData, setProjectData] = useState<IProjectData>({
+    id: '', name: '', description: '', projectPath: ''
+  })
+
+  const [showStatus, setShowStatus] = useState<boolean>(false)
 
   const handleProjectData = (e: React.ChangeEvent<HTMLInputElement>) => {
     handleInfo(e, projectData, setProjectData)
   }
 
+  // REVIEW: Checar se o evento fica escutando depois que cancela o file browser
   const handleProjectFolder = async () => {
     window.electron.send(FileBrowserEvents.CHOOSE_DIR)
     window.electron.on(FileBrowserEvents.PROJECT_PATH, (event, args) => {
-      setProjectData({ ...projectData, projectPath: args[0] })
+      window.electron.removeAllListeners(FileBrowserEvents.PROJECT_PATH)
+      if (args !== undefined) {
+        setProjectData({ ...projectData, projectPath: args[0] })
+      }
     })
   }
 
   const handleSaveProject = async () => {
     window.electron.send(ReadWriteEvents.WRITE_FILE_NEW, projectData)
+
+    window.electron.on(ReadWriteEvents.WRITE_FILE_STATUS, (event, { status, message }: IReadWrite) => {
+      removeProjectListeners()
+      enqueueSnackbar(message, { variant: status, style: { whiteSpace: 'pre-line' } })
+      if (status === 'success') {
+        dispatch(projectActions.createNewProject(false))
+      }
+    })
+  }
+
+  const removeProjectListeners = () => {
+    window.electron.removeAllListeners(FileBrowserEvents.PROJECT_PATH)
+    window.electron.removeAllListeners(ReadWriteEvents.WRITE_FILE_NEW)
+    window.electron.removeAllListeners(ReadWriteEvents.WRITE_FILE_STATUS)
   }
 
   return (
@@ -94,21 +122,25 @@ function NewProjectCard() {
             <StyledMiniButton onClick={handleSaveProject}>Save</StyledMiniButton>
             <StyledMiniButton onClick={toggleProjectCard(false)}>Cancel</StyledMiniButton>
           </CardActions>
-          {JSON.stringify(projectData)}
         </StyledCard>
       </FormControl>
     </MuiThemeProvider>
   )
 }
 
-function ProjectCard() {
+function ProjectCard({ name, description }:Partial<IProjectData>) {
   return (
     <MuiThemeProvider theme={themeMini}>
       <FormControl>
         <StyledCard>
-          <CardHeader title="Project Name" />
+          <CardHeader title={name} />
           <CardContent>
-            <ZillaInput InputProps={{ style: { minHeight: 20 } }} multiline disabled value="Meu superprojeto que vai ser o máximo" />
+            <ZillaInput
+              InputProps={{ style: { minHeight: 20 } }}
+              multiline
+              disabled
+              value={description}
+            />
           </CardContent>
           <CardMedia title="Pipeline preview" image="a" />
           <CardActions>
@@ -125,25 +157,44 @@ export default function Projects() {
   const { toggle } = useSelector<ApplicationState, ApplicationState['projects']>((state) => state.projects)
 
   const [projects, setProjects] = useState([] as IProjectData[])
+  const [update, setUpdate] = useState<boolean>(false)
+
+  window.electron.on(ProjectsEvents.UPDATE, () => {
+    setUpdate(!update)
+  })
 
   useEffect(() => {
     const fetchProject = async () => {
-      window.electron.send(ProjectsEvents.REQUEST, 'projects')
+      window.electron.send(ProjectsEvents.REQUEST)
       const res = await getProjects()
       console.log('Projects: ', res)
+      if (res !== undefined) setProjects(res.reverse())
     }
     fetchProject()
-  })
+  }, [update])
 
   return (
     <MuiThemeProvider theme={theme}>
-      {console.log('Card: ', toggle)}
-      <StyledBox>
-        <ProjectCard />
-        { toggle
-          ? <NewProjectCard />
-          : <StyledButton startIcon={<IoIosAdd />} onClick={toggleProjectCard(true)}>  New Project </StyledButton>}
-      </StyledBox>
+      <SnackbarProvider
+        maxSnack={1}
+        autoHideDuration={2200}
+        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+      >
+        {console.log('Card: ', toggle)}
+        <StyledBox>
+
+          { toggle
+            ? <NewProjectCard />
+            : <StyledButton startIcon={<IoIosAdd />} onClick={toggleProjectCard(true)}>  New Project </StyledButton>}
+
+          {projects === undefined
+            ? <></>
+            : projects.map(({ name, description }) => (
+              <ProjectCard name={name} description={description} />
+            ))}
+
+        </StyledBox>
+      </SnackbarProvider>
     </MuiThemeProvider>
   )
 }
