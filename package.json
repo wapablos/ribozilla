@@ -43,12 +43,14 @@
     "@material-ui/core": "^4.11.2",
     "electron-store": "^6.0.1",
     "fs-jetpack": "^4.1.0",
+    "notistack": "^1.0.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-icons": "^3.10.0",
     "react-redux": "^7.2.2",
     "react-router-dom": "^5.2.0",
-    "redux": "^4.0.5"
+    "redux": "^4.0.5",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@commitlint/cli": "^9.1.1",
