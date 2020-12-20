@@ -1,20 +1,21 @@
 {
-   "name": "ribozdb",
-   "version": "1.0.0",
-   "description": "Embedded database of RNA-Seq analysis software commands",
-   "main": "build/index.js",
-   "scripts": {
-     "build": "tsc",
-     "start": "yarn build && node ."
-   },
-   "dependencies": {
-      "reflect-metadata": "^0.1.10",
-      "sqlite3": "^4.0.3",
-      "typeorm": "0.2.28"
-    },
-    "devDependencies": {
-      "@types/node": "^8.0.29",
-      "typescript":"3.8.3"
-    },
-    "license": "MIT"
+  "name": "ribozilla-extensions",
+  "version": "1.0.0",
+  "description": "Extensions to map RNA-Seq analysis software commands to Ribozilla",
+  "main": "./build/index.js",
+  "scripts": {
+    "clean": "rimraf ./build",
+    "build": "tsc",
+    "watch": "tsc -watch",
+    "start": "yarn build && node .",
+    "dev": "node ."
+  },
+  "dependencies": {
+    "fs-jetpack": "^4.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^8.0.29",
+    "typescript": "3.8.3"
+  },
+  "license": "MIT"
 }
