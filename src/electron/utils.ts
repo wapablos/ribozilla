@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable class-methods-use-this */
 import {
@@ -12,13 +13,7 @@ import {
   FileBrowserEvents, ReadWriteEvents, ProjectsEvents
 } from '@constants/events'
 import { IProjectData } from '@screens/projects'
-
-export interface ISystemInfo {
-  arch: string
-  hostname: string
-  platform: string
-  release: string
-}
+import { ISystemInfo, IReadWrite } from '@constants/interfaces'
 
 interface ProjectSchema {
   projects: IProjectData[]
@@ -39,7 +34,7 @@ export default class AppHandler {
     this.projects = new Store({
       name: 'recents',
       watch: true,
-      defaults: { projects: [{} as IProjectData] }
+      defaults: { projects: [] as Array<IProjectData> }
     })
   }
 
@@ -55,6 +50,7 @@ export default class AppHandler {
     this.saveProject()
     this.sendProjects()
     this.sendOnChangeProjects()
+    this.loadFiles()
   }
 
   public appQuit() {
@@ -107,40 +103,54 @@ export default class AppHandler {
     ipcMain.on(ReadWriteEvents.WRITE_FILE_NEW, (events, args: IProjectData) => {
       const { name, description, projectPath } = args
       const undefinedName = name === (undefined || '')
-      const undefinedPath = projectPath === undefined
+      const undefinedPath = projectPath === (undefined || '')
       const projectMeta = args
-
       if (undefinedName || undefinedPath) {
-        dialog.showMessageBoxSync(this.win, {
-          type: 'error',
-          buttons: ['OK'],
-          title: undefinedName ? 'Invalid name' : 'Invalid path',
-          message: undefinedName ? 'You must give a name to your project' : 'You must choose a valid path to save your project'
-        })
-        return
+        const error: IReadWrite = {
+          status: 'error',
+          message: undefinedName
+            ? 'You must give a name to your project'
+            : 'You must choose a valid path to save your project'
+        }
+
+        return this.win.webContents.send(ReadWriteEvents.WRITE_FILE_STATUS, error)
       }
 
-      if (jetpack.exists(jetpack.path(projectPath, name)) === 'dir') {
-        dialog.showMessageBoxSync(this.win, {
-          type: 'error',
-          buttons: ['OK'],
-          title: 'Duplicated project',
-          message: 'It seems a project already exists on selected folder \n Please, choose another name or folder!'
-        })
-        return
+      const folderExists = jetpack.exists(jetpack.path(projectPath, name)) === 'dir'
+
+      if (folderExists) {
+        const error: IReadWrite = {
+          status: 'error',
+          message: 'It seems a project already exists on selected folder \n  Please, choose another name or folder!'
+        }
+        return this.win.webContents.send(ReadWriteEvents.WRITE_FILE_STATUS, error)
       }
 
-      const saveStatus = jetpack
-        .cwd(projectPath)
-        .dir(name)
-        .file(`${name}.rzproject`, { content: projectMeta })
+      if (!folderExists) {
+        const saveStatus = jetpack
+          .cwd(projectPath)
+          .dir(name)
+          .file(`${name}.rzproject`, { content: projectMeta })
 
-      if (saveStatus.exists(`${name}.rzproject`) === 'file') {
-        this.addProject(args)
-        console.log('OK')
-      } else console.log('An undefined error occurred!')
+        const error: IReadWrite = {
+          status: 'error',
+          message: 'Cannot create the project \n Verify yor read and write permissions'
+        }
 
-      console.log(`name: ${name} \n description: ${description} \n projectPath: ${projectPath}`)
+        const success: IReadWrite = {
+          status: 'success',
+          message: 'Successfully created project'
+        }
+
+        if (saveStatus.exists(`${name}.rzproject`) === 'file') {
+          this.addProject(args)
+          this.win.webContents.send(ReadWriteEvents.WRITE_FILE_STATUS, success)
+          console.log(`name: ${name} \n description: ${description} \n projectPath: ${projectPath}`)
+        } else {
+          console.log(error)
+          return this.win.webContents.send(ReadWriteEvents.WRITE_FILE_STATUS, error)
+        }
+      }
     })
   }
 
@@ -151,9 +161,9 @@ export default class AppHandler {
   }
 
   public sendOnChangeProjects() {
-    this.projects.onDidAnyChange(() => {
+    this.projects.onDidChange('projects', () => {
       console.log('Mudancinhas')
-      this.win.webContents.send(ProjectsEvents.RESPONSE, this.getProjects())
+      this.win.webContents.send(ProjectsEvents.UPDATE, this.getProjects())
     })
   }
 
@@ -167,7 +177,19 @@ export default class AppHandler {
     this.projects.set(this.schemaKey, [...currentProjects, project])
   }
 
+  public loadFiles() {
+    ipcMain.on(FileBrowserEvents.CHOOSE_FILE, () => {
+      dialog.showOpenDialog(this.win, {
+        properties: ['openFile']
+      })
+    })
+  }
+
   public deleteProjects() {
+
+  }
+
+  public loadProjects() {
 
   }
 }
