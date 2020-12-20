@@ -30,6 +30,7 @@
     "import/no-extraneous-dependencies": "off",
     "import/prefer-default-export": "warn",
     "no-use-before-define": "off",
+    "no-shadow": "off",
     "semi":["warn","never"],
     "comma-dangle": ["warn", "never"],
     "max-len": ["warn", {

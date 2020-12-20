@@ -12,9 +12,12 @@
     "moduleResolution": "node",
     "baseUrl": ".",
     "types": [
-      "src/typings/**/*.d.ts"
+      "src/typings/preload"
     ],
     "paths": {
+      "@extensions/*":[
+        "extensions/*"
+      ],
       "@constants/*":[
         "src/constants/*"
       ],
