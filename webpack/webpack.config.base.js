@@ -11,13 +11,23 @@ const baseConfig = {
     filename: '[name].js'
   },
   module: {
-    rules: [{
-      test: /\.ts(x?)$/,
-      use: ['react-hot-loader/webpack', {
-        loader: 'ts-loader',
-        options: { transpileOnly: true }
-      }]
-    }]
+    rules: [
+      {
+        test: /\.ts(x?)$/,
+        use: ['react-hot-loader/webpack', {
+          loader: 'ts-loader',
+          options: { transpileOnly: true }
+        }]
+      },
+      {
+        test: /\.css$/i,
+        use: ["style-loader", "css-loader"]
+      },
+      {
+        test: /\.(woff2|woff|eot|ttf|otf)$/,
+        use: ["file-loader"],
+      }
+    ]
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.json'],
