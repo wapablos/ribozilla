@@ -13,7 +13,7 @@ module.exports = {
       title: 'Ribozilla',
       logo: {
         alt: 'My Site Logo',
-        src: 'img/logo.svg'
+        src: 'img/ribozilla-fav.svg'
       },
       items: [
         {
@@ -24,7 +24,9 @@ module.exports = {
         },
         { to: 'learn', label: 'Learn', position: 'left' },
         { to: 'blog', label: 'Blog', position: 'left' },
-        { to: 'showcase', label: 'Showcase', position: 'left' },
+        {
+          to: 'showcase', label: 'Showcase', position: 'left'
+        },
         {
           href: 'https://github.com/wapablos/ribozilla',
           label: 'GitHub',
@@ -102,6 +104,18 @@ module.exports = {
         theme: {
           customCss: require.resolve('./src/css/custom.css')
         }
+      }
+    ]
+  ],
+  plugins: [
+    [
+      '@docusaurus/plugin-content-docs',
+      {
+        id: 'showcase',
+        path: 'showcase',
+        routeBasePath: 'showcase',
+        include: ['**/*.md', '**/*.mdx'],
+        sidebarPath: require.resolve('./showcaseSidebars.js')
       }
     ]
   ]

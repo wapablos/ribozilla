@@ -9,7 +9,7 @@ import styles from './styles.module.css'
 const features = [
   {
     title: 'Easy to Use',
-    imageUrl: 'img/undraw_docusaurus_mountain.svg',
+    imageUrl: 'img/ribozilla-fav.svg',
     description: (
       <>
         Docusaurus was designed from the ground up to be easily installed and
