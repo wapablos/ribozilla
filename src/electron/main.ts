@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, Menu } from 'electron'
 import * as path from 'path'
 import AppHandler from './utils'
 
@@ -20,8 +20,9 @@ const file = {
 
 function createWindow() {
   const win = new BrowserWindow({
-    minWidth: 1020,
-    minHeight: 520,
+    minWidth: 1024,
+    minHeight: 640,
+    frame: false,
     webPreferences: {
       devTools: isDevelopment,
       webSecurity: true,
@@ -34,6 +35,8 @@ function createWindow() {
       preload: file.preload
     }
   })
+
+  Menu.setApplicationMenu(null)
 
   if (isDevelopment) {
     win.loadURL('http://localhost:4000/')
