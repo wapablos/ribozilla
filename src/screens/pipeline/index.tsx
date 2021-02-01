@@ -1,66 +1,71 @@
 /* eslint-disable consistent-return */
 /* eslint-disable array-callback-return */
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
+import ReactFlow, {
+  Elements, Controls, Background, OnLoadParams
+} from 'react-flow-renderer'
 import {
-  Grid, List, MuiThemeProvider, ListItem, MenuItem, Button, Switch,
-  ListItemText, Divider, Select, Collapse, IconButton
+  List, MuiThemeProvider, ListItem, MenuItem, Button, Switch,
+  ListItemText, Divider, Select, Collapse, IconButton, Input, Paper
 } from '@material-ui/core'
 import {
   MdExpandLess, MdExpandMore, MdAdd, MdRemove
 } from 'react-icons/md'
 
-import { FileBrowserEvents } from '@constants/events'
 import {
-  theme, StyledGrid, StyledPaper, StyledInput
+  IInputProps, InputTypes, RibozillaSchema
+} from '@extensions/api/types'
+import { FileBrowserEvents } from '@constants/events'
+import { useSelector, useDispatch } from 'react-redux'
+import { pipelineActions, PipelineActionTypes } from '@store/pipeline'
+import { ApplicationState } from '@store'
+
+import {
+  PipelineMuiTheme, PipelineScreen, StyledCardList, SoftwareList,
+  CommandList, StyledContainer, StyledPaper, NodeSurface
 } from './styles'
 
-import { getExtensions } from './internals'
+import {
+  getExtensions, setCommandNode, getCommandNode, handleOnDragOver
+} from './internals'
 
-interface ISoftwareInput {
-  type: string,
-  values?:string[]
-}
+function PipelineNodeSurface() {
+  const reactFlowWrapper = useRef<HTMLDivElement>(null)
+  const [reactFlowInstance, setReactFlowInstance] = useState<OnLoadParams>(null)
+  const [nodes, setNodes] = useState<Elements>([])
 
-function SoftwareList() {
-  const extensions = getExtensions()
+  const { nodeId, data } = useSelector<ApplicationState, ApplicationState['pipeline']>((state) => state.pipeline)
+  const dispatch = useDispatch()
 
-  const names = extensions.map((value, index) => value.name)
-  const versions = extensions.map((value, index) => value.version)
-  const commands = extensions.map((value, index) => value.commands)
+  const handleOnLoad = (reactFlowInstance: OnLoadParams) => {
+    setReactFlowInstance(reactFlowInstance)
+  }
+
+  const handleOnDrop = (event: React.DragEvent<HTMLDivElement>) => {
+    const { newNode, cmd, cmdId } = getCommandNode(event, nodeId, reactFlowWrapper, reactFlowInstance)
+    setNodes([...nodes, newNode])
+    console.log('Id: ', nodeId)
+    dispatch(pipelineActions.addPipelineSoftware([{ id: newNode.id, cmdId, softwareName: cmd }]))
+    console.log('Data: ', data)
+  }
 
   return (
-    <List>
-      {names.map((value, index) => {
-        const [collapse, setCollapse] = useState(false)
-        const handleCollapse = () => setCollapse(!collapse)
-        return (
-          <>
-            <ListItem button onClick={handleCollapse}>
-              <ListItemText id={`sw-${index}`} primary={value} />
-              {versions[index]}
-              {collapse ? <MdExpandLess /> : <MdExpandMore />}
-            </ListItem>
-            <Collapse in={collapse} unmountOnExit>
-              <List>
-                {commands[index].map(({ name, category }) => (
-                  <ListItem button>
-                    {name}
-                    (
-                    {category}
-                    )
-                  </ListItem>
-                ))}
-              </List>
-            </Collapse>
-          </>
-        )
-      })}
-    </List>
+    <NodeSurface ref={reactFlowWrapper}>
+      <ReactFlow
+        elements={nodes}
+        onDragOver={handleOnDragOver}
+        onDrop={handleOnDrop}
+        onLoad={handleOnLoad}
+      >
+        <Controls />
+        <Background color="#5b5b5b" gap={16} />
+      </ReactFlow>
+    </NodeSurface>
   )
 }
 
-function SoftwareInput(input: ISoftwareInput[], places: number) {
-  const isMulti = places === -1
+function SoftwareInput(input: IInputProps[], places: number) {
+  const variableInput = places === -1
 
   const [select, setSelect] = useState('')
 
@@ -74,7 +79,7 @@ function SoftwareInput(input: ISoftwareInput[], places: number) {
   return input.map(
     ({ type, values }, index) => {
       switch (type) {
-        case 'enum': {
+        case InputTypes.ENUM: {
           if (values === undefined || values.length === 0) break
 
           const modValues = values.map((value) => value.replace(/^[-]*/, ''))
@@ -86,11 +91,11 @@ function SoftwareInput(input: ISoftwareInput[], places: number) {
           )
         }
 
-        case 'number': {
-          return <StyledInput id={`input-${index}`} type="number" />
+        case InputTypes.NUMBER: {
+          return <Input id={`input-${index}`} type="number" />
         }
 
-        case 'dir': {
+        case InputTypes.DIR: {
           const [foldersInput, setfoldersInput] = useState([''])
 
           const addfolderInput = () => setfoldersInput(['', ...foldersInput])
@@ -102,11 +107,11 @@ function SoftwareInput(input: ISoftwareInput[], places: number) {
 
           const folders = foldersInput.map((value, index) => (
             <div>
-              <StyledInput id={`folder-${index}`} placeholder={index.toString()} value={value} />
+              <Input id={`folder-${index}`} placeholder={index.toString()} value={value} />
               <Button onClick={handleFolders}>Browser</Button>
               {
                 (() => {
-                  if (isMulti) {
+                  if (variableInput) {
                     switch (index) {
                       case 0:
                         return <IconButton onClick={addfolderInput}><MdAdd /></IconButton>
@@ -122,7 +127,7 @@ function SoftwareInput(input: ISoftwareInput[], places: number) {
           return folders
         }
 
-        case 'file': {
+        case InputTypes.FILE: {
           const [filesInput, setFilesInput] = useState([''])
 
           const addFileInput = () => setFilesInput(['', ...filesInput])
@@ -134,11 +139,11 @@ function SoftwareInput(input: ISoftwareInput[], places: number) {
 
           const files = filesInput.map((value, index) => (
             <div>
-              <StyledInput id={`file-${index}`} placeholder={index.toString()} value={value} />
+              <Input id={`file-${index}`} placeholder={index.toString()} value={value} />
               <Button onClick={handleFiles}>Browser</Button>
               {
                 (() => {
-                  if (isMulti) {
+                  if (variableInput) {
                     switch (index) {
                       case 0:
                         return <IconButton onClick={addFileInput}><MdAdd /></IconButton>
@@ -154,40 +159,74 @@ function SoftwareInput(input: ISoftwareInput[], places: number) {
           return files
         }
 
-        case 'boolean':
+        case InputTypes.BOOLEAN:
           return <Switch />
 
         default: {
-          return <StyledInput id={`input-${index}`} placeholder="unknown" />
+          return <Input id={`input-${index}`} placeholder="unknown" />
         }
       }
     }
   )
 }
 
+function AvaliableSoftwares() {
+  const extensions = getExtensions()
+  const softwares = Object.values(extensions)
+
+  return (
+    <StyledPaper>
+      <List>
+        {softwares.map(({ name, commands, version }, index) => {
+          const [collapse, setCollapse] = useState(false)
+
+          const handleCollapse = () => setCollapse(!collapse)
+
+          return (
+            <>
+              <SoftwareList key={`sw-${index.toString()}`} button onClick={handleCollapse}>
+                <ListItemText primary={name} />
+                {version}
+                {collapse ? <MdExpandLess /> : <MdExpandMore />}
+              </SoftwareList>
+              <Collapse in={collapse} unmountOnExit>
+                <List>
+                  {commands.map(({ name, category, cmdId }) => (
+                    <CommandList
+                      onDragStart={(e) => setCommandNode(e, name, cmdId)}
+                      button
+                      disableRipple
+                      draggable
+                    >
+                      {name}
+                      (
+                      {category}
+                      )
+                    </CommandList>
+                  ))}
+                </List>
+              </Collapse>
+            </>
+          )
+        })}
+      </List>
+    </StyledPaper>
+  )
+}
+
 function SoftwareCard() {
   const extensions = getExtensions()
-  const { name, commands, version } = extensions[0]
-  const { flags, args } = commands[0]
+
+  const { name, params } = extensions.star.commands[0]
 
   return (
     <StyledPaper>
       {name}
       <Divider />
       <List>
-        {args.map(({
-          label, input, places
-        }, index) => (
+        {params.map(({ label, input, places }, index) => (
           <ListItem>
             <ListItemText id={`arg-${index}`} primary={label} />
-            {SoftwareInput(input, places)}
-          </ListItem>
-        ))}
-        {flags.map(({
-          label, input, places
-        }, index) => (
-          <ListItem>
-            <ListItemText id={`flag-${index}`} primary={label} />
             {SoftwareInput(input, places)}
           </ListItem>
         ))}
@@ -197,26 +236,25 @@ function SoftwareCard() {
 }
 
 export default function Pipeline() {
+  const [nodeCard, setNodeCard] = useState<JSX.Element[]>([])
+  const { data } = useSelector<ApplicationState, ApplicationState['pipeline']>((state) => state.pipeline)
+
   return (
-    <MuiThemeProvider theme={theme}>
-      <StyledGrid container>
-        <Grid item>
-          <StyledPaper>
-            <SoftwareList />
-          </StyledPaper>
-        </Grid>
+    <MuiThemeProvider theme={PipelineMuiTheme}>
+      <PipelineScreen>
+        <StyledContainer>
+          <AvaliableSoftwares />
 
-        <Grid item>
-          <StyledPaper>xs</StyledPaper>
-        </Grid>
-      </StyledGrid>
-
-      <StyledGrid container>
-        <Grid item>
-          <SoftwareCard />
-        </Grid>
-      </StyledGrid>
-
+          <Paper>
+            <PipelineNodeSurface />
+          </Paper>
+        </StyledContainer>
+        <StyledCardList>
+          { data.length === 0
+            ? <></>
+            : data.map(() => (<SoftwareCard />))}
+        </StyledCardList>
+      </PipelineScreen>
     </MuiThemeProvider>
   )
 }
