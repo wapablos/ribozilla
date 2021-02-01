@@ -1,5 +1,5 @@
 import React from 'react'
-import { ThemeProvider } from '@material-ui/core'
+import { ThemeProvider, Toolbar } from '@material-ui/core'
 
 import { DevToolsEvents } from '@constants/events'
 import { GlobalStyle } from '@constants/styles'
@@ -7,13 +7,14 @@ import { BaseTheme } from '@constants/themes'
 
 import Sidebar, { ITask } from '@components/Sidebar'
 import Statusbar from '@components/Statusbar'
-import Menubar from '@components/Menubar'
+import Titlebar from '@components/Titlebar'
 
 import Projects from '@screens/projects'
 import Pipeline from '@screens/pipeline'
 
 import SystemInfo from '@screens/systeminfo'
-import WorkspaceGrid from './styles'
+
+import { WorkspaceLayout } from './styles'
 import Routes from './routes'
 
 const taskList: ITask[] = [
@@ -27,13 +28,13 @@ const taskList: ITask[] = [
 export default function Workspace() {
   return (
     <ThemeProvider theme={BaseTheme}>
-      <WorkspaceGrid>
-        <GlobalStyle />
-        <Menubar />
+      <GlobalStyle />
+      <WorkspaceLayout>
+        <Titlebar />
         <Sidebar tasks={taskList} />
         <Routes tasks={taskList} />
         <Statusbar />
-      </WorkspaceGrid>
+      </WorkspaceLayout>
     </ThemeProvider>
   )
 }

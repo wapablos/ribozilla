@@ -1,18 +1,20 @@
-import { createStyles, withStyles, Theme } from '@material-ui/core/styles'
-import { Grid } from '@material-ui/core'
+import styled from 'styled-components'
+import { titlebarHeight } from '@components/Titlebar/styles'
+import { statusBarHeight } from '@components/Statusbar/styles'
 
-const styles = (theme : Theme) => createStyles({
-  root: {
-    display: 'flex',
-    minHeight: '100vh',
-    flexShrink: 1,
-    zIndex: 1,
-    position: 'relative',
-    overflow: 'hidden',
-    backgroundColor: theme.palette.background.paper
-  }
-})
+export const RoutesScreen = styled.div`
+  display: grid;
+  box-sizing: border-box;
+  background-color: #989898;
+  width: 100%;
+  max-height: calc(100% - ${titlebarHeight + statusBarHeight}px);
+  margin-top: ${titlebarHeight}px;
+  margin-bottom: ${statusBarHeight}px;
+  padding: 10px;
+`
 
-const WorkspaceGrid = withStyles(styles)(Grid)
-
-export default WorkspaceGrid
+export const WorkspaceLayout = styled.div`
+  display: flex;
+  flex-shrink: 1;
+  height: 100vh;
+`

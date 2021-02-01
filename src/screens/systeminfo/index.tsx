@@ -18,7 +18,7 @@ export default function SystemInfo() {
   }, [])
 
   return (
-    <>
+    <div>
       {Object.entries(sysinfo).map(([key, value]) => (
         <div key={key.toString()}>
           {key.replace(/^./, key.charAt(0).toUpperCase())}
@@ -26,7 +26,7 @@ export default function SystemInfo() {
           {value}
         </div>
       ))}
-    </>
+    </div>
   )
 }
 /**
