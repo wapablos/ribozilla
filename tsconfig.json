@@ -15,6 +15,9 @@
       "src/typings/preload"
     ],
     "paths": {
+      "@fonts/*":[
+        "public/fonts/*"
+      ],
       "@extensions/*":[
         "extensions/*"
       ],

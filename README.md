@@ -44,3 +44,6 @@ Install and build all of the dependencies using Yarn:
     yarn install
 
 ## Development
+
+* Use of Yalc
+  `yarn global add yalc`
