@@ -1,13 +1,17 @@
 import React from 'react'
-import { Toolbar } from '@material-ui/core'
-import StyledStatusbar from './styles'
+import { MdCompareArrows } from 'react-icons/md'
+
+import { StyledStatusbar, ToolbarContainer } from './styles'
 
 export default function Statusbar() {
   return (
     <StyledStatusbar>
-      <Toolbar>
-        Statusbar
-      </Toolbar>
+      <ToolbarContainer>
+        <div className="conn">
+          <MdCompareArrows style={{ paddingRight: 5 }} size={20} />
+          Offline
+        </div>
+      </ToolbarContainer>
     </StyledStatusbar>
   )
 }

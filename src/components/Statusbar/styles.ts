@@ -1,17 +1,39 @@
-import { createStyles, withStyles, Theme } from '@material-ui/core/styles'
-import { AppBar } from '@material-ui/core'
-import { toolbarHeight } from '@constants/themes'
+import { createStyles, withStyles } from '@material-ui/core/styles'
+import { AppBar, Toolbar } from '@material-ui/core'
 
-const styles = (theme : Theme) => createStyles({
+export const statusBarHeight = 25
+
+const StatusBarMuiStyles = createStyles({
   root: {
-    height: toolbarHeight,
-    backgroundColor: 'red',
+    backgroundColor: '#191A21',
     top: 'auto',
     bottom: 0,
-    zIndex: theme.zIndex.drawer + 1
+    height: statusBarHeight,
+    fontFamily: 'Helvetica',
+    fontSize: '0.9em',
+    fontWeight: 300
   }
 })
 
-const StyledStatusbar = withStyles(styles)(AppBar)
+export const StyledStatusbar = withStyles(StatusBarMuiStyles)(AppBar)
 
-export default StyledStatusbar
+const ToolbarMuiStyles = createStyles({
+  root: {
+    minHeight: statusBarHeight,
+    margin: 0,
+    paddingRight: 0,
+    paddingLeft: 10,
+
+    '& > div.conn': {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      color: 'black',
+      backgroundColor: '#AAAAAA',
+      padding: '0 10px',
+      borderRadius: 10
+    }
+  }
+})
+
+export const ToolbarContainer = withStyles(ToolbarMuiStyles)(Toolbar)
