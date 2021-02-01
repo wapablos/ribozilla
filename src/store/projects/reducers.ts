@@ -1,5 +1,4 @@
-import { Reducer } from 'redux'
-import { PayloadAction } from 'typesafe-actions'
+import { Reducer, PayloadAction } from 'typesafe-actions'
 import { ProjectCardState, ProjectsCardActionTypes } from './types'
 
 const initialState: ProjectCardState = {
