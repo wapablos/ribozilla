@@ -1,29 +1,9 @@
 /* eslint-disable no-underscore-dangle */
 import * as jetpack from 'fs-jetpack'
-
-export type Categories = 'alignment' | 'trimming' | 'genindex'
-export type ParamsTypes = 'enum' | 'string' | 'boolean'|'number' | 'dir' | 'file'
-
-export interface Input {
-  type: ParamsTypes,
-  values?:string[]
-}
-
-export interface IFlag {
-  signature: string[]| string
-  label: string
-  places: number
-  input: Input[]
-  required: boolean
-  description: string
-}
-
-export interface IArgument extends IFlag {
-  after?: string
-  before?: string
-}
-
-export type IParams = Parameters<(type?: ParamsTypes, values?:string[]) => void>
+import {
+  Categories, IParameter, ParamsTypes, InputProps, IInputProps,
+  InputTypes, RibozillaSchema, CommandProps
+} from './types'
 
 export default class RibozillaExtension {
   private _software: string
@@ -32,15 +12,13 @@ export default class RibozillaExtension {
 
   private _commands: string[]
 
-  private _categories: string[]
+  private _categories: Categories[]
 
-  private _flags: IFlag[]
+  private _cmdId: number
 
-  private _flagsStore: IFlag[][]
+  private _params: IParameter[]
 
-  private _arguments: IArgument[]
-
-  private _argumentsStore: IArgument[][]
+  private _paramsStore: IParameter[][]
 
   /**
    * @param software Nome do software
@@ -51,10 +29,9 @@ export default class RibozillaExtension {
     this._version = version
     this._categories = []
     this._commands = []
-    this._flags = []
-    this._flagsStore = []
-    this._arguments = []
-    this._argumentsStore = []
+    this._params = []
+    this._paramsStore = []
+    this._cmdId = 0
   }
 
   /**
@@ -62,32 +39,32 @@ export default class RibozillaExtension {
   * um arquivo com o mesmo nome será criado
   */
   public stringIt(write: boolean, path: string = '.') {
-    const schema = {
+    const schema : RibozillaSchema = {
       name: this._software,
       version: this._version,
-      commands: this._commands.map((value, index) => {
-        const cmd = {
-          name: value,
-          category: this._categories[index],
-          flags: this._flagsStore[index],
-          args: this._argumentsStore[index]
-        }
-        return cmd
-      })
+      commands: this._commands.map((value, index) => ({
+        name: value,
+        cmdId: this.setCmdId(this._software),
+        category: this._categories[index],
+        params: this._paramsStore[index]
+      }))
     }
 
     if (write) {
       jetpack.cwd(path).file(`${path}.json`, { content: schema })
-      console.log('\x1b[33m', `Criado o arquivo ${path}.json`)
+      console.info('\x1b[33m', `Criado o arquivo ${path}.json`)
     }
   }
 
   public end() {
-    this._flagsStore = [...this._flagsStore, [...this._flags]]
-    this._flags = []
+    this._paramsStore = [...this._paramsStore, [...this._params]]
+    this._params = []
+  }
 
-    this._argumentsStore = [...this._argumentsStore, [...this._arguments]]
-    this._arguments = []
+  private setCmdId(name: string): string {
+    const id = `${name.toLowerCase()}_${this._cmdId}`
+    this._cmdId += 1
+    return id
   }
 
   public command(command: string) {
@@ -101,6 +78,7 @@ export default class RibozillaExtension {
   }
 
   /**
+   * @param type Define se o parametro é `flag` ou `argumento`
    * @param signature Forma da flag na linha de comando sem os traços, caso haja
    * @param label Título exibido na interface que se refere a esta flag
    * @param places Quantidade de entradas que a flag recebe, caso nenhum, input deve ser boolean
@@ -111,82 +89,37 @@ export default class RibozillaExtension {
    * @param description Documentação da flag
    */
 
-  public flag(
-    signature: string[] | string,
+  public param(
+    type: ParamsTypes,
+    signature: string,
     label: string,
     places: number,
-    input: IParams[],
+    input: InputProps[],
     required: boolean,
     description: string = 'No description',
   ) {
-    let flagin: Input[]
+    let paramInput: IInputProps[]
 
     if (input.length === 0) {
-      flagin = [{ type: 'boolean' }]
+      paramInput = [{ type: InputTypes.BOOLEAN }]
     } else {
-      flagin = input.map((value) => ({
+      paramInput = input.map((value) => ({
         type: value[0],
         values: value[1]
       }))
     }
 
-    const flag: IFlag = {
+    const param: IParameter = {
+      type,
       signature,
       label,
       places,
-      input: flagin,
+      input: paramInput,
       required,
       description
     }
 
-    this._flags = [...this._flags, flag]
-    return this
-  }
-
-  /**
-   * @param signature - Forma do argumento na linha de comando, `default = none`
-   *                  - É recomendável definir um ID para faciliar o params `after` e `before`
-   * @param label Título exibido na interface que se refere a este argumento
-   * @param places
-   * @param input
-   * @param required
-   * @param description
-   * @param after Define qual argumento ele procede na ordem da CLI
-   * @param after Define qual argumento ele antecede na ordem da CLI
-   */
-  public argument(
-    signature:string[]|string = 'none',
-    label:string,
-    places:number,
-    input: IParams[],
-    required:boolean,
-    after?: string,
-    before?:string,
-    description:string = 'No description'
-  ) {
-    let argin: Input[]
-
-    if (input.length === 0) {
-      argin = [{ type: 'boolean' }]
-    } else {
-      argin = input.map((value) => ({
-        type: value[0],
-        values: value[1]
-      }))
-    }
-
-    const argument : IArgument = {
-      signature,
-      label,
-      places,
-      input: argin,
-      required,
-      after,
-      before,
-      description
-    }
-
-    this._arguments = [...this._arguments, argument]
+    this._params = [...this._params, param]
     return this
   }
 }
