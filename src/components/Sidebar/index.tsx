@@ -1,10 +1,10 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import {
-  List, ListItem, ListItemText, Toolbar
+  List, ListItem, ListItemText, MuiThemeProvider, Drawer
 } from '@material-ui/core'
 
-import StyledDrawer from './styles'
+import { StyledSidebar } from './styles'
 
 export interface ITask {
   title?: string
@@ -20,8 +20,7 @@ export interface ISidebar {
 
 export default function Sidebar({ tasks } : ISidebar) {
   return (
-    <StyledDrawer>
-      <Toolbar />
+    <StyledSidebar>
       <List>
         {tasks.map(({
           title, href, icon, onClick
@@ -32,6 +31,6 @@ export default function Sidebar({ tasks } : ISidebar) {
           </ListItem>
         ))}
       </List>
-    </StyledDrawer>
+    </StyledSidebar>
   )
 }
