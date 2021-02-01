@@ -6,7 +6,7 @@ import { IoIosAdd } from 'react-icons/io'
 import { MuiThemeProvider } from '@material-ui/core/styles'
 import {
   StandardTextFieldProps, CardContent, FormControl,
-  CardActions, CardHeader, CardMedia, Grid, Snackbar
+  CardActions, CardHeader, CardMedia, Grid
 } from '@material-ui/core'
 import { SnackbarProvider, useSnackbar } from 'notistack'
 
@@ -16,7 +16,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { ProjectCardState, projectActions } from '@store/projects'
 import { ApplicationState } from '@store'
 import {
-  theme, themeMini, StyledBox, StyledButton, StyledCard,
+  theme, themeMini, ProjectsScreen, StyledButton, StyledCard,
   StyledInput, StyledMiniButton, StyledMiniGrid
 } from './styles'
 import getProjects, { handleInfo, toggleProjectCard } from './internals'
@@ -62,7 +62,6 @@ function NewProjectCard() {
     handleInfo(e, projectData, setProjectData)
   }
 
-  // REVIEW: Checar se o evento fica escutando depois que cancela o file browser
   const handleProjectFolder = async () => {
     window.electron.send(FileBrowserEvents.CHOOSE_DIR)
     window.electron.on(FileBrowserEvents.PROJECT_PATH, (event, args) => {
@@ -175,14 +174,13 @@ export default function Projects() {
 
   return (
     <MuiThemeProvider theme={theme}>
+
       <SnackbarProvider
         maxSnack={1}
         autoHideDuration={2200}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        {console.log('Card: ', toggle)}
-        <StyledBox>
-
+        <ProjectsScreen>
           { toggle
             ? <NewProjectCard />
             : <StyledButton startIcon={<IoIosAdd />} onClick={toggleProjectCard(true)}>  New Project </StyledButton>}
@@ -192,8 +190,7 @@ export default function Projects() {
             : projects.map(({ name, description }) => (
               <ProjectCard name={name} description={description} />
             ))}
-
-        </StyledBox>
+        </ProjectsScreen>
       </SnackbarProvider>
     </MuiThemeProvider>
   )

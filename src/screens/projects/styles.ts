@@ -1,7 +1,11 @@
 import { createStyles, withStyles, createMuiTheme } from '@material-ui/core/styles'
 import {
-  Button, Box, Card, TextField, Grid
+  Button, Card, TextField, Grid
 } from '@material-ui/core'
+import ScrollContainer from 'react-indiana-drag-scroll'
+import styled from 'styled-components'
+
+const cardWidth = '250px'
 
 const theme = createMuiTheme({
   props: {
@@ -41,17 +45,10 @@ const miniButtonStyles = createStyles({
   }
 })
 
-const boxStyles = createStyles({
-  root: {
-    display: 'flex',
-    flexDirection: 'row'
-  }
-})
-
 const cardStyles = createStyles({
   root: {
-    marginRight: 10,
-    flexWrap: 'nowrap'
+    width: cardWidth,
+    height: 300
   }
 })
 
@@ -67,14 +64,26 @@ const miniGridStyles = createStyles({
   }
 })
 
+const ProjectsScreen = styled(ScrollContainer)`
+  display: grid;
+  height: 100%;
+  box-sizing: border-box;
+  gap: 10px;
+  grid-auto-flow: column;
+  grid-auto-columns: ${cardWidth};
+  cursor: grab;
+
+:active {
+  cursor: grabbing;
+}
+`
 const StyledMiniGrid = withStyles(miniGridStyles)(Grid)
 const StyledMiniButton = withStyles(miniButtonStyles)(Button)
 const StyledInput = withStyles(inputStyles)(TextField)
 const StyledButton = withStyles(buttonStyles)(Button)
 const StyledCard = withStyles(cardStyles)(Card)
-const StyledBox = withStyles(boxStyles)(Box)
 
 export {
-  theme, themeMini, StyledButton, StyledBox,
+  theme, themeMini, ProjectsScreen, StyledButton,
   StyledCard, StyledInput, StyledMiniButton, StyledMiniGrid
 }
