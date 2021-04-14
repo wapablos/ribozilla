@@ -12,7 +12,7 @@
     "moduleResolution": "node",
     "baseUrl": ".",
     "types": [
-      "src/typings/preload"
+      "./src/typings"
     ],
     "paths": {
       "@fonts/*":[
