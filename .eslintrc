@@ -23,12 +23,13 @@
   ],
   "rules": {
     "no-unused-vars":["warn"],
+    "consistent-return":["warn"],
     "react/require-default-props":["off"],
     "react/jsx-filename-extension":["error", { "extensions": [".js", ".jsx",".ts",".tsx"] }],
     "import/no-unresolved": "off",
     "import/extensions": "off",
     "import/no-extraneous-dependencies": "off",
-    "import/prefer-default-export": "warn",
+    "import/prefer-default-export": "off",
     "no-use-before-define": "off",
     "no-shadow": "off",
     "semi":["warn","never"],
@@ -43,6 +44,9 @@
     }],
     "jsx-a11y/label-has-for": [ "error", {
       "required": { "some": [ "nesting", "id"  ] }
+    }],
+    "object-curly-newline": ["error", {
+      "ImportDeclaration": "never"
     }]
   }
 }
