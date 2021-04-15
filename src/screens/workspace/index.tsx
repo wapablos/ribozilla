@@ -1,29 +1,36 @@
 import React from 'react'
-import { ThemeProvider, Toolbar } from '@material-ui/core'
-
-import { DevToolsEvents } from '@constants/events'
-import { GlobalStyle } from '@constants/styles'
+import { ThemeProvider } from '@material-ui/core'
+import { GiTestTubes } from 'react-icons/gi'
+import { IoMdAnalytics } from 'react-icons/io'
+import { SiNodeRed, SiGnubash } from 'react-icons/si'
+import { GoMortarBoard, GoGear } from 'react-icons/go'
+import { AiFillQuestionCircle } from 'react-icons/ai'
 import { BaseTheme } from '@constants/themes'
-
-import Sidebar, { ITask } from '@components/Sidebar'
-import Statusbar from '@components/Statusbar'
+import { isDevelopment } from '@constants/environment'
+import { GlobalStyle } from '@constants/styles'
+import Sidebar, { Routes, ISidebar } from '@components/Sidebar'
 import Titlebar from '@components/Titlebar'
-
-import Projects from '@screens/projects'
-import Pipeline from '@screens/pipeline'
-
 import SystemInfo from '@screens/systeminfo'
-
 import { WorkspaceLayout } from './styles'
-import Routes from './routes'
+import { toggleDevTools } from './internals'
 
-const taskList: ITask[] = [
-  { title: 'Projects', href: '/', component: Projects },
-  { title: 'Pipelines', href: '/pipelines', component: Pipeline },
-  { title: 'Learn', href: '?' },
-  { title: 'System Info', href: '/sysinfo', component: SystemInfo },
-  { title: 'DevTools', href: '?', onClick: () => window.electron.send(DevToolsEvents.TOOGLE) }
+const main: ISidebar['tasks'] = [
+  { id: 'projects', title: 'Projects', href: '/projects', icon: GiTestTubes },
+  { id: 'pipelines', title: 'Pipelines', href: '/pipelines', icon: SiNodeRed },
+  { id: 'analysis', title: 'Data Analysis', href: '/analysis', icon: IoMdAnalytics }
 ]
+
+const extras: ISidebar['tasks'] = [
+  { id: 'learn', title: 'Learn', icon: GoMortarBoard },
+  { id: 'settings', title: 'Settings', icon: GoGear }
+]
+
+if (isDevelopment) {
+  main.push(
+    { id: 'sysinfo', title: 'System Info', icon: AiFillQuestionCircle, href: '/sysinfo', component: SystemInfo },
+    { id: 'devtools', title: 'DevTools', icon: SiGnubash, onClick: toggleDevTools }
+  )
+}
 
 export default function Workspace() {
   return (
@@ -31,9 +38,8 @@ export default function Workspace() {
       <GlobalStyle />
       <WorkspaceLayout>
         <Titlebar />
-        <Sidebar tasks={taskList} />
-        <Routes tasks={taskList} />
-        <Statusbar />
+        <Sidebar main={main} extras={extras} />
+        <Routes main={main} extras={extras} />
       </WorkspaceLayout>
     </ThemeProvider>
   )

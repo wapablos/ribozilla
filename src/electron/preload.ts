@@ -1,7 +1,6 @@
 import { contextBridge, ipcRenderer } from 'electron'
-import { eventNames } from 'cluster'
 
-console.log('Oizão')
+console.log('Electron preload was initialized')
 
 const api : Partial<Window> = {
   electron: {
@@ -27,7 +26,7 @@ contextBridge.exposeInMainWorld('electron', api.electron)
 
 /**
  * A apiKey 'electron' deve ter o mesmo nome da chave
- * implementada na interface global Window, pois é a chave
- * 'electron' que estará sendo exposta na variavel window,
+ * implementada na interface global Window 'src/typings/index.d.ts
+ * Pois é a chave 'electron' que estará sendo exposta na variavel window,
  * assim como as definições da variável local 'api'
  */
