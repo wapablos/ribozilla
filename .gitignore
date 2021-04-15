@@ -103,3 +103,4 @@ dist
 # User config
 build/
 *.db
+.DS_Store
