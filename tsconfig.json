@@ -15,6 +15,9 @@
       "./src/typings"
     ],
     "paths": {
+      "@electron/*": [
+        "src/electron/*"
+      ],
       "@fonts/*":[
         "public/fonts/*"
       ],
@@ -32,9 +35,6 @@
       ],
       "@store/*": [
         "src/store/*"
-      ],
-      "@store": [
-        "src/store/."
       ]
     },
     "allowSyntheticDefaultImports": true,
