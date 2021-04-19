@@ -34,6 +34,8 @@
     "no-shadow": "off",
     "semi":["warn","never"],
     "comma-dangle": ["warn", "never"],
+    "react/jsx-props-no-spreading": ["off"],
+    "no-unused-expressions": ["off"],
     "max-len": ["warn", {
       "code": 180,
       "ignoreComments": true,
