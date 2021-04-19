@@ -1,21 +1,17 @@
 import { combineReducers, createStore, Store } from 'redux'
-import { projectCardReducer, ProjectCardState } from '@store/projects'
-import { pipelineReducer, PipelineState } from '@store/pipeline'
-
+import { titlebarReducer, TitlebarState } from '@store/titlebar'
 /**
  * Top-level state
  */
 export interface ApplicationState {
-  projects: ProjectCardState
-  pipeline: PipelineState
+  titlebar: TitlebarState
 }
 
 /**
  * Root reducer
  */
 const createRootReducer = combineReducers({
-  projects: projectCardReducer,
-  pipeline: pipelineReducer
+  titlebar: titlebarReducer
 })
 
 /**

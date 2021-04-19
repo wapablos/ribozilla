@@ -2,7 +2,7 @@ import { App, BrowserWindow, ipcMain, dialog } from 'electron'
 import Store from 'electron-store'
 import * as os from 'os'
 import * as jetpack from 'fs-jetpack'
-import { AppEvents, DevToolsEvents } from '@constants/events'
+import { AppEvents, DevToolsEvents, WindowControlsEvents } from '@constants/events'
 
 /**
  * Development variables
@@ -28,6 +28,7 @@ export default class AppHandler {
     public initAllListeners() {
       this.appQuit()
       this.showDevTools()
+      this.windowControls()
     }
 
     public appQuit() {
@@ -40,5 +41,14 @@ export default class AppHandler {
       ipcMain.on(DevToolsEvents.TOOGLE, () => {
         this.win.webContents.toggleDevTools()
       })
+    }
+
+    public windowControls() {
+      ipcMain.on(WindowControlsEvents.MAXIMIZE, () => {
+        this.win.isMaximized() ? this.win.unmaximize() : this.win.maximize()
+      })
+
+      ipcMain.on(WindowControlsEvents.MINIMIZE, () => this.win.minimize())
+      ipcMain.on(WindowControlsEvents.CLOSE, () => this.win.closeFilePreview())
     }
 }
