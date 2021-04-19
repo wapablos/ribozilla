@@ -1,97 +1,91 @@
-import { createStyles, withStyles } from '@material-ui/core/styles'
-import {
-  AppBar, Toolbar, Box, IconButton
-} from '@material-ui/core'
+import styled, { createGlobalStyle } from 'styled-components'
+import { AppBar, IconButton } from '@material-ui/core'
+import { baseFeatures } from '@constants/styles'
+import 'react-electron-window-menu/dist/style.css'
 
-export const titlebarHeight = 30
+export const MenubarStyles = createGlobalStyle`    
+    .rewm-contextmenu {
+        background-color: rgba(66, 66, 69, 0.95);
+        color: #FFFFFF;
+        border: 1px solid #8D8D92;
+        border-top-width: 0;
+        box-shadow: 0 2px 3px rgba(0, 0, 0, 0.3);
+        
+        [data-ctx-item] {
+            font-family: Helvetica;
+        }
 
-const TitlebarMuiStyles = createStyles({
-  root: {
-    backgroundColor: '#3C3C3C',
-    height: titlebarHeight,
-    fontFamily: 'Helvetica',
-    fontSize: '0.85em'
-  }
-})
-
-export const StyledTitleBar = withStyles(TitlebarMuiStyles)(AppBar)
-
-const ToolbarMuiStyles = createStyles({
-  root: {
-    minHeight: titlebarHeight,
-    margin: 0,
-    paddingRight: 0,
-    paddingLeft: 10,
-    '-webkit-app-region': 'drag'
-  }
-})
-
-export const ToolbarContainer = withStyles(ToolbarMuiStyles)(Toolbar)
-
-const WindowControlsStyles = createStyles({
-  root: {
-    display: 'flex',
-    right: 0,
-    marginLeft: '5%',
-    '-webkit-app-region': 'no-drag'
-  }
-})
-
-export const WindowControlsContainer = withStyles(WindowControlsStyles)(Box)
-
-const IconButtonStyles = createStyles({
-  root: {
-    borderRadius: 0,
-    height: titlebarHeight,
-    width: 46,
-    color: '#CCCCCC',
-    padding: '0 12px',
-    cursor: 'default',
-
-    '&:hover': {
-      color: '#FFFFFF',
-      backgroundColor: '#FFFFFF1A'
-    },
-
-    '&#cancel:hover': {
-      color: '#FFFFFF',
-      backgroundColor: '#E81123',
-      opacity: '90%'
+        [data-ctx-separator] {
+            background-color: rgba(158,158,158,0.7);
+            filter: blur(0.5px);
+        }
     }
-  }
-})
 
-export const StyledIconButton = withStyles(IconButtonStyles)(IconButton)
+    .rewm-menubar {
+        [data-menubar-item] {
+            color: #FFFFFF;
+            height: ${baseFeatures.titlebarHeight}px;
+            -webkit-app-region: no-drag;
+        }
+    }
+`
+export const MenuBarContainer = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    font-family: Helvetica;    
+    font-size: 0.90em;
 
-const AppMenuStyles = createStyles({
-  root: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingRight: '1em',
-    '-webkit-app-region': 'no-drag'
+    .app-name {
+        padding: 0 15px;
+        font-weight: 600;
+        text-align: center;
+    }
+    
+    .project-title {
+        color: yellowgreen;
+        margin: auto;
+    }
+`
 
-  }
-})
+export const WindowControlsContainer = styled.div`
+    display: flex;
+    right: 0;
+    margin-left: 5%;
+`
 
-export const AppMenuContainer = withStyles(AppMenuStyles)(Box)
+export const StyledIconButton: typeof IconButton = styled(IconButton).attrs({
+  disableRipple: true,
+  size: 'small'
+})`
+    &.MuiIconButton-root {
+        border-radius: 0;
+        height: ${baseFeatures.titlebarHeight}px;
+        width: 40px;
+        color: white;
+        padding: 0 12px;
+        cursor: default;
 
-const WindowTitleStyles = createStyles({
-  root: {
-    fontWeight: 600,
-    padding: '0 10px',
-    textAlign: 'center'
-  }
-})
+        :hover {
+            color: #FFFFFF;
+            background-color: #FFFFFF1A;
+        }
 
-export const WindowTitleContainer = withStyles(WindowTitleStyles)(Box)
+        &.close:hover {
+            color: #FFFFFF;
+            background-color: #E81123;
+            opacity: 90%;
+        }
+    }
+        
+`
 
-const ProjectTitleStyles = createStyles({
-  root: {
-    fontWeight: 600,
-    margin: 'auto',
-    textAlign: 'center'
-  }
-})
-
-export const ProjectTitleContainer = withStyles(ProjectTitleStyles)(Box)
+export const StyledAppBar = styled(AppBar)`
+    &.MuiAppBar-root {
+        background-color: rgba(33, 34, 44, 0.9);
+        height: ${baseFeatures.titlebarHeight}px;
+        -webkit-app-region: drag;
+        -webkit-user-select: none;
+    }
+`

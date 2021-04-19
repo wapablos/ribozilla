@@ -1,95 +1,62 @@
-import React, { useState } from 'react'
-import { Typography } from '@material-ui/core'
-import { VscChromeClose, VscChromeMaximize, VscChromeMinimize } from 'react-icons/vsc'
+import React from 'react'
 import { MenuBar, IREWMenu } from 'react-electron-window-menu'
+import { VscChromeClose, VscChromeMaximize, VscChromeMinimize } from 'react-icons/vsc'
+import sharedOptions from '@electron/menu/shared'
+import { IconBaseProps } from 'react-icons/lib/cjs'
+import { CommonProps } from '@material-ui/core/OverridableComponent'
+import { IconButtonProps } from '@material-ui/core'
+import { useDispatch } from 'react-redux'
+import { titlebarActions } from '@store/titlebar'
+import { StyledAppBar, MenuBarContainer, MenubarStyles, WindowControlsContainer, StyledIconButton } from './styles'
 
-// FIX: Drag on macOs
-import { AppEvents } from '@constants/events'
-import {
-  StyledTitleBar, ToolbarContainer, StyledIconButton,
-  AppMenuContainer, WindowControlsContainer, WindowTitleContainer,
-  ProjectTitleContainer
-} from './styles'
-import './styles.css'
+interface ITitleText extends React.HTMLAttributes<HTMLDivElement> {
+  text: string
+}
+
+function TitleText({ text, ...props } : ITitleText) {
+  return (
+    <div {...props}>
+      {text}
+    </div>
+  )
+}
+
+function ControlButton({ icon, ...props }: { icon?: any} & IconButtonProps) {
+  return (
+    <StyledIconButton {...props}>
+      {React.createElement(icon || 'div')}
+    </StyledIconButton>
+  )
+}
 
 function WindowControls() {
-  const handleAppQuit = () => window.electron.send(AppEvents.QUIT)
+  const dispatch = useDispatch()
 
   return (
     <WindowControlsContainer>
-
-      <StyledIconButton disableRipple size="small">
-        <VscChromeMinimize />
-      </StyledIconButton>
-
-      <StyledIconButton disableRipple size="small">
-        <VscChromeMaximize />
-      </StyledIconButton>
-
-      <StyledIconButton disableRipple size="small" id="cancel" onClick={handleAppQuit}>
-        <VscChromeClose />
-      </StyledIconButton>
-
+      <ControlButton icon={VscChromeMinimize} onClick={() => dispatch(titlebarActions.minWindow)} />
+      <ControlButton icon={VscChromeMaximize} onClick={() => dispatch(titlebarActions.maxWindow)} />
+      <ControlButton className="close" icon={VscChromeClose} onClick={() => dispatch(titlebarActions.closeWindow)} />
     </WindowControlsContainer>
+
   )
 }
-
 function AppMenu() {
-  const menu: IREWMenu.IMenuItem[] = [
-    {
-      label: 'File',
-      submenu: [
-        {
-          label: 'Open'
-
-        },
-        {
-          label: 'Save',
-          accelerator: 'Ctrl + S'
-        }]
-    },
-    {
-      label: 'Help',
-      submenu: [
-        {
-          label: 'About'
-        }
-      ]
-    }
-  ]
-
   return (
-    <AppMenuContainer>
-      <MenuBar items={menu} />
-    </AppMenuContainer>
+    <MenuBarContainer>
+      <TitleText text="Ribozilla" className="app-name" />
+      <MenuBar items={sharedOptions} />
+      <TitleText text="Project Title" className="project-title" />
+      <WindowControls />
+    </MenuBarContainer>
   )
 }
 
-function ProjectTitle() {
+export default function Titlebar() {
   return (
-    <ProjectTitleContainer>
-      No Project
-    </ProjectTitleContainer>
-  )
-}
-
-function WindowTitle() {
-  return (
-    <WindowTitleContainer>
-      Ribozilla
-    </WindowTitleContainer>
-  )
-}
-
-export default function TitleBar() {
-  return (
-    <StyledTitleBar>
-      <ToolbarContainer>
-        <WindowTitle />
-        <AppMenu />
-        <ProjectTitle />
-        <WindowControls />
-      </ToolbarContainer>
-    </StyledTitleBar>
+    <StyledAppBar>
+      <MenubarStyles />
+      <AppMenu />
+    </StyledAppBar>
   )
 }
