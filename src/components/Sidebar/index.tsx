@@ -35,7 +35,7 @@ export function Routes({ main, extras } : ISidebar) {
         {routes.map(({ href, component }, index) => (
           <Route exact path={href || '?'} component={component || PageTemplate} key={`${index.toString()}`} />
         ))}
-        <Redirect from="/" to="projects" />
+        <Redirect exact from="/" to="projects" />
       </Switch>
     </RoutesScreen>
   )
@@ -43,7 +43,7 @@ export function Routes({ main, extras } : ISidebar) {
 
 export default function Sidebar({ main, extras } : ISidebar) {
   const { pathname } = useLocation()
-  const [selected, setSelected] = useState(pathname)
+  const [selected, setSelected] = useState(pathname === '/' ? '/projects' : pathname)
 
   const handleListItemClick = (href: string, onClick?: () => void) => {
     if (href === undefined && typeof onClick === 'function') onClick()
