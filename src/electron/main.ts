@@ -1,28 +1,22 @@
 import { app, BrowserWindow, Menu } from 'electron'
 import * as path from 'path'
-import AppHandler from './utils'
+import AppHandler, { isDevelopment, isMac } from './app-handler'
+// import appMenu from './menu'
 
-/**
- * User variables
- */
-const isDevelopment = process.env.NODE_ENV === 'development'
-
-const outputFolder = (file: string = '') => path.join(app.getAppPath(), isDevelopment ? '' : 'dist', file)
+const outputFolder = (file: string) => path.join(app.getAppPath(), isDevelopment ? '' : 'dist', file)
 
 const file = {
   preload: outputFolder('preload.js'),
   html: outputFolder('index.html')
 }
 
-/**
- * Window variables
- */
-
 function createWindow() {
   const win = new BrowserWindow({
-    minWidth: 1024,
+    minWidth: 1280,
     minHeight: 640,
-    frame: false,
+    frame: !(isMac && !isDevelopment),
+    maximizable: true,
+    fullscreenable: false,
     webPreferences: {
       devTools: isDevelopment,
       webSecurity: true,
@@ -36,7 +30,11 @@ function createWindow() {
     }
   })
 
-  Menu.setApplicationMenu(null)
+  // if (isMac) {
+  //   Menu.setApplicationMenu(appMenu)
+  // } else {
+  //   Menu.setApplicationMenu(null)
+  // }
 
   if (isDevelopment) {
     win.loadURL('http://localhost:4000/')
@@ -50,7 +48,9 @@ function createWindow() {
 
 app.allowRendererProcessReuse = true
 
-app.on('ready', createWindow)
+app.on('ready', () => {
+  createWindow()
+})
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
