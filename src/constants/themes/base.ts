@@ -1,14 +1,17 @@
 import { createMuiTheme } from '@material-ui/core/styles'
 
-const BaseTheme = createMuiTheme({
+export const BaseTheme = createMuiTheme({
   props: {
     MuiAppBar: {
       position: 'fixed',
-      elevation: 1
+      elevation: 0
     },
     MuiDrawer: {
       variant: 'permanent',
       elevation: 0
+    },
+    MuiButtonBase: {
+      disableRipple: true
     }
   },
   zIndex: {
@@ -16,5 +19,3 @@ const BaseTheme = createMuiTheme({
     drawer: 0
   }
 })
-
-export { BaseTheme }
