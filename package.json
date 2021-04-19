@@ -47,7 +47,7 @@
     "notistack": "^1.0.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-electron-window-menu": "git+https://github.com/wapablos/react-electron-window-menu.git#fa4f942",
+    "react-electron-window-menu": "git+https://github.com/wapablos/react-electron-window-menu.git#a26265e",
     "react-flow-renderer": "^8.2.3",
     "react-icons": "^4.2.0",
     "react-indiana-drag-scroll": "^1.8.0",
