@@ -44,11 +44,17 @@ export default class AppHandler {
     }
 
     public windowControls() {
-      ipcMain.on(WindowControlsEvents.MAXIMIZE, () => {
-        this.win.isMaximized() ? this.win.unmaximize() : this.win.maximize()
-      })
+      const handleMax = () => {
+        if (this.win.isMaximized()) {
+          this.win.unmaximize()
+        } else {
+          this.win.maximize()
+        }
+        this.win.webContents.send(WindowControlsEvents.MAXIMIZE, this.win.isMaximized())
+      }
 
+      ipcMain.on(WindowControlsEvents.MAXIMIZE, handleMax)
       ipcMain.on(WindowControlsEvents.MINIMIZE, () => this.win.minimize())
-      ipcMain.on(WindowControlsEvents.CLOSE, () => this.win.closeFilePreview())
+      ipcMain.on(WindowControlsEvents.CLOSE, () => this.app.quit())
     }
 }

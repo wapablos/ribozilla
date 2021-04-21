@@ -1,6 +1,4 @@
 import { action } from 'typesafe-actions'
-import { TitlebarActionTypes } from './types'
+import { TitlebarActionTypes, TitlebarState } from './types'
 
-export const maxWindow = action(TitlebarActionTypes.MAXIMIZE)
-export const minWindow = action(TitlebarActionTypes.MINIMIZE)
-export const closeWindow = action(TitlebarActionTypes.CLOSE)
+export const maxWindow = (isMax: TitlebarState['isMaximized']) => action(TitlebarActionTypes.MAXIMIZE, isMax)

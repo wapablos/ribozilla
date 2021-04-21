@@ -1,12 +1,12 @@
 import React from 'react'
 import { MenuBar, IREWMenu } from 'react-electron-window-menu'
-import { VscChromeClose, VscChromeMaximize, VscChromeMinimize } from 'react-icons/vsc'
+import { VscChromeClose, VscChromeMaximize, VscChromeMinimize, VscChromeRestore } from 'react-icons/vsc'
 import sharedOptions from '@electron/menu/shared'
-import { IconBaseProps } from 'react-icons/lib/cjs'
-import { CommonProps } from '@material-ui/core/OverridableComponent'
 import { IconButtonProps } from '@material-ui/core'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { WindowControlsEvents } from '@constants/events'
 import { titlebarActions } from '@store/titlebar'
+import { ApplicationState } from '@store/.'
 import { StyledAppBar, MenuBarContainer, MenubarStyles, WindowControlsContainer, StyledIconButton } from './styles'
 
 interface ITitleText extends React.HTMLAttributes<HTMLDivElement> {
@@ -31,14 +31,26 @@ function ControlButton({ icon, ...props }: { icon?: any} & IconButtonProps) {
 
 function WindowControls() {
   const dispatch = useDispatch()
+  const { isMaximized } = useSelector<ApplicationState, ApplicationState['titlebar']>((state) => state.titlebar)
+
+  const windowActions = {
+    maximize: async () => {
+      window.electron.ipcRenderer.send(WindowControlsEvents.MAXIMIZE)
+      await window.electron.ipcRenderer.on(WindowControlsEvents.MAXIMIZE, (evt, res) => {
+        dispatch(titlebarActions.maxWindow(res))
+        window.electron.ipcRenderer.removeAllListeners(WindowControlsEvents.MAXIMIZE)
+      })
+    },
+    minimize: () => window.electron.ipcRenderer.send(WindowControlsEvents.MINIMIZE),
+    close: () => window.electron.ipcRenderer.send(WindowControlsEvents.CLOSE)
+  }
 
   return (
     <WindowControlsContainer>
-      <ControlButton icon={VscChromeMinimize} onClick={() => dispatch(titlebarActions.minWindow)} />
-      <ControlButton icon={VscChromeMaximize} onClick={() => dispatch(titlebarActions.maxWindow)} />
-      <ControlButton className="close" icon={VscChromeClose} onClick={() => dispatch(titlebarActions.closeWindow)} />
+      <ControlButton icon={VscChromeMinimize} onClick={windowActions.minimize} />
+      <ControlButton icon={isMaximized ? VscChromeRestore : VscChromeMaximize} onClick={windowActions.maximize} />
+      <ControlButton className="close" icon={VscChromeClose} onClick={windowActions.close} />
     </WindowControlsContainer>
-
   )
 }
 function AppMenu() {

@@ -1,6 +1,8 @@
+/* eslint-disable array-callback-return */
 import { app, BrowserWindow, Menu } from 'electron'
 import * as path from 'path'
 import AppHandler, { isDevelopment, isMac } from './app-handler'
+
 // import appMenu from './menu'
 
 const outputFolder = (file: string) => path.join(app.getAppPath(), isDevelopment ? '' : 'dist', file)
@@ -44,11 +46,12 @@ function createWindow() {
 
   const appHandler = new AppHandler(app, win)
   appHandler.initAllListeners()
+  console.log(app.getPath('userData'))
 }
 
 app.allowRendererProcessReuse = true
 
-app.on('ready', () => {
+app.on('ready', async () => {
   createWindow()
 })
 

@@ -1,20 +1,17 @@
-import { Reducer, Action } from 'typesafe-actions'
-import { WindowControlsEvents } from '@constants/events'
-import { TitlebarActionTypes } from './types'
+/* eslint-disable no-case-declarations */
+import { Reducer, PayloadAction } from 'typesafe-actions'
+import { TitlebarActionTypes, TitlebarState } from './types'
 
-const titlebarReducer: Reducer<void, Action<TitlebarActionTypes>> = (state, action) => {
+const initialState: TitlebarState = {
+  isMaximized: null
+}
+
+const titlebarReducer: Reducer<TitlebarState, PayloadAction<TitlebarActionTypes, TitlebarState['isMaximized']>> = (state = initialState, action) => {
   switch (action.type) {
     case TitlebarActionTypes.MAXIMIZE:
-      window.electron.ipcRenderer.send(WindowControlsEvents.MAXIMIZE)
-      return null
-    case TitlebarActionTypes.MINIMIZE:
-      window.electron.ipcRenderer.send(WindowControlsEvents.MINIMIZE)
-      return null
-    case TitlebarActionTypes.CLOSE:
-      window.electron.ipcRenderer.send(WindowControlsEvents.CLOSE)
-      return null
+      return { isMaximized: action.payload }
     default:
-      return null
+      return state
   }
 }
 

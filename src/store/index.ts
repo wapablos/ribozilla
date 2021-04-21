@@ -16,7 +16,7 @@ const createRootReducer = combineReducers({
 
 /**
  * Root saga
- */
+*/
 
 /**
   * Global store
