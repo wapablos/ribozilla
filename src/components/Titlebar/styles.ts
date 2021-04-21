@@ -1,4 +1,4 @@
-import styled, { createGlobalStyle } from 'styled-components'
+import styled, { createGlobalStyle, keyframes } from 'styled-components'
 import { AppBar, IconButton } from '@material-ui/core'
 import { baseFeatures } from '@constants/styles'
 import 'react-electron-window-menu/dist/style.css'
@@ -29,6 +29,17 @@ export const MenubarStyles = createGlobalStyle`
         }
     }
 `
+
+const rotate = keyframes`
+  from {
+    background-position: 0%;
+  }
+
+  to {
+    background-position: 400%;
+  }
+`
+
 export const MenuBarContainer = styled.div`
     display: flex;
     align-items: center;
@@ -41,6 +52,15 @@ export const MenuBarContainer = styled.div`
         padding: 0 15px;
         font-weight: 600;
         text-align: center;
+        color: #FFFFFF;
+
+        :hover {
+            background: linear-gradient(135deg, #bcc6cc, #eee, #bcc6cc);
+            background-size: 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: ${rotate} 2s linear infinite;
+        }
     }
     
     .project-title {
@@ -52,7 +72,7 @@ export const MenuBarContainer = styled.div`
 export const WindowControlsContainer = styled.div`
     display: flex;
     right: 0;
-    margin-left: 5%;
+    margin-left: 10%;
 `
 
 export const StyledIconButton: typeof IconButton = styled(IconButton).attrs({
