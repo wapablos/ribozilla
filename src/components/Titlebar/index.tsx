@@ -1,12 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { MenuBar, IREWMenu } from 'react-electron-window-menu'
 import { VscChromeClose, VscChromeMaximize, VscChromeMinimize, VscChromeRestore } from 'react-icons/vsc'
 import sharedOptions from '@electron/menu/shared'
 import { IconButtonProps } from '@material-ui/core'
-import { useDispatch, useSelector } from 'react-redux'
 import { WindowControlsEvents } from '@constants/events'
-import { titlebarActions } from '@store/titlebar'
-import { ApplicationState } from '@store/.'
 import { StyledAppBar, MenuBarContainer, MenubarStyles, WindowControlsContainer, StyledIconButton } from './styles'
 
 interface ITitleText extends React.HTMLAttributes<HTMLDivElement> {
@@ -30,14 +27,13 @@ function ControlButton({ icon, ...props }: { icon?: any} & IconButtonProps) {
 }
 
 function WindowControls() {
-  const dispatch = useDispatch()
-  const { isMaximized } = useSelector<ApplicationState, ApplicationState['titlebar']>((state) => state.titlebar)
+  const [isMaximized, setIsMaximized] = useState<boolean>(null)
 
   const windowActions = {
     maximize: async () => {
       window.electron.ipcRenderer.send(WindowControlsEvents.MAXIMIZE)
       await window.electron.ipcRenderer.on(WindowControlsEvents.MAXIMIZE, (evt, res) => {
-        dispatch(titlebarActions.maxWindow(res))
+        setIsMaximized(res)
         window.electron.ipcRenderer.removeAllListeners(WindowControlsEvents.MAXIMIZE)
       })
     },

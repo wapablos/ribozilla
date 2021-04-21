@@ -11,12 +11,13 @@ import { GlobalStyle } from '@constants/styles'
 import Sidebar, { Routes, ISidebar } from '@components/Sidebar'
 import Titlebar from '@components/Titlebar'
 import SystemInfo from '@screens/systeminfo'
+import Pipeline from '@screens/pipeline'
 import { WorkspaceLayout } from './styles'
 import { toggleDevTools } from './internals'
 
 const main: ISidebar['tasks'] = [
   { id: 'projects', title: 'Projects', href: '/projects', icon: GiTestTubes },
-  { id: 'pipelines', title: 'Pipelines', href: '/pipelines', icon: SiNodeRed },
+  { id: 'pipelines', title: 'Pipelines', href: '/pipelines', component: Pipeline, icon: SiNodeRed },
   { id: 'analysis', title: 'Data Analysis', href: '/analysis', icon: IoMdAnalytics }
 ]
 

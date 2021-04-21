@@ -1,7 +1,3 @@
-export enum TitlebarActionTypes {
-  MAXIMIZE='@@titlebar/MAXIMIZE',
-}
+export enum TitlebarActionTypes {}
 
-export interface TitlebarState {
-  readonly isMaximized: boolean
-}
+export interface TitlebarState {}

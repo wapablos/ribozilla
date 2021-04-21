@@ -1,15 +1,11 @@
 /* eslint-disable no-case-declarations */
-import { Reducer, PayloadAction } from 'typesafe-actions'
-import { TitlebarActionTypes, TitlebarState } from './types'
+import { Reducer, Action } from 'typesafe-actions'
+import { TitlebarState } from './types'
 
-const initialState: TitlebarState = {
-  isMaximized: null
-}
+const initialState: TitlebarState = {}
 
-const titlebarReducer: Reducer<TitlebarState, PayloadAction<TitlebarActionTypes, TitlebarState['isMaximized']>> = (state = initialState, action) => {
+const titlebarReducer: Reducer<TitlebarState, Action> = (state = initialState, action) => {
   switch (action.type) {
-    case TitlebarActionTypes.MAXIMIZE:
-      return { isMaximized: action.payload }
     default:
       return state
   }
