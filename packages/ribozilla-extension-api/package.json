@@ -1,0 +1,11 @@
+{
+  "name": "ribozilla-extension-api",
+  "version": "1.0.0",
+  "description": "Ribozilla extensions API definitions",
+  "main": "index.js",
+  "author": "Pablo Wesley",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^4.2.4"
+  }
+}
