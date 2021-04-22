@@ -566,6 +566,13 @@
   dependencies:
     "@types/react" "^16"
 
+"@types/react-panelgroup@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@types/react-panelgroup/-/react-panelgroup-1.0.1.tgz#c25bf7d2a7c41323ef3744b191f128093675d9e5"
+  integrity sha512-dIeK8YQcS3yEyXhdsd8YpMK16ttWvrah2xQRiy6atqGmm6yPyHpvpzx4HldGWRJhsSjDWnl/6HHLaUV19dUo7w==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-redux@^7.1.11", "@types/react-redux@^7.1.16":
   version "7.1.16"
   resolved "https://registry.yarnpkg.com/@types/react-redux/-/react-redux-7.1.16.tgz#0fbd04c2500c12105494c83d4a3e45c084e3cb21"
@@ -6107,6 +6114,13 @@ react-lifecycles-compat@^3.0.4:
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
 
+react-panelgroup@^1.0.12:
+  version "1.0.12"
+  resolved "https://registry.yarnpkg.com/react-panelgroup/-/react-panelgroup-1.0.12.tgz#e19c2d9d1fa4fbe504cdac9255eebc1c569c08f4"
+  integrity sha512-DuA+6TnxLK1TmlQqijYCbzvEVZYS3i6SyG9xqk7SW/S4pzzIxQ73lkSHLkMBG55/iOvGQEL/uH3Y96btk6mPDw==
+  dependencies:
+    prop-types "^15.6.1"
+
 react-redux@^7.2.2:
   version "7.2.3"
   resolved "https://registry.yarnpkg.com/react-redux/-/react-redux-7.2.3.tgz#4c084618600bb199012687da9e42123cca3f0be9"
@@ -7504,10 +7518,10 @@ typescript-tuple@^2.2.1:
   dependencies:
     typescript-compare "^0.0.2"
 
-typescript@3.8.3:
-  version "3.8.3"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.8.3.tgz#409eb8544ea0335711205869ec458ab109ee1061"
-  integrity sha512-MYlEfn5VrLNsgudQTVJeNaQFUAI7DkhnOjdpAp4T+ku1TfQClewlbSuTVHiA+8skNBgaf02TL/kLOvig4y3G8w==
+typescript@^3.8.3:
+  version "3.9.9"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.9.9.tgz#e69905c54bc0681d0518bd4d587cc6f2d0b1a674"
+  integrity sha512-kdMjTiekY+z/ubJCATUPlRDl39vXYiMV9iyeMuEuXZh2we6zz80uovNN2WlAxmmdE/Z/YQe+EbOEXB5RHEED3w==
 
 unbox-primitive@^1.0.0:
   version "1.0.1"
