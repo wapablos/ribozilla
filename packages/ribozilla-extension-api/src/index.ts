@@ -62,8 +62,9 @@ export default class RibozillaExtension {
     }
 
     const dirBasename = basename(`${dirname}`)
-
     const isValid = this.extensionValidator.validate(schema)
+
+    if (print) console.log(schema)
 
     if (dirname !== undefined) {
       if (validate && !isValid) {
@@ -73,7 +74,5 @@ export default class RibozillaExtension {
       jetpack.cwd(dirname).file(`${dirBasename}.manifest.json`, { content: schema })
       console.info(`\x1b[32mExtension created\n\x1b[36m${dirBasename}.manifest.json -> ${jetpack.path(dirname)}`)
     }
-
-    return schema
   }
 }

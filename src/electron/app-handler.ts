@@ -1,5 +1,5 @@
 import { App, BrowserWindow, ipcMain } from 'electron'
-import { AppEvents, DevToolsEvents, WindowControlsEvents } from '@constants/events'
+import { AppEvents, WindowControlsEvents } from '@constants/events'
 
 /**
  * Development variables
@@ -35,7 +35,7 @@ export default class AppHandler {
     }
 
     public showDevTools() {
-      ipcMain.on(DevToolsEvents.TOOGLE, () => {
+      ipcMain.on(AppEvents.TOOGLE_DEVTOOLS, () => {
         this.win.webContents.toggleDevTools()
       })
     }

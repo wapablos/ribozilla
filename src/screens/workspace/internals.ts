@@ -1,3 +1,3 @@
-import { DevToolsEvents } from '@constants/events'
+import { AppEvents } from '@constants/events'
 
-export const toggleDevTools = () => window.electron.ipcRenderer.send(DevToolsEvents.TOOGLE)
+export const toggleDevTools = () => window.electron.ipcRenderer.send(AppEvents.TOOGLE_DEVTOOLS)
