@@ -1,7 +1,4 @@
-import { App, BrowserWindow, ipcMain, dialog } from 'electron'
-import Store from 'electron-store'
-import * as os from 'os'
-import * as jetpack from 'fs-jetpack'
+import { App, BrowserWindow, ipcMain } from 'electron'
 import { AppEvents, DevToolsEvents, WindowControlsEvents } from '@constants/events'
 
 /**
