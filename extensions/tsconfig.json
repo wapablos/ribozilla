@@ -2,7 +2,6 @@
   "compilerOptions": {
   "target": "es5",
   "module": "commonjs",
-  "outDir": "./build",
   "removeComments": true,
   "strict": true,
   "noImplicitAny": true,
@@ -16,14 +15,13 @@
   "baseUrl": ".",
   "emitDecoratorMetadata": true,
   "experimentalDecorators": true,
-  "sourceMap": true,
   "isolatedModules": false,
   "typeRoots": [
     "./node_modules/@types"
   ]
   },
   "include": [
-     "./**/*.ts"
+    "./**/*.ts"
   ],
   "exclude": [
     "./node_modules/**/*"

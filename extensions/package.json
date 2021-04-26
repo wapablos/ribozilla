@@ -1,22 +1,15 @@
 {
   "name": "ribozilla-extensions",
   "version": "1.0.0",
-  "description": "Extensions to map RNA-Seq analysis software commands to Ribozilla",
-  "main": "./build/index.js",
+  "description": "Dependencies shared by all extensions",
+  "license": "MIT",
   "scripts": {
-    "clean": "rimraf ./build",
-    "build": "tsc",
-    "watch": "tsc -watch",
-    "start": "yarn build && node .",
-    "dev": "node .",
-    "ext": "node build/star && node build/trimmomatic "
-  },
-  "dependencies": {
-    "fs-jetpack": "^4.1.0"
+    "clean": "rimraf out node_modules yarn.lock",
+    "build": "tsc"
   },
   "devDependencies": {
     "@types/node": "^8.0.29",
-    "typescript": "3.8.3"
-  },
-  "license": "MIT"
+    "rimraf": "^3.0.2",
+    "typescript": "^3.8.3"
+  }
 }
