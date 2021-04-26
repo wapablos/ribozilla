@@ -35,6 +35,9 @@
       ],
       "@store/*": [
         "src/store/*"
+      ],
+      "@ribozilla/extension-api": [
+        "packages/ribozilla-extension-api"
       ]
     },
     "allowSyntheticDefaultImports": true,
@@ -46,6 +49,6 @@
     "src/**/*"
   ],
   "exclude": [
-    "node_modules/**/*"
+    "./node_modules/**/*"
   ]
 }

@@ -104,3 +104,5 @@ dist
 build/
 *.db
 .DS_Store
+
+packages/**/lib/

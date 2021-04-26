@@ -37,13 +37,9 @@ You should be able to build Ribozilla on the following platforms:
     git clone https://github.com/wapablos/ribozilla.git
 
 ## Building
-
-Install and build all of the dependencies using Yarn:
-
-    cd ribozilla
-    yarn install
-
+First install local packages with Yarn
+```
+$ cd ribozilla
+$ yarn install-dev
+```
 ## Development
-
-* Use of Yalc
-  `yarn global add yalc`

@@ -6,6 +6,7 @@
   "main": "./dist/main.js",
   "scripts": {
     "clean": "rimraf ./dist",
+    "install-dev": "yarn install && yarn --cwd packages/ribozilla-extension-api install",
     "start": "electron .",
     "build:main": "cross-env NODE_ENV=production webpack --config webpack/webpack.config.main.js",
     "build:renderer": "cross-env NODE_ENV=production webpack --config webpack/webpack.config.renderer.js",
@@ -42,6 +43,7 @@
   "homepage": "https://github.com/wapablos/ribozilla#readme",
   "dependencies": {
     "@material-ui/core": "^4.11.2",
+    "ajv": "^8.1.0",
     "electron-store": "^6.0.1",
     "fs-jetpack": "^4.1.0",
     "notistack": "^1.0.2",
