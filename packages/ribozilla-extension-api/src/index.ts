@@ -3,18 +3,94 @@ import * as jetpack from 'fs-jetpack'
 import Ajv, { JSONSchemaType, ValidateFunction } from 'ajv'
 import { basename } from 'path'
 
+export enum ParamsTypes {
+  FLAG = 'flag',
+  ARG = 'arg'
+}
+
+export enum InputTypes {
+  ENUM='enum',
+  STRING='string',
+  BOOLEAN='boolean',
+  NUMBER='number',
+  DIR='dir',
+  FILE='file'
+}
+
+export enum Categories {
+  ALIGNMENT='Alignment',
+  TRIMMING='Trimming',
+  GENOME_INDEX='Genome Index'
+}
+
+export interface InputProps {
+  type: InputTypes,
+  values?:string[]
+}
+
+export interface IParameter {
+  type: ParamsTypes
+  signature: string
+  label: string
+  places: number
+  inputs: InputProps[]
+  required: boolean
+  description: string
+}
+export interface CommandProps {
+  name: string
+  id: string
+  category: Categories
+  params: IParameter[],
+}
+
 export interface RibozillaSchema {
     name: string
     version: string
+    commands: CommandProps[]
 }
 
 const RibozillaValidationSchema: JSONSchemaType<RibozillaSchema> = {
   type: 'object',
   properties: {
     name: { type: 'string' },
-    version: { type: 'string' }
+    version: { type: 'string' },
+    commands: { type: 'array',
+      items: { type: 'object',
+        properties: {
+          name: { type: 'string' },
+          id: { type: 'string' },
+          category: { type: 'string', enum: [Categories.ALIGNMENT, Categories.GENOME_INDEX, Categories.TRIMMING] },
+          params: { type: 'array',
+            items: {
+              type: 'object',
+              properties: {
+                type: { type: 'string', enum: [ParamsTypes.ARG, ParamsTypes.FLAG] },
+                signature: { type: 'string' },
+                label: { type: 'string' },
+                places: { type: 'integer' },
+                inputs: { type: 'array',
+                  items: {
+                    type: 'object',
+                    properties: {
+                      type: { type: 'string', enum: [InputTypes.BOOLEAN, InputTypes.DIR, InputTypes.ENUM, InputTypes.FILE, InputTypes.NUMBER, InputTypes.STRING] },
+                      values: { type: 'array',
+                        nullable: true,
+                        items: {
+                          type: 'string'
+                        } }
+                    },
+                    required: ['type']
+                  } },
+                required: { type: 'boolean' },
+                description: { type: 'string' }
+              },
+              required: ['type', 'label', 'places', 'signature', 'inputs']
+            } }
+        },
+        required: ['name', 'id', 'category', 'params'] } }
   },
-  required: ['name', 'version']
+  required: ['name', 'version', 'commands']
 }
 
 export class RibozillaExtensionValidator {
@@ -37,28 +113,39 @@ export default class RibozillaExtension {
 
   private version: string
 
-  // private commands: string[]
+  private commands: string[]
 
-  // private categories: Categories[]
+  private categories: Categories[]
 
-  // private cmdId: number
+  private idNumber: number
 
-  // private params: IParameter[]
+  private params: IParameter[]
 
-  // private paramsStore: IParameter[][]
+  private paramsStore: IParameter[][]
 
   private extensionValidator: RibozillaExtensionValidator
 
   constructor(software: string, version: string) {
     this.software = software
     this.version = version
+    this.commands = []
+    this.categories = []
+    this.idNumber = 0
+    this.params = []
+    this.paramsStore = []
     this.extensionValidator = new RibozillaExtensionValidator()
   }
 
   public generateExtension(dirname?: string, print = true, validate = true) {
     const schema: RibozillaSchema = {
       name: this.software,
-      version: this.version
+      version: this.version,
+      commands: this.commands.map((value, index) => ({
+        name: value,
+        id: this.setId(value),
+        category: this.categories[index],
+        params: this.paramsStore[index]
+      }))
     }
 
     const dirBasename = basename(`${dirname}`)
@@ -74,5 +161,58 @@ export default class RibozillaExtension {
       jetpack.cwd(dirname).file(`${dirBasename}.manifest.json`, { content: schema })
       console.info(`\x1b[32mExtension created\n\x1b[36m${dirBasename}.manifest.json -> ${jetpack.path(dirname)}`)
     }
+  }
+
+  private setId(name: string) {
+    const id = `${this.software}-${name}-${this.idNumber}`.replace(/\W+(?!$)/g, '-').toLowerCase()
+    this.idNumber += 1
+    return id
+  }
+
+  public command(command: string) {
+    this.commands = [...this.commands, command]
+    return this
+  }
+
+  public category(category: Categories) {
+    this.categories = [...this.categories, category]
+    return this
+  }
+
+  /**
+   * @param type `flag | argument`
+   * @param signature Flag on command line
+   * @param label Flag title on GUI
+   * @param places Input qty of each flag
+   *               - For `places = 0` `input` types must be `boolean | enum`
+   *                -- For `enum` values are the available options
+   *                -- For `boolean` values are empty array (`[]`)
+   *               - For `places = -1` `input` define type and values are user-defined on GUI
+   *               - For `places >= 1` `input` define each type and values
+   * @param inputss  Input type and values of each place
+   * @param required Flag is require `true | false`
+   * @param description Flag information
+   */
+
+  public param(type: ParamsTypes, signature: string, label: string, places: number, inputs: [InputTypes, string[]?][], required = true, description = 'No description') {
+    const handleInputs = () : InputProps[] => {
+      if (inputs.length === 0) return [{ type: InputTypes.BOOLEAN }]
+
+      return inputs.map((input) => ({
+        type: input[0],
+        values: input[1]
+      }))
+    }
+
+    const inputProps = handleInputs()
+
+    const param: IParameter = { type, signature, label, places, inputs: inputProps, required, description }
+    this.params = [...this.params, param]
+    return this
+  }
+
+  public end() {
+    this.paramsStore = [...this.paramsStore, [...this.params]]
+    this.params = []
   }
 }
