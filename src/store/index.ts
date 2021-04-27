@@ -1,5 +1,5 @@
 import { combineReducers, createStore, Store, applyMiddleware } from 'redux'
-import { ExtensionsState, extensionsReducer, ExtensionsActionTypes, loadExtensions } from '@store/xtensions'
+import { ExtensionsState, extensionsReducer, ExtensionsActionTypes, loadExtensions } from '@store/extensions'
 import { all, takeLatest } from 'redux-saga/effects'
 import createSagaMiddleware from 'redux-saga'
 /**

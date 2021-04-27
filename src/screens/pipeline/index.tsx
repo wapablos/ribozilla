@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { RibozillaSchema } from 'packages/ribozilla-extension-api/lib'
 import { useSelector, useDispatch } from 'react-redux'
 import { ApplicationState } from '@store/.'
-import { extensionsActions } from '@store/xtensions'
+import { extensionsActions } from '@store/extensions'
 import { PipelineScreen, StyledPanel } from './styles'
 
 function NodeSurface() {
