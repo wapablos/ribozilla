@@ -45,9 +45,9 @@ export interface CommandProps {
 }
 
 export interface RibozillaSchema {
-    name: string
-    version: string
-    commands: CommandProps[]
+  name: string
+  version: string
+  commands: CommandProps[]
 }
 
 const RibozillaValidationSchema: JSONSchemaType<RibozillaSchema> = {
