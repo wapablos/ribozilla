@@ -20,6 +20,9 @@ module.exports = merge(baseConfig, {
     port: 4000,
     liveReload: false
   },
+  node: {
+    fs: 'empty'
+  },
   plugins: [
     new ForkTsCheckerWebpackPlugin({ async: false }),
     new HtmlWebpackPlugin({

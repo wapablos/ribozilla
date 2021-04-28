@@ -11,6 +11,9 @@ module.exports = merge(baseConfig, {
   entry: {
     bundle: './src/index.tsx'
   },
+  node: {
+    fs: 'empty'
+  },
   plugins: [
     new ForkTsCheckerWebpackPlugin({ async: false }),
     new HtmlWebpackPlugin({
