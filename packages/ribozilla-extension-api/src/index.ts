@@ -20,7 +20,9 @@ export enum InputTypes {
 export enum Categories {
   ALIGNMENT='Alignment',
   TRIMMING='Trimming',
-  GENOME_INDEX='Genome Index'
+  GENOME_INDEX='Genome Index',
+  QUALITY_ASSESSMENT='Quality Assessment',
+  OTHER='Other'
 }
 
 export interface InputProps {
@@ -60,7 +62,7 @@ const RibozillaValidationSchema: JSONSchemaType<RibozillaSchema> = {
         properties: {
           name: { type: 'string' },
           id: { type: 'string' },
-          category: { type: 'string', enum: [Categories.ALIGNMENT, Categories.GENOME_INDEX, Categories.TRIMMING] },
+          category: { type: 'string', enum: [Categories.ALIGNMENT, Categories.GENOME_INDEX, Categories.TRIMMING, Categories.QUALITY_ASSESSMENT] },
           params: { type: 'array',
             items: {
               type: 'object',
