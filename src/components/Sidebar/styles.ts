@@ -18,7 +18,7 @@ export const RoutesScreen = styled.div`
   max-height: calc(100% - ${baseFeatures.titlebarHeight + baseFeatures.statusbarHeight}px);
   margin-top: ${baseFeatures.titlebarHeight}px;
   margin-bottom: ${baseFeatures.statusbarHeight}px;
-  padding: 10px;
+  padding: 0px;
 `
 
 export const StyledSidebar: typeof Drawer = styled(Drawer)`
