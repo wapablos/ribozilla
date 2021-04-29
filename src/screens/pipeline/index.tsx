@@ -1,9 +1,15 @@
 import React, { useState, useEffect } from 'react'
-import { RibozillaSchema } from 'packages/ribozilla-extension-api/lib'
 import { useSelector, useDispatch } from 'react-redux'
 import { ApplicationState } from '@store/.'
 import { extensionsActions } from '@store/extensions'
-import { PipelineScreen, StyledPanel } from './styles'
+import { RibozillaSchema, Categories } from '@ribozilla/extension-api'
+import { Divider, Collapse } from '@material-ui/core'
+import { VscChevronRight, VscChevronDown } from 'react-icons/vsc'
+import { IconBaseProps } from 'react-icons/lib'
+import { GiConsoleController } from 'react-icons/gi'
+import { keys } from '@material-ui/core/styles/createBreakpoints'
+import { PipelineScreen, StyledPanel, StyledList, StyledListItem, StyledListItemIcon } from './styles'
+import { getSoftwareListByCategory, EnumCategories, KeyofCategories } from './internals'
 
 function NodeSurface() {
   return (
@@ -21,23 +27,63 @@ function CardsListContainer() {
   )
 }
 
+function StyledChevron({ collapse = false }: { collapse?: boolean}) {
+  const props: IconBaseProps = {
+    color: 'white',
+    size: '1.5em'
+  }
+
+  return (
+    <StyledListItemIcon>
+      {collapse
+        ? <VscChevronDown {...props} />
+        : <VscChevronRight {...props} />}
+    </StyledListItemIcon>
+  )
+}
+
+function SoftwareCategoryList(softwareList: EnumCategories, categoryKey: KeyofCategories) {
+  return softwareList[categoryKey].map(({ command, software, version }) => (
+    <StyledListItem>
+      {software}
+      (
+      {command}
+      )
+    </StyledListItem>
+  ))
+}
+
 function SoftwaresListContainer() {
   const dispatch = useDispatch()
+  const [reload, setReload] = useState(true)
   const { extensions, loading, error } = useSelector<ApplicationState, ApplicationState['extensions']>((state) => state.extensions)
-  const [reload, setReload] = useState<boolean>(false)
 
   useEffect(() => {
     dispatch(extensionsActions.loadRequest())
-  }, [reload])
+  }, [])
 
-  console.log(extensions)
+  const softwareList = getSoftwareListByCategory(extensions)
 
   return (
-    <div>
-      {extensions.map(({ name }) => (
-        <li>{name}</li>
-      ))}
-    </div>
+    <StyledList key="categ-list">
+      {Object.keys(Categories).map((key, index) => {
+        const [isOpen, setIsOpen] = useState(true)
+        const k = key as KeyofCategories
+
+        return (
+          <div key={`categ-div-${index.toString()}`}>
+            <Divider />
+            <StyledListItem key={`categ-${index.toString()}`} onClick={() => setIsOpen(!isOpen)}>
+              <StyledChevron collapse={isOpen} />
+              {Categories[k].toUpperCase()}
+            </StyledListItem>
+            <Collapse in={isOpen} unmountOnExit>
+              {SoftwareCategoryList(softwareList, k)}
+            </Collapse>
+          </div>
+        )
+      })}
+    </StyledList>
   )
 }
 
