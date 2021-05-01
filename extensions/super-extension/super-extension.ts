@@ -15,4 +15,4 @@ simple.command('STAR')
   ])
   .end()
 
-simple.generateExtension(__dirname)
+simple.generateExtension('super-extension', __dirname)

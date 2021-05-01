@@ -138,19 +138,18 @@ export default class RibozillaExtension {
     this.extensionValidator = new RibozillaExtensionValidator()
   }
 
-  public generateExtension(dirname?: string, print = true, validate = true) {
+  public generateExtension(filename: string, dirname: string, print = true, validate = true) {
     const schema: RibozillaSchema = {
       name: this.software,
       version: this.version,
       commands: this.commands.map((value, index) => ({
         name: value,
         id: this.setId(value),
-        category: this.categories[index],
+        category: this.categories[index] ? this.categories[index] : Categories.OTHER,
         params: this.paramsStore[index]
       }))
     }
 
-    const dirBasename = basename(`${dirname}`)
     const isValid = this.extensionValidator.validate(schema)
 
     if (print) console.log(schema)
@@ -160,8 +159,8 @@ export default class RibozillaExtension {
         console.log('\x1b[31mPlease check the extension development or source code!')
         return
       }
-      jetpack.cwd(dirname).file(`${dirBasename}.manifest.json`, { content: schema })
-      console.info(`\x1b[32mExtension created\n\x1b[36m${dirBasename}.manifest.json -> ${jetpack.path(dirname)}`)
+      jetpack.cwd(dirname).file(`${filename}.manifest.json`, { content: schema })
+      console.info(`\x1b[32mExtension created\n\x1b[36m${filename}.manifest.json -> ${jetpack.path(dirname)}`)
     }
   }
 

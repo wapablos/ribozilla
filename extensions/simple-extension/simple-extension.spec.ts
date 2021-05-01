@@ -17,4 +17,4 @@ simple.command('SOF3')
   .param(ParamsTypes.FLAG, '--usudfhs', 'fdgdsUUHUHUUf', 0, [])
   .end()
 
-simple.generateExtension(__dirname)
+simple.generateExtension('simple-extension', __dirname)
