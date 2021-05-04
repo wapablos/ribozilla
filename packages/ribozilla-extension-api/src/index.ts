@@ -3,6 +3,15 @@ import * as jetpack from 'fs-jetpack'
 import Ajv, { JSONSchemaType, ValidateFunction } from 'ajv'
 import { basename } from 'path'
 
+export enum RequiredTypes {
+  COMMON_IN = 'common/in',
+  COMMON_OUT = 'common/out',
+  MAIN_IN = ' main/in',
+  MAIN_OUT = 'main/out',
+  REQ_IN = 'req/in',
+  REQ_OUT = 'req/out'
+}
+
 export enum ParamsTypes {
   FLAG = 'flag',
   ARG = 'arg'
@@ -36,7 +45,7 @@ export interface IParameter {
   label: string
   places: number
   inputs: InputProps[]
-  required: boolean
+  isRequired: RequiredTypes
   description: string
 }
 export interface CommandProps {
@@ -84,7 +93,7 @@ const RibozillaValidationSchema: JSONSchemaType<RibozillaSchema> = {
                     },
                     required: ['type']
                   } },
-                required: { type: 'boolean' },
+                isRequired: { type: 'string', enum: Object.values(RequiredTypes).map((value) => value) },
                 description: { type: 'string' }
               },
               required: ['type', 'label', 'places', 'signature', 'inputs']
@@ -195,7 +204,7 @@ export default class RibozillaExtension {
    * @param description Flag information
    */
 
-  public param(type: ParamsTypes, signature: string, label: string, places: number, inputs: [InputTypes, string[]?][], required = true, description = 'No description') {
+  public param(type: ParamsTypes, signature: string, label: string, places: number, inputs: [InputTypes, string[]?][], isRequired = RequiredTypes.COMMON_IN, description = 'No description') {
     const handleInputs = () : InputProps[] => {
       if (inputs.length === 0) return [{ type: InputTypes.BOOLEAN }]
 
@@ -207,7 +216,7 @@ export default class RibozillaExtension {
 
     const inputProps = handleInputs()
 
-    const param: IParameter = { type, signature, label, places, inputs: inputProps, required, description }
+    const param: IParameter = { type, signature, label, places, inputs: inputProps, isRequired, description }
     this.params = [...this.params, param]
     return this
   }
