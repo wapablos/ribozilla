@@ -1,6 +1,6 @@
 import styled, { StyledComponent } from 'styled-components'
 import PanelGroup from 'react-panelgroup'
-import { List, ListItem, ListItemIcon } from '@material-ui/core'
+import { List, ListItem, ListItemIcon, Paper, Button } from '@material-ui/core'
 import { Mosaic } from 'react-mosaic-component'
 import 'react-mosaic-component/react-mosaic-component.css'
 
@@ -36,7 +36,6 @@ export const StyledList = styled(List).attrs({
     font-weight: 700;
     max-height: 100%;
   }
-
 `
 
 export const StyledListItemIcon = styled(ListItemIcon)`
@@ -96,6 +95,145 @@ export const PipelineScreen = styled.div`
   box-sizing: border-box;
   overflow: hidden;
 `
+export const MiniButton = styled(Button).attrs(({ ...props }) => ({
+  className: `nodrag ${props.className}`,
+  disableRipple: true
+}))`
+  &.MuiButtonBase-root {
+    min-height: 18px;
+    min-width: 18px;
+    max-height: 18px;
+    max-width: 18px;
+    padding: 3px;
+    border-radius: 100%;
+    margin: 0 5px;
+
+    background-color: #4f7cff;
+    color: #fff;
+
+    :hover {
+      background-color: #175dff;
+    }
+  }
+`
+
+export const StyledNode: typeof Paper = styled(Paper)`
+  &.MuiPaper-root {
+    min-width: 120px;
+    min-height: 44px;
+    padding: 0;
+    border-radius: 5px;
+
+    background: linear-gradient(to right, #505050, #2f2f2f);
+    
+    font-family: Helvetica, sans-serif;
+    font-size: 13px;
+    padding-bottom: 4px;
+    cursor: default;
+
+    .node-label {
+      position: relative;
+
+      display: flex;
+      flex-grow: 1;
+      align-items: center;
+      justify-content: space-between;
+      
+      height: 20px;
+      padding: 2px 5px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+      border-radius: 5px 5px 0 0;
+      margin-bottom: 4px;
+
+      background: linear-gradient(to right, #608ca1 5%, #464b4e);
+      color: white;
+
+      .label {
+        padding-right: 20px;
+        margin: 5px;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+
+      .close {
+        color: #FFFFFF;
+        
+        :hover {
+          color: #F4504D;
+        }
+      }
+    }
+
+    .node-command {
+      display: flex;
+      justify-content: center;
+
+      padding: 4px 10px 4px;
+
+      color: white;
+      font-size: 0.9em;
+
+      & .wrapper-badge {
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        min-width: 20px;
+
+        /* background-color: #0282FF; */
+        color: #FFF;
+        /* border-radius: 10px;
+        padding: 1px 10px; */
+      }
+    }
+
+    .node-socket {
+      display: flex;
+      flex-direction: row;
+      position: relative;
+      padding: 4px 0;
+      color: #fff;
+
+      &.socket-input {
+        padding-left: 18px;
+        padding-right: 6px;
+        justify-content: flex-start;
+      }
+
+      &.socket-output {
+        padding-right: 18px;
+        padding-left: 6px;
+        justify-content: flex-end;
+      }
+    }
+
+    .socket-io {
+      width: 10px;
+      height: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &.io-input {
+        border: 2px solid #94e349;
+        border-radius: 0 10px 10px 0;
+        border-left: 0;
+        left: 0px;
+        background: transparent;
+      }
+
+      &.io-output {
+        border: 2px solid #ff0072;
+        border-radius: 10px 0 0 10px;
+        border-right: 0;
+        right: 0px;
+        background: transparent;
+      }
+    }
+    
+  }
+`
 
 export const StyledMosaic = styled(Mosaic).attrs({
   initialValue: {
@@ -142,7 +280,7 @@ export const StyledMosaic = styled(Mosaic).attrs({
     }
 
     .mosaic-window-body {
-      background: #dddddd;
+      background: #eee;
     }
   }
 
