@@ -1,7 +1,7 @@
 import { Reducer, PayloadAction } from 'typesafe-actions'
 import { FlowElement } from 'react-flow-renderer'
 import { RibozillaNode } from '@screens/pipeline/internals'
-import { NodesState, NodesActionTypes } from './types'
+import { NodesState, NodesActionTypes, templateNode } from './types'
 
 const initialState: NodesState = {
   nodes: [{
@@ -9,9 +9,11 @@ const initialState: NodesState = {
     type: 'software',
     position: { x: 250, y: 50 },
     data: {
-      software: 'INitial'
+      software: 'Initial',
+      command: 'ribozi',
+      version: '3.0.0-beta'
     }
-  }]
+  }, templateNode]
 }
 
 const nodesReducer : Reducer<NodesState, PayloadAction<NodesActionTypes, RibozillaNode>> = (state = initialState, action) => {
