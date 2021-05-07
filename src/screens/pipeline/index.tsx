@@ -1,27 +1,31 @@
+/* eslint-disable array-callback-return */
+/* eslint-disable consistent-return */
 /* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { ApplicationState } from '@store/.'
 import { extensionsActions } from '@store/extensions'
 import { nodesActions } from '@store/nodes'
-import { Categories, IParameter, RequiredTypes } from '@ribozilla/extension-api'
+import { Categories, IParameter, RequiredTypes, InputTypes } from '@ribozilla/extension-api'
 import { Divider, Collapse } from '@material-ui/core'
 import { VscChevronRight, VscChevronDown, VscChromeClose } from 'react-icons/vsc'
 import { BiLogInCircle } from 'react-icons/bi'
-import { FiLock } from 'react-icons/fi'
 import { IconBaseProps } from 'react-icons/lib'
 import ReactFlow, { Controls, Background, NodeTypesType, OnLoadParams, Handle, Position } from 'react-flow-renderer'
-import { MosaicBranch, MosaicWindow } from 'react-mosaic-component'
+import { MosaicBranch, MosaicWindow, MosaicNode } from 'react-mosaic-component'
 import { uniqueId, random } from 'lodash'
-import { PipelineScreen, StyledList, StyledListItem, StyledListItemIcon, SurfaceDiv, ListContainer, StyledMosaic, StyledNode, MiniButton } from './styles'
+import { FiLock, FiUpload, FiEdit3, FiFolderPlus, FiFilePlus } from 'react-icons/fi'
+import { RiUser4Line, RiCheckboxBlankCircleLine, RiSubtractLine, RiCloseLine } from 'react-icons/ri'
+import { MosaicParent } from 'react-mosaic-component/lib/types'
+import { PipelineScreen, StyledList, StyledListItem, StyledListItemIcon, SurfaceDiv, ListContainer, StyledMosaic, StyledNode, TheDivider, CardsContainer, StyledCard, SoftwareList, SoftwareListItem, MiniSwitch, MiniButton, StyledParamInput, StyledParamSelect } from './styles'
 import { getSoftwareListByCategory, EnumCategories, KeyofCategories, RibozillaNode } from './internals'
 
 function SoftwareNode({ data } : RibozillaNode) {
   const Label = () => (
     <div className="node-label">
-      <div className="label">{data.software}</div>
+      <div className="label">{data.software.toUpperCase()}</div>
       <VscChromeClose className="icon close" size="1.1em" />
     </div>
   )
@@ -35,17 +39,26 @@ function SoftwareNode({ data } : RibozillaNode) {
   const Content = () => {
     if (data.params === undefined) return (<></>)
     const mainIn = data.params.filter(({ isRequired }) => (isRequired === RequiredTypes.MAIN_IN))
-    console.log(mainIn)
+    const mainOut = data.params.filter(({ isRequired }) => (isRequired === RequiredTypes.MAIN_OUT))
 
     return (
       <>
-        {mainIn.map(({ label, signature }) => (
-          <div className="node-socket socket-input">
+        {mainIn.map(({ label, signature }, index) => (
+          <div className="node-socket socket-input" key={`${index.toString}${signature}`}>
             <Handle id={signature} className="socket-io io-input" type="target" position={Position.Left} />
             {label}
-            <MiniButton>
-              <FiLock />
-            </MiniButton>
+          </div>
+        ))}
+        { mainOut.length === 0 ? <></> : <TheDivider />}
+        {mainOut.map(({ label, signature }, index) => (
+          <div className="node-socket socket-output" key={`${index.toString}${signature}`}>
+            {label}
+            <Handle
+              id={signature}
+              className="socket-io io-output"
+              type="target"
+              position={Position.Right}
+            />
           </div>
         ))}
       </>
@@ -82,11 +95,161 @@ function NodeSurface() {
   )
 }
 
-function CardsListContainer() {
+function SoftwareInputType({ inputs } : Partial<IParameter>) {
+  const paramInput = inputs.map(({ type, values }) => {
+    switch (type) {
+      case InputTypes.BOOLEAN:
+        return <MiniSwitch />
+
+      case InputTypes.FILE:
+        return (
+          <>
+            <StyledParamInput type="text" placeholder="~/.bashrc" />
+            <MiniButton className="card-button">
+              <FiFilePlus />
+            </MiniButton>
+          </>
+        )
+
+      case InputTypes.DIR:
+        return (
+          <>
+            <StyledParamInput type="text" placeholder="~/home/public" />
+            <MiniButton className="card-button">
+              <FiFolderPlus />
+            </MiniButton>
+          </>
+        )
+
+      case InputTypes.NUMBER:
+        return <StyledParamInput type="number" size={2} placeholder="2" />
+
+      case InputTypes.ENUM:
+        if (values === undefined || values.length === 0) break
+
+        return (
+          <StyledParamSelect>
+            {values.map((value) => (
+              <option>{value.replace(/^[-]*/, '')}</option>
+            ))}
+          </StyledParamSelect>
+        )
+
+      case InputTypes.STRING:
+        return <StyledParamInput type="text" />
+
+      default:
+        return <StyledParamInput size={5} disabled value={type} />
+    }
+  })
+
+  return paramInput
+}
+
+function switchRoles() {
+  const readWriteIcons = {
+    lock: <FiLock />,
+    edit: <FiEdit3 />
+  }
+
+  const socketsIcons = {
+    input: <RiSubtractLine className="rot-icon" />,
+    output: <RiCheckboxBlankCircleLine className="rot-icon" />,
+    both: <RiUser4Line className="rot-icon" />,
+    none: <RiCloseLine />
+  }
+
+  const [rwIcon, setRwIcon] = useState<keyof typeof readWriteIcons>('lock')
+  const [socketIcon, setSocketIcon] = useState<keyof typeof socketsIcons>('input')
+  const selectRwIcon = readWriteIcons[rwIcon]
+  const selectSocketIcon = socketsIcons[socketIcon]
+
+  type B = <T>(routinesIconList: T, routine: keyof T, setRoutine: React.Dispatch<React.SetStateAction<keyof T>>) => void
+
+  const toggleRoutines: B = (iconList, routine, setRoutine) => {
+    const keys = Object.keys(iconList)
+    const index = keys.indexOf(routine as string)
+    const next = keys[index + 1] || keys[0]
+    setRoutine(next as typeof routine)
+  }
+
+  const toggleIconsRw = () => toggleRoutines(readWriteIcons, rwIcon, setRwIcon)
+  const toggleIconsSocket = () => toggleRoutines(socketsIcons, socketIcon, setSocketIcon)
+
+  return { selectRwIcon, toggleIconsRw, selectSocketIcon, toggleIconsSocket }
+}
+
+function SoftwareCard({ data } : Partial<RibozillaNode>) {
+  const checkIsRequired = (isRequired: RequiredTypes) => {
+    const { selectRwIcon, toggleIconsRw, selectSocketIcon, toggleIconsSocket } = switchRoles()
+
+    if (isRequired === RequiredTypes.MAIN_IN || isRequired === RequiredTypes.MAIN_OUT) {
+      return (
+        <>
+          <MiniButton onClick={toggleIconsSocket}>{selectSocketIcon}</MiniButton>
+          <MiniButton onClick={toggleIconsRw}>{selectRwIcon}</MiniButton>
+        </>
+      )
+    }
+  }
+
+  const Label = () => (
+    <div className="node-label">
+      <div className="label">
+        {data.software.toUpperCase()}
+      </div>
+      <div className="wrapper-chip">{data.command}</div>
+    </div>
+  )
+
+  const Content = () => (
+    <SoftwareList>
+      {data.params.map(({ label, signature, inputs, isRequired }, index) => (
+        <SoftwareListItem key={`${index.toString()}${signature}`}>
+          <div className="param-label">
+            {checkIsRequired(isRequired)}
+            {label}
+          </div>
+          <div className="param-input">
+            {SoftwareInputType({ inputs })}
+          </div>
+        </SoftwareListItem>
+      ))}
+      <SoftwareListItem key="random-x">
+        <div className="param-label">
+          Label
+        </div>
+        <div className="param-input">
+          <StyledParamInput type="text" value="~/.bashrc" disabled />
+          <MiniButton className="card-button" disabled>
+            <FiUpload />
+          </MiniButton>
+        </div>
+      </SoftwareListItem>
+    </SoftwareList>
+  )
   return (
-    <>
-      Cards
-    </>
+    <StyledCard>
+      <Label />
+      {data.params && <Content />}
+    </StyledCard>
+  )
+}
+
+function SoftwaresCardListContainer() {
+  const containerRef = useRef<HTMLDivElement>()
+
+  const { nodes } = useSelector<ApplicationState, ApplicationState['nodes']>((state) => state.nodes)
+
+  useEffect(() => {
+    const { scrollWidth, scrollHeight } = containerRef.current
+    containerRef.current.scrollTo({ top: scrollHeight, left: scrollWidth, behavior: 'smooth' })
+  }, [nodes])
+
+  return (
+    <CardsContainer className="cards-container" ref={containerRef}>
+      {nodes.map(({ data }, index) => (<SoftwareCard data={data} key={`card-${index.toString()}`} />))}
+    </CardsContainer>
   )
 }
 
@@ -129,6 +292,7 @@ function SoftwareCategoryList(categKey: KeyofCategories, softwareList: EnumCateg
       dispatch(nodesActions.addNode(node))
     }, []
   )
+
   return (
     <div key={`categ-div-${categIndex}`}>
       <Divider />
@@ -189,7 +353,7 @@ const pipelineComponents: PanelAttrs = {
   },
   cards: {
     title: 'Setup',
-    component: <CardsListContainer />
+    component: <SoftwaresCardListContainer />
   }
 }
 
@@ -203,10 +367,62 @@ function renderPanels(item: React.ReactText, path: MosaicBranch[]) {
 }
 
 export default function Pipeline() {
+  const handleDivProportions = useCallback((node: MosaicNode<React.ReactText>) => {
+    const { direction, second } = (node as MosaicParent<React.ReactText>) || { direction: '' }
+
+    const { clientWidth, clientHeight, classList } = document
+      .getElementsByClassName('cards-container')
+      .item(0) as HTMLElement
+
+    const sum = clientWidth - clientHeight
+    const checkProportion = sum > 1
+    console.log()
+
+    const updateElement = (classname: string, toggle: boolean) => {
+      classList.toggle(classname, toggle)
+    }
+
+    if (node === null) {
+      updateElement('flex-overflow', checkProportion)
+      updateElement('flex-wrapped', !checkProportion)
+    }
+
+    if (node !== null) {
+      const checkRow = direction === 'row'
+      const checkCol = direction === 'column'
+      const secDirect = (second as any).direction
+
+      if (checkRow && secDirect === 'column') {
+        updateElement('flex-overflow', true)
+        updateElement('flex-wrapped', false)
+      }
+
+      if (checkRow && secDirect === undefined) {
+        updateElement('flex-overflow', false)
+        updateElement('flex-wrapped', true)
+      }
+
+      if (checkRow && secDirect === 'row') {
+        updateElement('flex-overflow', false)
+        updateElement('flex-wrapped', true)
+      }
+
+      if (checkCol) {
+        updateElement('flex-overflow', true)
+        updateElement('flex-wrapped', false)
+      }
+    }
+  }, [])
+
+  useEffect(() => {
+    handleDivProportions(null)
+  }, [])
+
   return (
     <PipelineScreen>
       <StyledMosaic
         renderTile={renderPanels}
+        onRelease={handleDivProportions}
       />
     </PipelineScreen>
   )
