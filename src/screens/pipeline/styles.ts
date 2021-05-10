@@ -396,7 +396,9 @@ export const SoftwareListItem: typeof ListItem = styled(ListItem).attrs({
     color: #FFFFFF;
 
     .param-label {
-    align-items: center;
+      display: flex;
+      align-items: center;
+      column-gap: 2px;
     }
 
     .param-input {
@@ -416,7 +418,7 @@ export const MiniButton = styled(Button).attrs(({ ...props }) => ({
     max-height: 16px;
     max-width: 16px;
     padding: 2px;
-    margin-right: 5px;
+    margin-right: 0px;
     
     border-radius: 3px;
     background-color: #4f7cff;

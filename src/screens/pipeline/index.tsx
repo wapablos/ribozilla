@@ -206,26 +206,15 @@ function SoftwareCard({ data } : Partial<RibozillaNode>) {
     <SoftwareList>
       {data.params.map(({ label, signature, inputs, isRequired }, index) => (
         <SoftwareListItem key={`${index.toString()}${signature}`}>
-          <div className="param-label">
+          <div className="param-label" key={`${index.toString}${signature}-label`}>
             {checkIsRequired(isRequired)}
             {label}
           </div>
-          <div className="param-input">
+          <div className="param-input" key={`${index.toString}${signature}-input`}>
             {SoftwareInputType({ inputs })}
           </div>
         </SoftwareListItem>
       ))}
-      <SoftwareListItem key="random-x">
-        <div className="param-label">
-          Label
-        </div>
-        <div className="param-input">
-          <StyledParamInput type="text" value="~/.bashrc" disabled />
-          <MiniButton className="card-button" disabled>
-            <FiUpload />
-          </MiniButton>
-        </div>
-      </SoftwareListItem>
     </SoftwareList>
   )
   return (
