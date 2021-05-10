@@ -5,7 +5,7 @@ import { ParamsTypes, InputTypes, RequiredTypes } from '@ribozilla/extension-api
 export enum NodesActionTypes {
     ADD_NODE='@@nodes/ADD_NODE',
     DELETE_NODE='@@nodes/DELETE_NODE',
-    LOAD_NODES='@@nodes/LOAD_FAILURE'
+    LOAD_NODES='@@nodes/LOAD_NODES'
 }
 
 export interface NodesState {

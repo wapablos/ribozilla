@@ -13,7 +13,7 @@ const baseColorPallete = {
 export const RoutesScreen = styled.div`
   display: grid;
   box-sizing: border-box;
-  background-color: #989898;
+  background-color: #cccccc;
   width: 100%;
   max-height: calc(100% - ${baseFeatures.titlebarHeight + baseFeatures.statusbarHeight}px);
   margin-top: ${baseFeatures.titlebarHeight}px;

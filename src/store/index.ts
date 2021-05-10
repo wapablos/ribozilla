@@ -1,6 +1,7 @@
 import { combineReducers, createStore, Store, applyMiddleware } from 'redux'
 import { ExtensionsState, extensionsReducer, ExtensionsActionTypes, loadExtensions } from '@store/extensions'
 import { NodesState, nodesReducer } from '@store/nodes'
+import { ProjectState, projectsReducer } from '@store/projects'
 import { all, takeLatest } from 'redux-saga/effects'
 import createSagaMiddleware from 'redux-saga'
 /**
@@ -8,7 +9,8 @@ import createSagaMiddleware from 'redux-saga'
  */
 export interface ApplicationState {
   extensions: ExtensionsState,
-  nodes: NodesState
+  nodes: NodesState,
+  projects: ProjectState
 }
 
 /**
@@ -16,7 +18,8 @@ export interface ApplicationState {
  */
 const createRootReducer = combineReducers<ApplicationState>({
   extensions: extensionsReducer,
-  nodes: nodesReducer
+  nodes: nodesReducer,
+  projects: projectsReducer
 })
 
 /**
