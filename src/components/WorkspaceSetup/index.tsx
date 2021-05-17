@@ -19,14 +19,13 @@ export function WorkspaceButton({ label, icon, ...props }: IActionButton) {
 }
 
 export function SetupProjectCard() {
-  useEffect(() => {
-    const projectTitle = document.getElementById('project-title') as HTMLElement
-    projectTitle.focus()
-  }, [])
-
   return (
     <StyledCard className="project edit-project">
-      <div className="project-name" id="project-title" contentEditable> Project Name </div>
+      <div className="card-item-input">
+        Name
+        <input type="text" placeholder="Cancer DE" />
+      </div>
+
       <div className="card-item-input">
         Category
         <input type="text" placeholder="mRNA Alignment" />
@@ -40,7 +39,7 @@ export function SetupProjectCard() {
       <div className="card-item-input">
         Project Path
         <div className="item-wrapper">
-          <input type="text" placeholder="mRNA Alignment" className="side-button" />
+          <input type="text" placeholder="~/.ribozilla" className="side-button" />
           <ActionButton className="mini-button">
             <FiFolderPlus />
           </ActionButton>

@@ -198,10 +198,10 @@ export const StyledCard = styled(Paper).attrs(({ elevation, ...props }) => ({
       border: 1px solid transparent;
       outline: 0;
       padding: 0 5px;
-      max-width: 18ch;
+      /* max-width: 18ch; */
 
       &.side-button {
-        max-width: 15ch;
+        max-width: 14ch;
         border-right: 0;
         border-radius: 5px 0 0 5px;
       }

@@ -11,7 +11,7 @@ export default function Projects() {
 
   return (
     <WorkspaceWrapper>
-      {toggleCard ? <SetupProjectCard /> : <WorkspaceButton label="Add Project" icon={<FiPlus />} onClick={toggleProjectCard(true)} /> }
+      {toggleCard ? <SetupProjectCard /> : <WorkspaceButton label="New Project" icon={<FiPlus />} onClick={toggleProjectCard(true)} /> }
       <ProjectCard />
     </WorkspaceWrapper>
   )
