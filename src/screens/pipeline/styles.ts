@@ -215,14 +215,6 @@ export const StyledNode: typeof Paper = styled(Paper)`
         font-weight: 700;
 
       }
-
-      .close {
-        color: #FFFFFF;
-        
-        :hover {
-          color: #F4504D;
-        }
-      }
     }
 
     .node-command {
@@ -282,6 +274,10 @@ export const StyledNode: typeof Paper = styled(Paper)`
         border-left: 0;
         left: 0px;
         background: transparent;
+
+        &.has-connection {
+          background: #94e349;
+        }
       }
 
       &.io-output {
@@ -290,6 +286,11 @@ export const StyledNode: typeof Paper = styled(Paper)`
         border-right: 0;
         right: 0px;
         background: transparent;
+
+        &.has-connection {
+          background: #ff0072;
+        }
+
       }
     }
     
@@ -444,8 +445,20 @@ export const MiniButton = styled(Button).attrs(({ ...props }) => ({
     & .rot-icon {
       transform: rotate(90deg);
     }
-  }
+
+    &.label-button {
+        padding: 0;
+        background-color  : rgba(255,255,255, 0);
+        color: #FFFFFF;
+      
+      &.close:hover {
+          background-color  : rgba(255,255,255, 0.15);
+          color: tomato;
+        }
+      }
+    }
 `
+
 export const MiniSwitch = styled(Switch)`
   &.MuiSwitch-root {
     width: 28px;
@@ -493,7 +506,7 @@ export const StyledParamInput = styled.input.attrs(({ size }) => ({
   border-radius: 5px;
   background-color: #DDD;
   padding: 0 5px;
-  margin-left: 5px;
+  margin-left: 5px; 
 
   &::-webkit-outer-spin-button,
   &::-webkit-inner-spin-button {
@@ -521,4 +534,28 @@ export const StyledParamSelect = styled.select`
     border-radius: 5px;
 
     margin-left: 5px;
+`
+
+export const StyledSVG = styled.svg`
+  z-index: 0;
+  color: transparent;
+  fill: #b1b1b7;  
+  
+  circle, rect {
+    pointer-events: all;
+  }
+
+  &:active {
+    fill: #555;
+  }
+
+  &:hover {
+    circle, rect { 
+      fill: tomato; 
+      border-radius: 10px;
+    }
+
+    .icon { color: white;}
+    
+  }
 `

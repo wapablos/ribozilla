@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable array-callback-return */
 /* eslint-disable consistent-return */
 /* eslint-disable react/prop-types */
@@ -13,20 +14,48 @@ import { Divider, Collapse } from '@material-ui/core'
 import { VscChevronRight, VscChevronDown, VscChromeClose } from 'react-icons/vsc'
 import { BiLogInCircle } from 'react-icons/bi'
 import { IconBaseProps } from 'react-icons/lib'
-import ReactFlow, { Controls, Background, NodeTypesType, OnLoadParams, Handle, Position } from 'react-flow-renderer'
+import ReactFlow, { Controls, Background, NodeTypesType, OnLoadParams, Handle, Position, Edge, Connection, isNode, isEdge, getBezierPath, getMarkerEnd, EdgeProps, EdgeTypesType, getEdgeCenter } from 'react-flow-renderer'
 import { MosaicBranch, MosaicWindow, MosaicNode } from 'react-mosaic-component'
-import { uniqueId, random } from 'lodash'
-import { FiLock, FiUpload, FiEdit3, FiFolderPlus, FiFilePlus } from 'react-icons/fi'
+import * as lo from 'lodash'
+import { FiLock, FiEdit3, FiFolderPlus, FiFilePlus } from 'react-icons/fi'
 import { RiUser4Line, RiCheckboxBlankCircleLine, RiSubtractLine, RiCloseLine } from 'react-icons/ri'
 import { MosaicParent } from 'react-mosaic-component/lib/types'
-import { PipelineScreen, StyledList, StyledListItem, StyledListItemIcon, SurfaceDiv, ListContainer, StyledMosaic, StyledNode, TheDivider, CardsContainer, StyledCard, SoftwareList, SoftwareListItem, MiniSwitch, MiniButton, StyledParamInput, StyledParamSelect } from './styles'
+import { PipelineScreen, StyledList, StyledListItem, StyledListItemIcon, SurfaceDiv, ListContainer, StyledMosaic, StyledNode, TheDivider, CardsContainer, StyledCard, SoftwareList, SoftwareListItem, MiniSwitch, MiniButton, StyledParamInput, StyledParamSelect, StyledSVG } from './styles'
 import { getSoftwareListByCategory, EnumCategories, KeyofCategories, RibozillaNode } from './internals'
 
-function SoftwareNode({ data } : RibozillaNode) {
+function CustomEdge({ id, sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, style = {}, arrowHeadType, markerEndId }: EdgeProps) {
+  const dispatch = useDispatch()
+  const edgePath = getBezierPath({ sourceX, sourceY, sourcePosition, targetX, targetY, targetPosition })
+  const [centerX, centerY] = getEdgeCenter({ sourceX, sourceY, targetX, targetY })
+
+  const handleEdgeDelete = (id:string) => {
+    dispatch(nodesActions.deleteNode(id))
+  }
+
+  return (
+    <>
+      <path id={id} style={style} className="react-flow__edge-path" d={edgePath} />
+      <StyledSVG x={centerX - 4} y={centerY - 4} width={8} height={8} viewBox="0 0 8 8">
+        <circle cx="50%" cy="50%" r={4} onClick={() => handleEdgeDelete(id)} />
+        <VscChromeClose x="10%" y="10%" className="icon" size="0.4em" />
+      </StyledSVG>
+    </>
+  )
+}
+
+function SoftwareNode({ id, data } : RibozillaNode) {
+  const dispatch = useDispatch()
+
+  const handleNodeDelete = () => {
+    dispatch(nodesActions.deleteNode(id))
+  }
+
   const Label = () => (
     <div className="node-label">
       <div className="label">{data.software.toUpperCase()}</div>
-      <VscChromeClose className="icon close" size="1.1em" />
+      <MiniButton className="label-button close" onClick={handleNodeDelete}>
+        <VscChromeClose size="1.1em" />
+      </MiniButton>
     </div>
   )
 
@@ -53,12 +82,7 @@ function SoftwareNode({ data } : RibozillaNode) {
         {mainOut.map(({ label, signature }, index) => (
           <div className="node-socket socket-output" key={`${index.toString}${signature}`}>
             {label}
-            <Handle
-              id={signature}
-              className="socket-io io-output"
-              type="target"
-              position={Position.Right}
-            />
+            <Handle id={signature} className="socket-io io-output" type="source" position={Position.Right} />
           </div>
         ))}
       </>
@@ -78,16 +102,25 @@ const nodeTypes: NodeTypesType = {
   software: SoftwareNode
 }
 
+const edgeTypes: EdgeTypesType = {
+  custom: CustomEdge
+}
+
 function NodeSurface() {
+  const dispatch = useDispatch()
   const { nodes } = useSelector<ApplicationState, ApplicationState['nodes']>((state) => state.nodes)
 
   const handleOnLoad = (reactFlowInstance: OnLoadParams) => {
     reactFlowInstance.setTransform({ x: 0, y: 0, zoom: 0.9 })
   }
 
+  const onConnect = (connection: Edge | Connection) => {
+    dispatch(nodesActions.linkNodes({ ...connection, type: 'custom' }))
+  }
+
   return (
     <SurfaceDiv>
-      <ReactFlow elements={nodes} onLoad={handleOnLoad} nodeTypes={nodeTypes}>
+      <ReactFlow elements={nodes} onLoad={handleOnLoad} nodeTypes={nodeTypes} onConnect={onConnect} edgeTypes={edgeTypes}>
         <Controls />
         <Background color="black" gap={16} />
       </ReactFlow>
@@ -146,6 +179,7 @@ function SoftwareInputType({ inputs } : Partial<IParameter>) {
   return paramInput
 }
 
+// FIX: Icon change, function and scoket typoeß
 function switchRoles() {
   const readWriteIcons = {
     lock: <FiLock />,
@@ -164,9 +198,9 @@ function switchRoles() {
   const selectRwIcon = readWriteIcons[rwIcon]
   const selectSocketIcon = socketsIcons[socketIcon]
 
-  type B = <T>(routinesIconList: T, routine: keyof T, setRoutine: React.Dispatch<React.SetStateAction<keyof T>>) => void
+  type IconList = <T>(routinesIconList: T, routine: keyof T, setRoutine: React.Dispatch<React.SetStateAction<keyof T>>) => void
 
-  const toggleRoutines: B = (iconList, routine, setRoutine) => {
+  const toggleRoutines: IconList = (iconList, routine, setRoutine) => {
     const keys = Object.keys(iconList)
     const index = keys.indexOf(routine as string)
     const next = keys[index + 1] || keys[0]
@@ -196,15 +230,15 @@ function SoftwareCard({ data } : Partial<RibozillaNode>) {
   const Label = () => (
     <div className="node-label">
       <div className="label">
-        {data.software.toUpperCase()}
+        {data?.software.toUpperCase()}
       </div>
-      <div className="wrapper-chip">{data.command}</div>
+      <div className="wrapper-chip">{data?.command}</div>
     </div>
   )
 
   const Content = () => (
     <SoftwareList>
-      {data.params.map(({ label, signature, inputs, isRequired }, index) => (
+      {data?.params.map(({ label, signature, inputs, isRequired }, index) => (
         <SoftwareListItem key={`${index.toString()}${signature}`}>
           <div className="param-label" key={`${index.toString}${signature}-label`}>
             {checkIsRequired(isRequired)}
@@ -220,7 +254,7 @@ function SoftwareCard({ data } : Partial<RibozillaNode>) {
   return (
     <StyledCard>
       <Label />
-      {data.params && <Content />}
+      {data?.params && <Content />}
     </StyledCard>
   )
 }
@@ -229,6 +263,7 @@ function SoftwaresCardListContainer() {
   const containerRef = useRef<HTMLDivElement>()
 
   const { nodes } = useSelector<ApplicationState, ApplicationState['nodes']>((state) => state.nodes)
+  const nodesOnly = lo.filter(nodes, isNode)
 
   useEffect(() => {
     const { scrollWidth, scrollHeight } = containerRef.current
@@ -237,7 +272,7 @@ function SoftwaresCardListContainer() {
 
   return (
     <CardsContainer className="cards-container" ref={containerRef}>
-      {nodes.map(({ data }, index) => (<SoftwareCard data={data} key={`card-${index.toString()}`} />))}
+      {nodesOnly.map(({ data }, index) => (<SoftwareCard data={data} key={`card-${index.toString()}`} />))}
     </CardsContainer>
   )
 }
@@ -270,9 +305,9 @@ function SoftwareCategoryList(categKey: KeyofCategories, softwareList: EnumCateg
   const addNode = useCallback(
     (software: string, command: string, params: IParameter[]) => {
       const node = new RibozillaNode({
-        id: uniqueId('node-'),
+        id: lo.uniqueId('node-'),
         type: 'software',
-        position: { x: random(0, 250), y: random(50, 100) },
+        position: { x: lo.random(0, 250), y: lo.random(50, 100) },
         data: {
           software, command, params
         }
@@ -365,7 +400,6 @@ export default function Pipeline() {
 
     const sum = clientWidth - clientHeight
     const checkProportion = sum > 1
-    console.log()
 
     const updateElement = (classname: string, toggle: boolean) => {
       classList.toggle(classname, toggle)

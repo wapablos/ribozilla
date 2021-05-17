@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { FiSave, FiLock, FiPlay, FiTrash2, FiEdit3, FiFolderPlus, FiX, FiCopy, FiEye, FiKey, FiLoader, FiToggleLeft } from 'react-icons/fi'
+import { FiSave, FiPlay, FiTrash2, FiFolderPlus, FiX, FiCopy } from 'react-icons/fi'
 import { ButtonBaseProps } from '@material-ui/core'
 import { StyledCard, ActionButton } from './styles'
 import { toggleProjectCard } from './internals'
@@ -79,7 +79,7 @@ export function ProjectCard() {
       <div className="card-item-input flex-column">
         Preview
         <div className="item-wrapper img-area">
-          <img src="public/template-dna.jpg" alt="template" />
+          <img src="public/template-dna.png" alt="template" />
         </div>
       </div>
 
