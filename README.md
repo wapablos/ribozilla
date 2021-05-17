@@ -6,7 +6,7 @@
 * [Pre-requisites](#pre-requisites)
 * [Platforms](#platforms)
 * [Get the source code](#get-the-source-code)
-* [Buidling](#building)
+* [Building](#building)
   * [Windows details](#windows-details)
   * [macOS details](#macos-details)
   * [Linux details](#linux-details)
@@ -14,13 +14,15 @@
 
 ## Introduction
 
-**Ribozilla** is a GUI-based flexible architecture for RNA-Seq analysis
+**Ribozilla** is a GUI-based flexible architecture to develop RNA-Seq pipelines and setup analysis.
+
+Ribozilla has own **Extensions API**, that takes CLI software parameters to be used in GUI to be setup and generates the scripts to run  based on inputs. It works in Mac, Linux and Windows.
 
 ## Platforms
 You should be able to build Ribozilla on the following platforms:
 
 * Windows 10
-* macOS 10.15.3 Mojave
+* macOS Sierra and later
 * Linux
 
 ## Pre-requisites
@@ -37,9 +39,17 @@ You should be able to build Ribozilla on the following platforms:
     git clone https://github.com/wapablos/ribozilla.git
 
 ## Building
-First install local packages with Yarn
+Build software base and extensions API
 ```
 $ cd ribozilla
-$ yarn install-dev
+$ yarn install && yarn install-dev
 ```
+Then, build the extensions
+```
+$ cd extensions
+$ yarn install && yarn build
+```
+
 ## Development
+
+You can use any CLI software inside Ribozilla, using the `ribozilla-extension-api` to create it.
