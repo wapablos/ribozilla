@@ -1,32 +1,30 @@
+/** @type {import('@docusaurus/types').DocusaurusConfig} */
 module.exports = {
   title: 'Ribozilla',
-  tagline: 'Do the transcription',
+  tagline: 'Playing with genetics',
   url: 'https://your-docusaurus-test-site.com',
   baseUrl: '/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
-  organizationName: 'wapablos', // Usually your GitHub org/user name.
-  projectName: 'ribozilla', // Usually your repo name.
+  organizationName: 'facebook', // Usually your GitHub org/user name.
+  projectName: 'docusaurus', // Usually your repo name.
   themeConfig: {
     navbar: {
       title: 'Ribozilla',
       logo: {
-        alt: 'My Site Logo',
-        src: 'img/ribozilla-fav.svg'
+        alt: 'Ribozilla Logo',
+        src: 'img/logo.svg'
       },
       items: [
         {
-          to: 'docs/',
-          activeBasePath: 'docs',
-          label: 'Docs',
-          position: 'left'
+          type: 'doc',
+          docId: 'intro',
+          position: 'left',
+          label: 'Tutorial'
         },
-        { to: 'learn', label: 'Learn', position: 'left' },
-        { to: 'blog', label: 'Blog', position: 'left' },
-        {
-          to: 'showcase', label: 'Showcase', position: 'left'
-        },
+        { to: '/blog', label: 'Blog', position: 'left' },
+        { to: '/ux-research', label: 'UX Research', position: 'left' },
         {
           href: 'https://github.com/wapablos/ribozilla',
           label: 'GitHub',
@@ -41,12 +39,8 @@ module.exports = {
           title: 'Docs',
           items: [
             {
-              label: 'Style Guide',
-              to: 'docs/'
-            },
-            {
-              label: 'Second Doc',
-              to: 'docs/doc2/'
+              label: 'Tutorial',
+              to: '/docs/intro'
             }
           ]
         },
@@ -54,16 +48,8 @@ module.exports = {
           title: 'Community',
           items: [
             {
-              label: 'Stack Overflow',
-              href: 'https://stackoverflow.com/questions/tagged/docusaurus'
-            },
-            {
-              label: 'Discord',
-              href: 'https://discordapp.com/invite/docusaurus'
-            },
-            {
               label: 'Twitter',
-              href: 'https://twitter.com/docusaurus'
+              href: 'https://twitter.com/ribozilla'
             }
           ]
         },
@@ -72,16 +58,16 @@ module.exports = {
           items: [
             {
               label: 'Blog',
-              to: 'blog'
+              to: '/blog'
             },
             {
               label: 'GitHub',
-              href: 'https://github.com/facebook/docusaurus'
+              href: 'https://github.com/wapablos/ribozilla'
             }
           ]
         }
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`
+      copyright: `Copyright © ${new Date().getFullYear()} Tunguska Cyberpunk, Inc. Built with Docusaurus.`
     }
   },
   presets: [
@@ -89,7 +75,6 @@ module.exports = {
       '@docusaurus/preset-classic',
       {
         docs: {
-          path: 'guides',
           sidebarPath: require.resolve('./sidebars.js'),
           // Please change this to your repo.
           editUrl:
@@ -104,18 +89,6 @@ module.exports = {
         theme: {
           customCss: require.resolve('./src/css/custom.css')
         }
-      }
-    ]
-  ],
-  plugins: [
-    [
-      '@docusaurus/plugin-content-docs',
-      {
-        id: 'showcase',
-        path: 'showcase',
-        routeBasePath: 'showcase',
-        include: ['**/*.md', '**/*.mdx'],
-        sidebarPath: require.resolve('./showcaseSidebars.js')
       }
     ]
   ]
