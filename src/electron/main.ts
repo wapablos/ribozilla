@@ -14,7 +14,9 @@ const file = {
 
 function createWindow() {
   const win = new BrowserWindow({
-    minWidth: 1280,
+    minWidth: 1024,
+    width: 1024,
+    height: 640,
     minHeight: 640,
     frame: !(isMac && !isDevelopment),
     maximizable: true,

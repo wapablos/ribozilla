@@ -10,7 +10,7 @@ export const MenubarStyles = createGlobalStyle`
         border: 1px solid #8D8D92;
         border-top-width: 0;
         box-shadow: 0 2px 3px rgba(0, 0, 0, 0.3);
-        
+        z-index: 10;
         [data-ctx-item] {
             font-family: Helvetica;
         }
@@ -30,16 +30,6 @@ export const MenubarStyles = createGlobalStyle`
     }
 `
 
-const rotate = keyframes`
-  from {
-    background-position: 0%;
-  }
-
-  to {
-    background-position: 400%;
-  }
-`
-
 export const MenuBarContainer = styled.div`
     display: flex;
     align-items: center;
@@ -53,14 +43,6 @@ export const MenuBarContainer = styled.div`
         font-weight: 600;
         text-align: center;
         color: #FFFFFF;
-
-        :hover {
-            background: linear-gradient(135deg, #bcc6cc, #eee, #bcc6cc);
-            background-size: 400%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: ${rotate} 2s linear infinite;
-        }
     }
     
     .project-title {
@@ -73,6 +55,7 @@ export const WindowControlsContainer = styled.div`
     display: flex;
     right: 0;
     margin-left: 10%;
+    -webkit-app-region: no-drag;
 `
 
 export const StyledIconButton: typeof IconButton = styled(IconButton).attrs({
