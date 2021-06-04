@@ -220,7 +220,7 @@ function SoftwareCard({ data } : Partial<RibozillaNode>) {
     if (isRequired === RequiredTypes.MAIN_IN || isRequired === RequiredTypes.MAIN_OUT) {
       return (
         <>
-          <MiniButton onClick={toggleIconsSocket}>{selectSocketIcon}</MiniButton>
+          {/* <MiniButton onClick={toggleIconsSocket}>{selectSocketIcon}</MiniButton> */}
           <MiniButton onClick={toggleIconsRw}>{selectRwIcon}</MiniButton>
         </>
       )

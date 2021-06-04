@@ -452,8 +452,8 @@ export const MiniButton = styled(Button).attrs(({ ...props }) => ({
         color: #FFFFFF;
       
       &.close:hover {
-          background-color  : rgba(255,255,255, 0.15);
-          color: tomato;
+          background-color  : rgba(255,255,255, 0.25);
+          /* color: tomato; */
         }
       }
     }

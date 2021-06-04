@@ -1,5 +1,5 @@
 import { createGlobalStyle } from 'styled-components'
-import { isMac } from './environment'
+import { isMac, isDevelopment } from './environment'
 
 export const GlobalStyle = createGlobalStyle`
   * {
@@ -11,6 +11,6 @@ export const GlobalStyle = createGlobalStyle`
 
 export const baseFeatures = {
   drawerWidth: 48,
-  titlebarHeight: !isMac ? 0 : 22,
+  titlebarHeight: isMac && !isDevelopment ? 0 : 22,
   statusbarHeight: 22
 }

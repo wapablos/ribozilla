@@ -109,7 +109,7 @@ export const StyledCard = styled(Paper).attrs(({ elevation, ...props }) => ({
     row-gap: 12px;
     min-width: 250px;
     max-width: 250px;
-    min-height: 250px;
+    min-height: 200px;
     padding-top: 10px;
 
     background: linear-gradient(to bottom, #4a4a4a 5%, #2f2f2f);
@@ -121,7 +121,6 @@ export const StyledCard = styled(Paper).attrs(({ elevation, ...props }) => ({
 
     &.project {
       color: #FFFFFF;
-
       .project-name {
         display: flex;
         align-items: center;
@@ -141,7 +140,7 @@ export const StyledCard = styled(Paper).attrs(({ elevation, ...props }) => ({
     }
 
     &.edit-project {
-      height: 270px;
+      height: 220px;
     }
 
     .card-item-input {

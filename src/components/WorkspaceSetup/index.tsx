@@ -1,8 +1,10 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FiSave, FiPlay, FiTrash2, FiFolderPlus, FiX, FiCopy } from 'react-icons/fi'
 import { ButtonBaseProps } from '@material-ui/core'
+import { FileBrowserEvents, ReadWriteEvents } from '@constants/events'
+import { IProjectMeta, IReadWrite } from '@constants/interfaces'
 import { StyledCard, ActionButton } from './styles'
-import { toggleProjectCard } from './internals'
+import { toggleProjectCard, handleState } from './internals'
 
 interface IActionButton extends Partial<ButtonBaseProps> {
   label: string
@@ -19,35 +21,48 @@ export function WorkspaceButton({ label, icon, ...props }: IActionButton) {
 }
 
 export function SetupProjectCard() {
+  const [projectMeta, setProjectMeta] = useState<IProjectMeta>({ id: '', name: '', description: '', path: '' })
+
+  const handleProjectPath = async () => {
+    const res = await window.electron.ipcRenderer.invoke(FileBrowserEvents.CHOOSE_DIR).then((res) => res)
+    if (res !== undefined) setProjectMeta({ ...projectMeta, path: res })
+  }
+
+  const handleProjectMeta = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    handleState(e, projectMeta, setProjectMeta)
+  }
+
+  const saveProjectMeta = () => {
+    window.electron.ipcRenderer.invoke(ReadWriteEvents.WRITE_FILE, projectMeta).then(({ status, message }: IReadWrite) => {
+      console.log(status)
+    })
+  }
+
+  console.log(projectMeta)
   return (
     <StyledCard className="project edit-project">
       <div className="card-item-input">
         Name
-        <input type="text" placeholder="Cancer DE" />
-      </div>
-
-      <div className="card-item-input">
-        Category
-        <input type="text" placeholder="mRNA Alignment" />
+        <input required id="name" type="text" placeholder="Cancer DE" value={projectMeta.name} onChange={handleProjectMeta} />
       </div>
 
       <div className="card-item-input flex-column">
         Description
-        <textarea placeholder="This project aims..." />
+        <textarea id="description" placeholder="This project aims..." value={projectMeta.description} onChange={handleProjectMeta} />
       </div>
 
       <div className="card-item-input">
         Project Path
         <div className="item-wrapper">
-          <input type="text" placeholder="~/.ribozilla" className="side-button" />
-          <ActionButton className="mini-button">
+          <input id="path" type="text" placeholder="~/.ribozilla" className="side-button" value={projectMeta.path} onChange={handleProjectMeta} />
+          <ActionButton className="mini-button" onClick={handleProjectPath}>
             <FiFolderPlus />
           </ActionButton>
         </div>
       </div>
 
       <div className="item-wrapper button-group">
-        <ActionButton className="card-button misc">
+        <ActionButton className="card-button misc" onClick={saveProjectMeta}>
           <FiSave size="1.3em" />
           <div className="side-label">Save</div>
         </ActionButton>
@@ -65,10 +80,6 @@ export function ProjectCard() {
   return (
     <StyledCard className="project">
       <div className="project-name"> Project Name </div>
-      <div className="card-item-input">
-        Category
-        <input type="text" value="mRNA Alignment" disabled />
-      </div>
 
       <div className="card-item-input flex-column">
         Description

@@ -3,7 +3,7 @@ import { homedir } from 'os'
 import { resolve, basename } from 'path'
 import * as jetpack from 'fs-jetpack'
 import { RibozillaExtensionValidator } from '@ribozilla/extension-api'
-import { PipelineEvents } from '@constants/events'
+import { PipelineEvents, FileBrowserEvents } from '@constants/events'
 
 const homePath = homedir()
 const appPath = resolve(homePath, '.ribozilla')
@@ -17,10 +17,6 @@ function createAppPath(folderExists: boolean) {
     .cwd(homePath)
     .dir(appPath)
     .dir(extensionsPath)
-}
-
-function defaultConfig() {
-  jetpack.cwd(appPath)
 }
 
 export async function loadExtensions() {
@@ -38,4 +34,3 @@ export async function loadExtensions() {
   console.log(extensions)
   ipcMain.handle(PipelineEvents.GET_EXTENSIONS, async () => extensions)
 }
-// TODO: carregar uma vez e salvar no state

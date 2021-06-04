@@ -2,9 +2,10 @@ import React from 'react'
 import { ThemeProvider } from '@material-ui/core'
 import { GiTestTubes, GiToolbox } from 'react-icons/gi'
 import { SiNodeRed, SiGnubash } from 'react-icons/si'
+import { BsLayoutWtf, BsGridFill } from 'react-icons/bs'
 import { GoMortarBoard, GoGear } from 'react-icons/go'
 import { BaseTheme } from '@constants/themes'
-import { isDevelopment } from '@constants/environment'
+import { isDevelopment, isMac } from '@constants/environment'
 import { GlobalStyle } from '@constants/styles'
 import Sidebar, { Routes, ISidebar } from '@components/Sidebar'
 import Titlebar from '@components/Titlebar'
@@ -15,7 +16,7 @@ import { toggleDevTools } from './internals'
 
 const main: ISidebar['tasks'] = [
   // { id: 'hosts', title: 'Hosts', href: '', icon: CgArrowsExchange },
-  { id: 'projects', title: 'Projects', href: '/projects', icon: GiTestTubes, component: Projects },
+  { id: 'projects', title: 'Projects', href: '/projects', icon: BsGridFill, component: Projects },
   { id: 'pipelines', title: 'Pipelines', href: '/pipelines', icon: SiNodeRed, component: Pipeline },
   { id: 'analysis', title: 'Toolbox', href: '/analysis', icon: GiToolbox }
 ]
@@ -37,7 +38,7 @@ export default function Workspace() {
     <ThemeProvider theme={BaseTheme}>
       <GlobalStyle />
       <WorkspaceLayout>
-        <Titlebar />
+        {isMac && isDevelopment ? <Titlebar /> : <></>}
         <Sidebar main={main} extras={extras} />
         <Routes main={main} extras={extras} />
       </WorkspaceLayout>
