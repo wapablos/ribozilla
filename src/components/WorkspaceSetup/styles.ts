@@ -2,12 +2,12 @@ import styled from 'styled-components'
 import { Paper, Button } from '@material-ui/core'
 
 export const WorkspaceWrapper = styled.div`
-
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
 
-  max-height: 350px;
+  max-height: 100%;
+  overflow-y: auto;
   padding: 5px;
 `
 export const ActionButton = styled(Button).attrs({

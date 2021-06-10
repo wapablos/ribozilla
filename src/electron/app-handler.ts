@@ -1,9 +1,11 @@
 /* eslint-disable class-methods-use-this */
 /* eslint-disable no-console */
 import { App, BrowserWindow, ipcMain, dialog } from 'electron'
-import { AppEvents, WindowControlsEvents, FileBrowserEvents, ReadWriteEvents } from '@constants/events'
+import { AppEvents, WindowControlsEvents, FileBrowserEvents, ReadWriteEvents, ProjectsEvents } from '@constants/events'
 import { IProjectMeta, IReadWrite } from '@constants/interfaces'
 import jetpack from 'fs-jetpack'
+import Store from 'electron-store'
+import { appPath, RecentsSchema, recentsBasename } from './storage'
 
 /**
  * Development variables
@@ -18,12 +20,13 @@ export const isLinux = process.platform === 'linux'
  */
 export default class AppHandler {
     private app: App
-
     private win: BrowserWindow
+    private recents: Store<RecentsSchema>
 
     constructor(app: App, win: BrowserWindow) {
       this.app = app
       this.win = win
+      this.recents = new Store({ name: recentsBasename, cwd: appPath })
     }
 
     public appQuit() {
@@ -61,7 +64,8 @@ export default class AppHandler {
     }
 
     public saveProjectMeta() {
-      ipcMain.handle(ReadWriteEvents.WRITE_FILE, async (event, { name, description, path }: IProjectMeta) => {
+      ipcMain.handle(ReadWriteEvents.WRITE_FILE, async (event, req: IProjectMeta) => {
+        const { name, path, description } = req
         const uname = name === (undefined || '')
         const upath = path === (undefined || '')
         const checkExistingProjectFolder = jetpack.exists(jetpack.path(path, name))
@@ -88,6 +92,36 @@ export default class AppHandler {
 
         if (uname || upath) return undefMetaError
         if (checkExistingProjectFolder) return existFolderError
+
+        if (!checkExistingProjectFolder) {
+          const createFile = jetpack.cwd(path).dir(name).file(`${name}.ribozilla`, { content: { id: '1', name, description, path } })
+
+          if (createFile.exists(`${name}.ribozilla`) === 'file') {
+            this.addRecentProjects(req)
+            return writeProjSuccess
+          }
+
+          return writeProjError
+        }
+      })
+    }
+
+    public addRecentProjects(project: IProjectMeta) {
+      const recentProjects = this.getRecentProjects()
+      this.recents.set('recents', [...recentProjects, project])
+      console.log(this.getRecentProjects)
+    }
+
+    public getRecentProjects() {
+      const projects = this.recents.get(recentsBasename)
+      console.log(`Projects: \n ${JSON.stringify(projects)}`)
+      return projects
+    }
+
+    public loadRecentProjects() {
+      ipcMain.handle(ProjectsEvents.GET_RECENTS, () => {
+        console.log('YEs')
+        return this.getRecentProjects()
       })
     }
 
@@ -97,5 +131,6 @@ export default class AppHandler {
       this.windowControls()
       this.chooseDir()
       this.saveProjectMeta()
+      this.loadRecentProjects()
     }
 }

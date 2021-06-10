@@ -22,3 +22,9 @@ export enum ReadWriteEvents {
   WRITE_FILE='@@RW/WRITE_FILE',
   WRITE_FILE_ERROR='@@RW/WRITE_FILE_ERROR'
 }
+
+export enum ProjectsEvents {
+  GET_RECENTS='@@PROJ/GET_RECENTS',
+  RES_RECENTS='@@PROJ/RES_RECENTS',
+  UPDATE='@@PROJ/UPDATE'
+}

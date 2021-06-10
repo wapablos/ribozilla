@@ -4,19 +4,33 @@ import { resolve, basename } from 'path'
 import * as jetpack from 'fs-jetpack'
 import { RibozillaExtensionValidator } from '@ribozilla/extension-api'
 import { PipelineEvents, FileBrowserEvents } from '@constants/events'
+import Store from 'electron-store'
+import { IProjectMeta } from '@constants/interfaces'
 
-const homePath = homedir()
-const appPath = resolve(homePath, '.ribozilla')
-const extensionsPath = resolve(appPath, 'extensions')
-const recentProjects = resolve(appPath, 'recents.json')
-const appConfig = resolve(appPath, 'config.json')
-const folderExists = jetpack.exists(jetpack.path(appPath)) && jetpack.exists(jetpack.path(extensionsPath))
+export interface RecentsSchema {
+  recents: IProjectMeta[]
+}
 
-function createAppPath(folderExists: boolean) {
-  jetpack
-    .cwd(homePath)
-    .dir(appPath)
-    .dir(extensionsPath)
+export const homePath = homedir()
+export const appPath = resolve(homePath, '.ribozilla')
+export const extensionsPath = resolve(appPath, 'extensions')
+export const recentsBasename = 'recents'
+export const recentProjects = resolve(appPath, `${recentsBasename}.json`)
+export const appConfig = resolve(appPath, 'config.json')
+
+export function checkAppConfigFiles() {
+  if (!jetpack.exists(appPath) && !jetpack.exists(extensionsPath)) {
+    jetpack.cwd(homePath).dir(appPath).dir(extensionsPath)
+  }
+
+  if (!jetpack.exists(recentProjects)) {
+    const recents = new Store<RecentsSchema>({
+      cwd: appPath,
+      name: recentsBasename,
+      fileExtension: 'json',
+      defaults: { recents: [] }
+    })
+  }
 }
 
 export async function loadExtensions() {

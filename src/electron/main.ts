@@ -2,7 +2,7 @@
 import { app, BrowserWindow, Menu } from 'electron'
 import * as path from 'path'
 import AppHandler, { isDevelopment, isMac } from './app-handler'
-import { loadExtensions } from './storage'
+import { loadExtensions, checkAppConfigFiles } from './storage'
 // import appMenu from './menu'
 
 const outputFolder = (file: string) => path.join(app.getAppPath(), isDevelopment ? '' : 'dist', file)
@@ -53,6 +53,7 @@ function createWindow() {
 app.allowRendererProcessReuse = true
 
 app.on('ready', async () => {
+  checkAppConfigFiles()
   loadExtensions()
   createWindow()
 })

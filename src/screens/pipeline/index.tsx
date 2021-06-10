@@ -345,6 +345,7 @@ function SoftwaresListContainer() {
   const { extensions } = useSelector<ApplicationState, ApplicationState['extensions']>((state) => state.extensions)
 
   useEffect(() => {
+    console.log('Reload Effect')
     dispatch(extensionsActions.loadRequest())
   }, [])
 
