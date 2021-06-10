@@ -3,6 +3,7 @@ import { FiSave, FiPlay, FiTrash2, FiFolderPlus, FiX, FiCopy } from 'react-icons
 import { ButtonBaseProps } from '@material-ui/core'
 import { FileBrowserEvents, ReadWriteEvents } from '@constants/events'
 import { IProjectMeta, IReadWrite } from '@constants/interfaces'
+import { useSnackbar } from 'notistack'
 import { StyledCard, ActionButton } from './styles'
 import { toggleProjectCard, handleState } from './internals'
 
@@ -22,6 +23,7 @@ export function WorkspaceButton({ label, icon, ...props }: IActionButton) {
 
 export function SetupProjectCard() {
   const [projectMeta, setProjectMeta] = useState<IProjectMeta>({ id: '', name: '', description: '', path: '' })
+  const { enqueueSnackbar } = useSnackbar()
 
   const handleProjectPath = async () => {
     const res = await window.electron.ipcRenderer.invoke(FileBrowserEvents.CHOOSE_DIR).then((res) => res)
@@ -34,6 +36,7 @@ export function SetupProjectCard() {
 
   const saveProjectMeta = () => {
     window.electron.ipcRenderer.invoke(ReadWriteEvents.WRITE_FILE, projectMeta).then(({ status, message }: IReadWrite) => {
+      enqueueSnackbar(message, { variant: status, style: { whiteSpace: 'pre-line' } })
       console.log(status)
     })
   }
@@ -76,14 +79,14 @@ export function SetupProjectCard() {
   )
 }
 
-export function ProjectCard() {
+export function ProjectCard({ name, description } : Partial<IProjectMeta>) {
   return (
     <StyledCard className="project">
-      <div className="project-name"> Project Name </div>
+      <div className="project-name">{name}</div>
 
       <div className="card-item-input flex-column">
         Description
-        <textarea value="This project aims..." disabled />
+        <textarea value={description} disabled />
       </div>
 
       <div className="card-item-input flex-column">
@@ -99,10 +102,10 @@ export function ProjectCard() {
           <div className="side-label">Start</div>
         </ActionButton>
 
-        <ActionButton className="card-button misc">
+        {/* <ActionButton className="card-button misc">
           <FiCopy size="1.3em" />
           <div className="side-label">Copy</div>
-        </ActionButton>
+        </ActionButton> */}
 
         <ActionButton className="card-button cancel">
           <FiTrash2 size="1.3em" />
