@@ -6,7 +6,7 @@ export const WorkspaceWrapper = styled.div`
   flex-wrap: wrap;
   gap: 10px;
 
-  max-height: 100%;
+  max-height: 350px;
   overflow-y: auto;
   padding: 5px;
 `

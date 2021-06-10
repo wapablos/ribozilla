@@ -7,11 +7,8 @@
 * [Platforms](#platforms)
 * [Get the source code](#get-the-source-code)
 * [Building](#building)
-  * [Windows details](#windows-details)
-  * [macOS details](#macos-details)
-  * [Linux details](#linux-details)
 * [Development](#development)
-
+* [Screenshots](#screenshots)
 ## Introduction
 
 **Ribozilla** is a GUI-based flexible architecture to develop RNA-Seq pipelines and setup analysis.
@@ -53,3 +50,10 @@ $ yarn install && yarn build
 ## Development
 
 You can use any CLI software inside Ribozilla, using the `ribozilla-extension-api` to create it.
+
+## Screenshots
+  Projects Management      |  Pipelines Development 
+:-------------------------:|:-------------------------:
+ ![](screenshots/recent-projects-screen.png)|  ![](screenshots/pipelines-screen.png)
+
+
