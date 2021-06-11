@@ -6,7 +6,7 @@ export const WorkspaceWrapper = styled.div`
   flex-wrap: wrap;
   gap: 10px;
 
-  max-height: 350px;
+  max-height: 100%;
   overflow-y: auto;
   padding: 5px;
 `
@@ -110,6 +110,7 @@ export const StyledCard = styled(Paper).attrs(({ elevation, ...props }) => ({
     min-width: 250px;
     max-width: 250px;
     min-height: 200px;
+    max-height: 320px;
     padding-top: 10px;
 
     background: linear-gradient(to bottom, #4a4a4a 5%, #2f2f2f);

@@ -1,6 +1,6 @@
 /* eslint-disable class-methods-use-this */
 /* eslint-disable no-console */
-import { App, BrowserWindow, ipcMain, dialog } from 'electron'
+import { App, BrowserWindow, ipcMain, dialog, ipcRenderer } from 'electron'
 import { AppEvents, WindowControlsEvents, FileBrowserEvents, ReadWriteEvents, ProjectsEvents } from '@constants/events'
 import { IProjectMeta, IReadWrite } from '@constants/interfaces'
 import jetpack from 'fs-jetpack'
@@ -26,7 +26,7 @@ export default class AppHandler {
     constructor(app: App, win: BrowserWindow) {
       this.app = app
       this.win = win
-      this.recents = new Store({ name: recentsBasename, cwd: appPath })
+      this.recents = new Store({ name: recentsBasename, cwd: appPath, watch: true })
     }
 
     public appQuit() {
@@ -65,7 +65,7 @@ export default class AppHandler {
 
     public saveProjectMeta() {
       ipcMain.handle(ReadWriteEvents.WRITE_FILE, async (event, req: IProjectMeta) => {
-        const { name, path, description } = req
+        const { id, name, path, description } = req
         const uname = name === (undefined || '')
         const upath = path === (undefined || '')
         const checkExistingProjectFolder = jetpack.exists(jetpack.path(path, name))
@@ -94,7 +94,7 @@ export default class AppHandler {
         if (checkExistingProjectFolder) return existFolderError
 
         if (!checkExistingProjectFolder) {
-          const createFile = jetpack.cwd(path).dir(name).file(`${name}.ribozilla`, { content: { id: '1', name, description, path } })
+          const createFile = jetpack.cwd(path).dir(name).file(`${name}.ribozilla`, { content: { id, name, description, path } })
 
           if (createFile.exists(`${name}.ribozilla`) === 'file') {
             this.addRecentProjects(req)
@@ -109,19 +109,32 @@ export default class AppHandler {
     public addRecentProjects(project: IProjectMeta) {
       const recentProjects = this.getRecentProjects()
       this.recents.set('recents', [...recentProjects, project])
-      console.log(this.getRecentProjects)
     }
 
     public getRecentProjects() {
       const projects = this.recents.get(recentsBasename)
-      console.log(`Projects: \n ${JSON.stringify(projects)}`)
       return projects
     }
 
     public loadRecentProjects() {
-      ipcMain.handle(ProjectsEvents.GET_RECENTS, () => {
-        console.log('YEs')
-        return this.getRecentProjects()
+      ipcMain.handle(ProjectsEvents.GET_RECENTS, () => this.getRecentProjects())
+    }
+
+    public updateRecentProjects() {
+      console.log('----Will update-----')
+
+      this.recents.onDidChange(recentsBasename, () => {
+        console.log('Update')
+        this.win.webContents.send(ProjectsEvents.UPDATE, 0)
+      })
+    }
+
+    public deleteRecentProjects() {
+      ipcMain.handle(ProjectsEvents.DELETE_RECENT, (event, id) => {
+        console.log('Qaui:', id)
+        const projects = this.getRecentProjects()
+        this.recents.set('recents', projects.filter((value) => value.id !== id))
+        return id
       })
     }
 
@@ -132,5 +145,7 @@ export default class AppHandler {
       this.chooseDir()
       this.saveProjectMeta()
       this.loadRecentProjects()
+      this.updateRecentProjects()
+      this.deleteRecentProjects()
     }
 }

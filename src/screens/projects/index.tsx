@@ -7,20 +7,26 @@ import { ApplicationState } from '@store/.'
 import { toggleProjectCard } from '@components/WorkspaceSetup/internals'
 import { SnackbarProvider } from 'notistack'
 import { projectActions } from '@store/projects'
+import { ProjectsEvents } from '@constants/events'
 
 export default function Projects() {
   const dispatch = useDispatch()
   const { toggleCard, recentProjects } = useSelector<ApplicationState, ApplicationState['projects']>((state) => state.projects)
+  const [update, setUpdate] = useState(false)
 
   useEffect(() => {
+    window.electron.ipcRenderer.once(ProjectsEvents.UPDATE, (e, res) => {
+      setUpdate(!update)
+    })
     dispatch(projectActions.loadProjects())
-  }, [])
+    dispatch(projectActions.createNewProject(false))
+  }, [update])
 
   return (
     <SnackbarProvider maxSnack={1} autoHideDuration={2200} anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}>
       <WorkspaceWrapper>
         {toggleCard ? <SetupProjectCard /> : <WorkspaceButton label="New Project" icon={<FiPlus />} onClick={toggleProjectCard(true)} /> }
-        {recentProjects.map(({ name, description }) => <ProjectCard name={name} description={description} />)}
+        {recentProjects.map(({ id, name, description }) => <ProjectCard id={id} name={name} description={description} />)}
       </WorkspaceWrapper>
     </SnackbarProvider>
   )

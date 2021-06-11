@@ -11,6 +11,7 @@ export interface RecentsSchema {
   recents: IProjectMeta[]
 }
 
+// TODO: Add json validator to the software files
 export const homePath = homedir()
 export const appPath = resolve(homePath, '.ribozilla')
 export const extensionsPath = resolve(appPath, 'extensions')

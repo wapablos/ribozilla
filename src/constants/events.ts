@@ -26,5 +26,6 @@ export enum ReadWriteEvents {
 export enum ProjectsEvents {
   GET_RECENTS='@@PROJ/GET_RECENTS',
   RES_RECENTS='@@PROJ/RES_RECENTS',
-  UPDATE='@@PROJ/UPDATE'
+  UPDATE='@@PROJ/UPDATE',
+  DELETE_RECENT='@@PROJ/DELETE_RECENT'
 }

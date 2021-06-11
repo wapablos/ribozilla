@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { FiSave, FiPlay, FiTrash2, FiFolderPlus, FiX, FiCopy } from 'react-icons/fi'
 import { ButtonBaseProps } from '@material-ui/core'
-import { FileBrowserEvents, ReadWriteEvents } from '@constants/events'
+import { FileBrowserEvents, ReadWriteEvents, ProjectsEvents } from '@constants/events'
 import { IProjectMeta, IReadWrite } from '@constants/interfaces'
 import { useSnackbar } from 'notistack'
 import { StyledCard, ActionButton } from './styles'
@@ -22,7 +22,7 @@ export function WorkspaceButton({ label, icon, ...props }: IActionButton) {
 }
 
 export function SetupProjectCard() {
-  const [projectMeta, setProjectMeta] = useState<IProjectMeta>({ id: '', name: '', description: '', path: '' })
+  const [projectMeta, setProjectMeta] = useState<IProjectMeta>({ id: `_${Math.random().toString(36).substr(2, 9)}`, name: '', description: '', path: '' })
   const { enqueueSnackbar } = useSnackbar()
 
   const handleProjectPath = async () => {
@@ -79,7 +79,14 @@ export function SetupProjectCard() {
   )
 }
 
-export function ProjectCard({ name, description } : Partial<IProjectMeta>) {
+export function ProjectCard({ id, name, description } : Partial<IProjectMeta>) {
+  const deleteProjectMeta = () => {
+    window.electron.ipcRenderer.invoke(ProjectsEvents.DELETE_RECENT, id).then((res) => {
+      console.log('Deleted: ', res)
+    })
+  }
+
+  console.log('Id:', id)
   return (
     <StyledCard className="project">
       <div className="project-name">{name}</div>
@@ -107,7 +114,7 @@ export function ProjectCard({ name, description } : Partial<IProjectMeta>) {
           <div className="side-label">Copy</div>
         </ActionButton> */}
 
-        <ActionButton className="card-button cancel">
+        <ActionButton className="card-button cancel" onClick={deleteProjectMeta}>
           <FiTrash2 size="1.3em" />
           <div className="side-label">Delete</div>
         </ActionButton>
