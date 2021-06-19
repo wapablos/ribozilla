@@ -3,9 +3,9 @@
   "productName": "Ribozilla",
   "version": "1.0.0",
   "description": "Flexible architecure for RNA-Seq analysis",
-  "main": "./dist/main.js",
+  "main": "./build/main.js",
   "scripts": {
-    "clean": "rimraf ./dist",
+    "clean": "rimraf ./build",
     "install-dev": "yarn install && yarn --cwd packages/ribozilla-extension-api install",
     "start": "electron .",
     "build:main": "cross-env NODE_ENV=production webpack --config webpack/webpack.config.main.js",
@@ -44,6 +44,7 @@
   "dependencies": {
     "@material-ui/core": "^4.11.2",
     "ajv": "^8.1.0",
+    "electron-builder": "22.10.5",
     "electron-store": "^6.0.1",
     "fs-jetpack": "^4.1.0",
     "lodash": "^4.17.21",

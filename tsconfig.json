@@ -3,7 +3,7 @@
     "target": "es5",
     "module": "commonjs",
     "jsx": "react",
-    "outDir": "dist",
+    "outDir": "build",
     "removeComments": true,
     "strict": true,
     "noImplicitAny": true,

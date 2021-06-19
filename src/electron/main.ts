@@ -5,7 +5,7 @@ import AppHandler, { isDevelopment, isMac } from './app-handler'
 import { loadExtensions, checkAppConfigFiles } from './storage'
 // import appMenu from './menu'
 
-const outputFolder = (file: string) => path.join(app.getAppPath(), isDevelopment ? '' : 'dist', file)
+const outputFolder = (file: string) => path.join(app.getAppPath(), isDevelopment ? '' : 'build', file)
 
 const file = {
   preload: outputFolder('preload.js'),
@@ -18,7 +18,7 @@ function createWindow() {
     width: 1100,
     height: 740,
     minHeight: 740,
-    frame: isMac && isDevelopment,
+    frame: !(isMac && isDevelopment),
     maximizable: true,
     fullscreenable: false,
     webPreferences: {

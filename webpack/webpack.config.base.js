@@ -7,7 +7,7 @@ const isDevelopment = process.env.NODE_ENV !== 'production';
 const baseConfig = {
   mode: isDevelopment ? 'development' : 'production',
   output: {
-    path: path.resolve(rootPath, 'dist'),
+    path: path.resolve(rootPath, 'build'),
     filename: '[name].js'
   },
   module: {

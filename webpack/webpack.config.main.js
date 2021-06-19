@@ -5,7 +5,7 @@ const path = require('path')
 const { baseConfig, isDevelopment, rootPath } = require('./webpack.config.base')
 const isServer = process.env.DEV_SERVER === 'enable';
 
-const ElectronReloadPlugin = require('webpack-electron-reload')({ path: path.resolve(rootPath, 'dist/main.js') })
+const ElectronReloadPlugin = require('webpack-electron-reload')({ path: path.resolve(rootPath, 'build/main.js') })
 
 module.exports = merge(baseConfig, {
   target: 'electron-main',

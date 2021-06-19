@@ -26,7 +26,7 @@ module.exports = merge(baseConfig, {
   plugins: [
     new ForkTsCheckerWebpackPlugin({ async: false }),
     new HtmlWebpackPlugin({
-      filename: path.resolve(rootPath, 'dist/index.html'),
+      filename: path.resolve(rootPath, 'build/index.html'),
       template: path.resolve(rootPath, 'public/index.html')
     }),
     new webpack.HotModuleReplacementPlugin()
