@@ -15,7 +15,8 @@
     "dev:renderer": "cross-env NODE_ENV=development webpack --config webpack/webpack.config.renderer.js",
     "server:main": "cross-env NODE_ENV='development' DEV_SERVER=enable webpack --color --progress --config webpack/webpack.config.main.js",
     "server:renderer": "cross-env NODE_ENV='development' webpack-dev-server --color --progress --config webpack/webpack.config.server.js",
-    "server:all": "concurrently \"yarn server:renderer\" \"wait-on http://localhost:4000 && yarn server:main\""
+    "server:all": "concurrently \"yarn server:renderer\" \"wait-on http://localhost:4000 && yarn server:main\"",
+    "pkg-mac:x64": "yarn electron-builder build --mac --x64"
   },
   "husky": {
     "hooks": {
@@ -44,7 +45,6 @@
   "dependencies": {
     "@material-ui/core": "^4.11.2",
     "ajv": "^8.1.0",
-    "electron-builder": "22.10.5",
     "electron-store": "^6.0.1",
     "fs-jetpack": "^4.1.0",
     "lodash": "^4.17.21",
@@ -80,6 +80,7 @@
     "cross-env": "^7.0.2",
     "css-loader": "^5.0.1",
     "electron": "^11.3.0",
+    "electron-builder": "22.10.5",
     "eslint": "^7.4.0",
     "eslint-config-airbnb": "^18.2.0",
     "eslint-plugin-import": "^2.22.0",
