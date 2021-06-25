@@ -30,10 +30,6 @@ export class RibozillaNode implements Node {
   }
 }
 
-export function generateId() {
-  return 1
-}
-
 export function getSoftwareListByCategory(extensions:RibozillaSchema[]) {
   const softwareList: EnumCategories = Object.assign({}, ...Object.keys(Categories).map((key) => ({ [key]: [] })))
 

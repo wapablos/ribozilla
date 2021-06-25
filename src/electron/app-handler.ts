@@ -2,10 +2,11 @@
 /* eslint-disable no-console */
 import { App, BrowserWindow, ipcMain, dialog, ipcRenderer } from 'electron'
 import { AppEvents, WindowControlsEvents, FileBrowserEvents, ReadWriteEvents, ProjectsEvents } from '@constants/events'
-import { IProjectMeta, IReadWrite } from '@constants/interfaces'
+import { IProjectMeta, IReadWrite, IProjectData } from '@constants/interfaces'
 import jetpack from 'fs-jetpack'
 import Store from 'electron-store'
-import { appPath, RecentsSchema, recentsBasename } from './storage'
+import { join } from 'path'
+import { appPath, RecentsSchema, recentsBasename, toolboxPath } from './storage'
 
 /**
  * Development variables
@@ -18,6 +19,7 @@ export const isLinux = process.platform === 'linux'
 /**
  * Main Class
  */
+// TODO: Mudar local de leitura adicionar o caminho totaL no recents e ler o arquivo
 export default class AppHandler {
     private app: App
     private win: BrowserWindow
@@ -94,10 +96,15 @@ export default class AppHandler {
         if (checkExistingProjectFolder) return existFolderError
 
         if (!checkExistingProjectFolder) {
-          const createFile = jetpack.cwd(path).dir(name).file(`${name}.ribozilla`, { content: { id, name, description, path } })
+          const createFile = jetpack.cwd(path).dir(name).file(`${name}.ribozilla`, { content: { id, name, description } })
 
           if (createFile.exists(`${name}.ribozilla`) === 'file') {
-            this.addRecentProjects(req)
+            try {
+              jetpack.cwd(path).dir(name).dir('.toolbox')
+              this.addRecentProjects({ id, description, name, path: join(path, name), file: join(path, name, `${name}.ribozilla`) })
+            } catch (error) {
+              return writeProjError
+            }
             return writeProjSuccess
           }
 
@@ -106,7 +113,7 @@ export default class AppHandler {
       })
     }
 
-    public addRecentProjects(project: IProjectMeta) {
+    public addRecentProjects(project: Partial<IProjectMeta>) {
       const recentProjects = this.getRecentProjects()
       this.recents.set('recents', [...recentProjects, project])
     }
@@ -122,7 +129,6 @@ export default class AppHandler {
 
     public updateRecentProjects() {
       console.log('----Will update-----')
-
       this.recents.onDidChange(recentsBasename, () => {
         console.log('Update')
         this.win.webContents.send(ProjectsEvents.UPDATE, 0)
@@ -130,11 +136,35 @@ export default class AppHandler {
     }
 
     public deleteRecentProjects() {
-      ipcMain.handle(ProjectsEvents.DELETE_RECENT, (event, id) => {
-        console.log('Qaui:', id)
+      ipcMain.handle(ProjectsEvents.DELETE_RECENT, (event, { id }: IProjectMeta) => {
+        console.log('Project ID: ', id)
         const projects = this.getRecentProjects()
         this.recents.set('recents', projects.filter((value) => value.id !== id))
         return id
+      })
+    }
+
+    public checkIfProjectExists() {
+      const checkMetaInfoExistence = ({ name, path }:IProjectMeta) => {
+
+      }
+      ipcMain.handle(ProjectsEvents.OPEN_PROJECT, (event, args: IProjectMeta) => {
+        console.log(args)
+      })
+    }
+
+    public handleProjectIO() {
+      const write = true
+      ipcMain.handle(ReadWriteEvents.WRITE_PROJECT, (events, args: IProjectData) => {
+        console.log('handleProjectIO: ', args)
+        const { path } = args
+        try {
+          console.log(toolboxPath(path, 'nodes.json'))
+          jetpack.file(toolboxPath(path, 'nodes.json'), { content: args })
+          return 'write nodes'
+        } catch (error) {
+          return error
+        }
       })
     }
 
@@ -147,5 +177,7 @@ export default class AppHandler {
       this.loadRecentProjects()
       this.updateRecentProjects()
       this.deleteRecentProjects()
+      this.checkIfProjectExists()
+      this.handleProjectIO()
     }
 }

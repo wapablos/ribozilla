@@ -71,7 +71,7 @@ const RibozillaValidationSchema: JSONSchemaType<RibozillaSchema> = {
         properties: {
           name: { type: 'string' },
           id: { type: 'string' },
-          category: { type: 'string', enum: [Categories.ALIGNMENT, Categories.GENOME_INDEX, Categories.TRIMMING, Categories.QUALITY_ASSESSMENT] },
+          category: { type: 'string', enum: Object.values(Categories).map((value) => value) },
           params: { type: 'array',
             items: {
               type: 'object',

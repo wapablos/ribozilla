@@ -26,6 +26,7 @@
     "consistent-return":["warn"],
     "react/require-default-props":["off"],
     "react/jsx-filename-extension":["error", { "extensions": [".js", ".jsx",".ts",".tsx"] }],
+    "react/no-array-index-key":["off"],
     "import/no-unresolved": "off",
     "import/extensions": "off",
     "import/no-extraneous-dependencies": "off",

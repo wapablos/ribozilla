@@ -7,7 +7,7 @@ export function* loadRecentProjects() {
     const recents = yield window.electron.ipcRenderer.invoke(ProjectsEvents.GET_RECENTS).then((res) => res)
     yield put(projectActions.loadProjectsSuccess(recents))
   } catch (error) {
-    console.log('Errr')
+    console.log('Error on load projects')
     yield put(projectActions.loadProjectsFailure())
   }
 }

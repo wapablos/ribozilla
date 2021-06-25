@@ -11,4 +11,5 @@ export enum NodesActionTypes {
 
 export interface NodesState {
     readonly nodes: Elements
+    readonly updateProject?: boolean
 }

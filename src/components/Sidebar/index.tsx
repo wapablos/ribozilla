@@ -1,8 +1,11 @@
 import React, { useState } from 'react'
 import { Link, Route, Switch, Redirect, useLocation } from 'react-router-dom'
-import { List } from '@material-ui/core'
+import { List, ListItemProps } from '@material-ui/core'
 import { IconBaseProps } from 'react-icons/lib/cjs'
 import { PageTemplate } from '@screens/template'
+import { useSelector } from 'react-redux'
+import { ApplicationState } from '@store/.'
+
 import { RoutesScreen, StyledSidebar, StyledListItem, StyledTooltip } from './styles'
 
 export interface ITask {
@@ -12,12 +15,14 @@ export interface ITask {
   icon?: any
   component?(): JSX.Element
   onClick?(): void
+  hasProj?:boolean
 }
 
 export interface ISidebar {
   main?: ITask[]
   extras?: ITask[]
   tasks?: ITask[]
+  needsProj?: boolean
 }
 
 function MenuIcon({ id, icon, ...props } : ITask & IconBaseProps) {
@@ -41,20 +46,28 @@ export function Routes({ main, extras } : ISidebar) {
   )
 }
 
-export default function Sidebar({ main, extras } : ISidebar) {
+export default function Sidebar({ main, extras, needsProj } : ISidebar) {
   const { pathname } = useLocation()
   const [selected, setSelected] = useState(pathname === '/' ? '/projects' : pathname)
+  const { projectIsOpen } = useSelector<ApplicationState, ApplicationState['projects']>((state) => state.projects)
 
   const handleListItemClick = (href: string, onClick?: () => void) => {
     if (href === undefined && typeof onClick === 'function') onClick()
     else setSelected(href || selected)
   }
 
-  const ActivityList = ({ tasks } : ISidebar) => (
+  const ActivityList = ({ tasks, needsProj } : ISidebar) => (
     <List>
-      {tasks.map(({ id, title, href, icon, onClick }, index) => (
+      {tasks.map(({ id, title, href, icon, onClick, hasProj }, index) => (
         <StyledTooltip title={title} key={index.toString()}>
-          <StyledListItem selected={selected === href} component={Link} to={href || '?'} key={index.toString()} onClick={() => handleListItemClick(href, onClick)}>
+          <StyledListItem
+            disabled={!projectIsOpen && (hasProj || false)}
+            selected={selected === href}
+            component={Link}
+            to={href || '?'}
+            key={index.toString()}
+            onClick={() => handleListItemClick(href, onClick)}
+          >
             {icon === undefined ? '*' : <MenuIcon id={id} icon={icon} size={28} />}
           </StyledListItem>
         </StyledTooltip>

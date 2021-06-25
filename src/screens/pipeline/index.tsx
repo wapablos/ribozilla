@@ -4,40 +4,39 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import React, { useState, useEffect, useCallback, useRef } from 'react'
+import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { ApplicationState } from '@store/.'
 import { extensionsActions } from '@store/extensions'
 import { nodesActions } from '@store/nodes'
-import { Categories, IParameter, RequiredTypes, InputTypes } from '@ribozilla/extension-api'
+import { Categories, IParameter, RequiredTypes, InputTypes, InputProps } from '@ribozilla/extension-api'
 import { Divider, Collapse } from '@material-ui/core'
 import { VscChevronRight, VscChevronDown, VscChromeClose } from 'react-icons/vsc'
-import { BiLogInCircle } from 'react-icons/bi'
+import { BiRightArrowCircle } from 'react-icons/bi'
 import { IconBaseProps } from 'react-icons/lib'
-import ReactFlow, { Controls, Background, NodeTypesType, OnLoadParams, Handle, Position, Edge, Connection, isNode, isEdge, getBezierPath, getMarkerEnd, EdgeProps, EdgeTypesType, getEdgeCenter } from 'react-flow-renderer'
+import ReactFlow, { Controls, Background, NodeTypesType, OnLoadParams, Handle, Position, Edge, Connection, isNode, getBezierPath, EdgeProps, EdgeTypesType, getEdgeCenter } from 'react-flow-renderer'
 import { MosaicBranch, MosaicWindow, MosaicNode } from 'react-mosaic-component'
 import * as lo from 'lodash'
 import { FiLock, FiEdit3, FiFolderPlus, FiFilePlus } from 'react-icons/fi'
 import { RiUser4Line, RiCheckboxBlankCircleLine, RiSubtractLine, RiCloseLine } from 'react-icons/ri'
 import { MosaicParent } from 'react-mosaic-component/lib/types'
+import { systemActions } from '@store/system'
 import { PipelineScreen, StyledList, StyledListItem, StyledListItemIcon, SurfaceDiv, ListContainer, StyledMosaic, StyledNode, TheDivider, CardsContainer, StyledCard, SoftwareList, SoftwareListItem, MiniSwitch, MiniButton, StyledParamInput, StyledParamSelect, StyledSVG } from './styles'
 import { getSoftwareListByCategory, EnumCategories, KeyofCategories, RibozillaNode } from './internals'
 
-function CustomEdge({ id, sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, style = {}, arrowHeadType, markerEndId }: EdgeProps) {
+function CustomEdge({ id, sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, style = {} }: EdgeProps) {
   const dispatch = useDispatch()
   const edgePath = getBezierPath({ sourceX, sourceY, sourcePosition, targetX, targetY, targetPosition })
   const [centerX, centerY] = getEdgeCenter({ sourceX, sourceY, targetX, targetY })
 
-  const handleEdgeDelete = (id:string) => {
-    dispatch(nodesActions.deleteNode(id))
-  }
+  const handleEdgeDelete = (id:string) => { dispatch(nodesActions.deleteNode(id)) }
 
   return (
     <>
       <path id={id} style={style} className="react-flow__edge-path" d={edgePath} />
-      <StyledSVG x={centerX - 4} y={centerY - 4} width={8} height={8} viewBox="0 0 8 8">
+      <StyledSVG x={centerX - 5} y={centerY - 5} width={10} height={10} viewBox="0 0 10 10">
         <circle cx="50%" cy="50%" r={4} onClick={() => handleEdgeDelete(id)} />
-        <VscChromeClose x="10%" y="10%" className="icon" size="0.4em" />
+        <VscChromeClose x="18%" y="18%" className="icon" size="0.4em" />
       </StyledSVG>
     </>
   )
@@ -46,41 +45,38 @@ function CustomEdge({ id, sourceX, sourceY, targetX, targetY, sourcePosition, ta
 function SoftwareNode({ id, data } : RibozillaNode) {
   const dispatch = useDispatch()
 
-  const handleNodeDelete = () => {
-    dispatch(nodesActions.deleteNode(id))
-  }
+  const handleNodeDelete = () => { dispatch(nodesActions.deleteNode(id)) }
 
-  const Label = () => (
+  const Label = useMemo(() => (
     <div className="node-label">
-      <div className="label">{data.software.toUpperCase()}</div>
+      <div className="label">{id.toUpperCase()}</div>
       <MiniButton className="label-button close" onClick={handleNodeDelete}>
         <VscChromeClose size="1.1em" />
       </MiniButton>
     </div>
-  )
+  ), [])
 
-  const Command = () => (
+  const Command = useMemo(() => (
     <div className="node-command">
       <div className="wrapper-badge">{data.command}</div>
     </div>
-  )
+  ), [])
 
   const Content = () => {
-    if (data.params === undefined) return (<></>)
-    const mainIn = data.params.filter(({ isRequired }) => (isRequired === RequiredTypes.MAIN_IN))
-    const mainOut = data.params.filter(({ isRequired }) => (isRequired === RequiredTypes.MAIN_OUT))
+    const mainIn = data?.params.filter(({ isRequired }) => (isRequired === RequiredTypes.MAIN_IN))
+    const mainOut = data?.params.filter(({ isRequired }) => (isRequired === RequiredTypes.MAIN_OUT))
 
     return (
       <>
-        {mainIn.map(({ label, signature }, index) => (
-          <div className="node-socket socket-input" key={`${index.toString}${signature}`}>
+        {mainIn?.map(({ label, signature }, index) => (
+          <div className="node-socket socket-input" key={`main-in-${index}-${signature}`}>
             <Handle id={signature} className="socket-io io-input" type="target" position={Position.Left} />
             {label}
           </div>
         ))}
         { mainOut.length === 0 ? <></> : <TheDivider />}
-        {mainOut.map(({ label, signature }, index) => (
-          <div className="node-socket socket-output" key={`${index.toString}${signature}`}>
+        {mainOut?.map(({ label, signature }, index) => (
+          <div className="node-socket socket-output" key={`main-out-${index}-${signature}`}>
             {label}
             <Handle id={signature} className="socket-io io-output" type="source" position={Position.Right} />
           </div>
@@ -91,8 +87,8 @@ function SoftwareNode({ id, data } : RibozillaNode) {
 
   return (
     <StyledNode>
-      <Label />
-      <Command />
+      {Label}
+      {Command}
       <Content />
     </StyledNode>
   )
@@ -108,15 +104,16 @@ const edgeTypes: EdgeTypesType = {
 
 function NodeSurface() {
   const dispatch = useDispatch()
-  const { nodes } = useSelector<ApplicationState, ApplicationState['nodes']>((state) => state.nodes)
+  const { nodes, updateProject } = useSelector<ApplicationState, ApplicationState['nodes']>((state) => state.nodes)
 
-  const handleOnLoad = (reactFlowInstance: OnLoadParams) => {
-    reactFlowInstance.setTransform({ x: 0, y: 0, zoom: 0.9 })
-  }
+  const handleOnLoad = (reactFlowInstance: OnLoadParams) => { reactFlowInstance.setTransform({ x: 0, y: 0, zoom: 0.9 }) }
 
-  const onConnect = (connection: Edge | Connection) => {
-    dispatch(nodesActions.linkNodes({ ...connection, type: 'custom' }))
-  }
+  const onConnect = (connection: Edge | Connection) => { dispatch(nodesActions.linkNodes({ ...connection, type: 'custom' })) }
+
+  useEffect(() => {
+    console.log('Atualização')
+    dispatch(systemActions.updateProjectFiles())
+  }, [updateProject])
 
   return (
     <SurfaceDiv>
@@ -128,55 +125,51 @@ function NodeSurface() {
   )
 }
 
-function SoftwareInputType({ inputs } : Partial<IParameter>) {
-  const paramInput = inputs.map(({ type, values }) => {
-    switch (type) {
-      case InputTypes.BOOLEAN:
-        return <MiniSwitch />
+function SoftwareInputType({ type, values } : Partial<InputProps> & Partial<JSX.Element>) {
+  switch (type) {
+    case InputTypes.BOOLEAN:
+      return <MiniSwitch />
 
-      case InputTypes.FILE:
-        return (
-          <>
-            <StyledParamInput type="text" placeholder="~/.bashrc" />
-            <MiniButton className="card-button">
-              <FiFilePlus />
-            </MiniButton>
-          </>
-        )
+    case InputTypes.FILE:
+      return (
+        <>
+          <StyledParamInput type="text" placeholder="~/.bashrc" />
+          <MiniButton className="card-button">
+            <FiFilePlus />
+          </MiniButton>
+        </>
+      )
 
-      case InputTypes.DIR:
-        return (
-          <>
-            <StyledParamInput type="text" placeholder="~/home/public" />
-            <MiniButton className="card-button">
-              <FiFolderPlus />
-            </MiniButton>
-          </>
-        )
+    case InputTypes.DIR:
+      return (
+        <>
+          <StyledParamInput type="text" placeholder="~/home/public" />
+          <MiniButton className="card-button">
+            <FiFolderPlus />
+          </MiniButton>
+        </>
+      )
 
-      case InputTypes.NUMBER:
-        return <StyledParamInput type="number" size={2} placeholder="2" />
+    case InputTypes.NUMBER:
+      return <StyledParamInput type="number" size={2} placeholder="2" />
 
-      case InputTypes.ENUM:
-        if (values === undefined || values.length === 0) break
+    case InputTypes.ENUM:
+      if (values === undefined || values.length === 0) break
 
-        return (
-          <StyledParamSelect>
-            {values.map((value) => (
-              <option>{value.replace(/^[-]*/, '')}</option>
-            ))}
-          </StyledParamSelect>
-        )
+      return (
+        <StyledParamSelect>
+          {values.map((value, index) => (
+            <option key={`value-${index}`}>{value.replace(/^[-]*/, '')}</option>
+          ))}
+        </StyledParamSelect>
+      )
 
-      case InputTypes.STRING:
-        return <StyledParamInput type="text" />
+    case InputTypes.STRING:
+      return <StyledParamInput type="text" />
 
-      default:
-        return <StyledParamInput size={5} disabled value={type} />
-    }
-  })
-
-  return paramInput
+    default:
+      return <StyledParamInput size={5} disabled value={type} />
+  }
 }
 
 // FIX: Icon change, function and scoket typoeß
@@ -213,16 +206,15 @@ function switchRoles() {
   return { selectRwIcon, toggleIconsRw, selectSocketIcon, toggleIconsSocket }
 }
 
-function SoftwareCard({ data } : Partial<RibozillaNode>) {
+function SoftwareCard({ id, data } : Partial<RibozillaNode>) {
   const checkIsRequired = (isRequired: RequiredTypes) => {
-    const { selectRwIcon, toggleIconsRw, selectSocketIcon, toggleIconsSocket } = switchRoles()
+    const { selectRwIcon, toggleIconsRw } = switchRoles()
 
     if (isRequired === RequiredTypes.MAIN_IN || isRequired === RequiredTypes.MAIN_OUT) {
       return (
-        <>
-          {/* <MiniButton onClick={toggleIconsSocket}>{selectSocketIcon}</MiniButton> */}
-          <MiniButton onClick={toggleIconsRw}>{selectRwIcon}</MiniButton>
-        </>
+        <MiniButton onClick={toggleIconsRw}>
+          {selectRwIcon}
+        </MiniButton>
       )
     }
   }
@@ -230,7 +222,7 @@ function SoftwareCard({ data } : Partial<RibozillaNode>) {
   const Label = () => (
     <div className="node-label">
       <div className="label">
-        {data?.software.toUpperCase()}
+        {id?.toUpperCase()}
       </div>
       <div className="wrapper-chip">{data?.command}</div>
     </div>
@@ -239,13 +231,13 @@ function SoftwareCard({ data } : Partial<RibozillaNode>) {
   const Content = () => (
     <SoftwareList>
       {data?.params.map(({ label, signature, inputs, isRequired }, index) => (
-        <SoftwareListItem key={`${index.toString()}${signature}`}>
-          <div className="param-label" key={`${index.toString}${signature}-label`}>
+        <SoftwareListItem key={`sw-${index}-${signature}`}>
+          <div className="param-label" key={`label-${index}-${signature}`}>
             {checkIsRequired(isRequired)}
             {label}
           </div>
-          <div className="param-input" key={`${index.toString}${signature}-input`}>
-            {SoftwareInputType({ inputs })}
+          <div className="param-input" key={`input-${index}-${signature}`}>
+            {inputs.map(({ type, values }, index) => <SoftwareInputType key={`input-${type}-${index}`} type={type} values={values} />)}
           </div>
         </SoftwareListItem>
       ))}
@@ -254,7 +246,7 @@ function SoftwareCard({ data } : Partial<RibozillaNode>) {
   return (
     <StyledCard>
       <Label />
-      {data?.params && <Content />}
+      { data?.params && <Content /> }
     </StyledCard>
   )
 }
@@ -272,7 +264,7 @@ function SoftwaresCardListContainer() {
 
   return (
     <CardsContainer className="cards-container" ref={containerRef}>
-      {nodesOnly.map(({ data }, index) => (<SoftwareCard data={data} key={`card-${index.toString()}`} />))}
+      {nodesOnly.map(({ id, data }, index) => (<SoftwareCard id={id} data={data} key={`card-${index}-${id}`} />))}
     </CardsContainer>
   )
 }
@@ -305,14 +297,11 @@ function SoftwareCategoryList(categKey: KeyofCategories, softwareList: EnumCateg
   const addNode = useCallback(
     (software: string, command: string, params: IParameter[]) => {
       const node = new RibozillaNode({
-        id: lo.uniqueId('node-'),
+        id: `node-${Math.random().toString(36).substr(2, 9)}`,
         type: 'software',
         position: { x: lo.random(0, 250), y: lo.random(50, 100) },
-        data: {
-          software, command, params
-        }
+        data: { software, command, params }
       })
-      console.log(node)
       dispatch(nodesActions.addNode(node))
     }, []
   )
@@ -331,7 +320,7 @@ function SoftwareCategoryList(categKey: KeyofCategories, softwareList: EnumCateg
             {`${software} (${command})`}
 
             <div className="mini-action" onClick={() => addNode(software, command, params)}>
-              <BiLogInCircle size="1.6em" />
+              <BiRightArrowCircle size="1.6em" />
             </div>
           </StyledListItem>
         ))}

@@ -4,6 +4,7 @@ import { ButtonBaseProps } from '@material-ui/core'
 import { FileBrowserEvents, ReadWriteEvents, ProjectsEvents } from '@constants/events'
 import { IProjectMeta, IReadWrite } from '@constants/interfaces'
 import { useSnackbar } from 'notistack'
+import * as path from 'path'
 import { StyledCard, ActionButton } from './styles'
 import { toggleProjectCard, handleState } from './internals'
 
@@ -22,7 +23,7 @@ export function WorkspaceButton({ label, icon, ...props }: IActionButton) {
 }
 
 export function SetupProjectCard() {
-  const [projectMeta, setProjectMeta] = useState<IProjectMeta>({ id: `_${Math.random().toString(36).substr(2, 9)}`, name: '', description: '', path: '' })
+  const [projectMeta, setProjectMeta] = useState<IProjectMeta>({ id: `${Math.random().toString(36).substr(2, 9)}`, name: '', description: '', path: '' })
   const { enqueueSnackbar } = useSnackbar()
 
   const handleProjectPath = async () => {
@@ -79,10 +80,17 @@ export function SetupProjectCard() {
   )
 }
 
-export function ProjectCard({ id, name, description } : Partial<IProjectMeta>) {
+export function ProjectCard({ id, name, description, path, file } : Partial<IProjectMeta>) {
+  const args: IProjectMeta = { id, name, description, path, file }
   const deleteProjectMeta = () => {
     window.electron.ipcRenderer.invoke(ProjectsEvents.DELETE_RECENT, id).then((res) => {
       console.log('Deleted: ', res)
+    })
+  }
+
+  const openProjectMeta = () => {
+    window.electron.ipcRenderer.invoke(ProjectsEvents.OPEN_PROJECT, args).then((res) => {
+      console.log('res: ', res)
     })
   }
 
@@ -104,7 +112,7 @@ export function ProjectCard({ id, name, description } : Partial<IProjectMeta>) {
       </div>
 
       <div className="item-wrapper button-group">
-        <ActionButton className="card-button start">
+        <ActionButton className="card-button start" onClick={openProjectMeta}>
           <FiPlay size="1.3em" />
           <div className="side-label">Start</div>
         </ActionButton>

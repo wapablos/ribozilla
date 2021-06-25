@@ -1,6 +1,6 @@
 import { BrowserWindow, ipcMain } from 'electron'
 import { homedir } from 'os'
-import { resolve, basename } from 'path'
+import { resolve, basename, join } from 'path'
 import * as jetpack from 'fs-jetpack'
 import { RibozillaExtensionValidator } from '@ribozilla/extension-api'
 import { PipelineEvents, FileBrowserEvents } from '@constants/events'
@@ -18,6 +18,7 @@ export const extensionsPath = resolve(appPath, 'extensions')
 export const recentsBasename = 'recents'
 export const recentProjects = resolve(appPath, `${recentsBasename}.json`)
 export const appConfig = resolve(appPath, 'config.json')
+export const toolboxPath = (path: string, file: string) => join(path, '.toolbox', file)
 
 export function checkAppConfigFiles() {
   if (!jetpack.exists(appPath) && !jetpack.exists(extensionsPath)) {

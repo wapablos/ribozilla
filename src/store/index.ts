@@ -2,15 +2,18 @@ import { combineReducers, createStore, Store, applyMiddleware } from 'redux'
 import { ExtensionsState, extensionsReducer, ExtensionsActionTypes, loadExtensions } from '@store/extensions'
 import { NodesState, nodesReducer } from '@store/nodes'
 import { ProjectState, projectsReducer, ProjectActionTypes, loadRecentProjects } from '@store/projects'
+import { ProjectDataState, projectDataReducer } from '@store/system'
 import { all, takeLatest, takeEvery } from 'redux-saga/effects'
 import createSagaMiddleware from 'redux-saga'
+import { SystemActionTypes, writeProjectToDisk } from './system'
 /**
  * Top-level state
  */
 export interface ApplicationState {
   extensions: ExtensionsState,
   nodes: NodesState,
-  projects: ProjectState
+  projects: ProjectState,
+  system: ProjectDataState
 }
 
 /**
@@ -19,7 +22,8 @@ export interface ApplicationState {
 const createRootReducer = combineReducers<ApplicationState>({
   extensions: extensionsReducer,
   nodes: nodesReducer,
-  projects: projectsReducer
+  projects: projectsReducer,
+  system: projectDataReducer
 })
 
 /**
@@ -28,7 +32,8 @@ const createRootReducer = combineReducers<ApplicationState>({
 function* rootSaga() {
   return yield all([
     takeLatest(ExtensionsActionTypes.LOAD_REQUEST, loadExtensions),
-    takeLatest(ProjectActionTypes.REQ_PROJECTS, loadRecentProjects)
+    takeLatest(ProjectActionTypes.REQ_PROJECTS, loadRecentProjects),
+    takeLatest(SystemActionTypes.WRITE_REQ, writeProjectToDisk)
   ])
 }
 

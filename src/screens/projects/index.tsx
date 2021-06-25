@@ -26,7 +26,7 @@ export default function Projects() {
     <SnackbarProvider maxSnack={1} autoHideDuration={2200} anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}>
       <WorkspaceWrapper>
         {toggleCard ? <SetupProjectCard /> : <WorkspaceButton label="New Project" icon={<FiPlus />} onClick={toggleProjectCard(true)} /> }
-        {recentProjects.map(({ id, name, description }) => <ProjectCard id={id} name={name} description={description} />)}
+        {recentProjects.map(({ id, name, description, path, file }) => <ProjectCard id={id} name={name} description={description} path={path} file={file} key={`proj-${id}`} />)}
       </WorkspaceWrapper>
     </SnackbarProvider>
   )
