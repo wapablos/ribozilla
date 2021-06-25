@@ -32,6 +32,7 @@ export default class AppHandler {
     }
 
     public appQuit() {
+      this.win.setTitle('No Project')
       ipcMain.on(AppEvents.QUIT, () => { this.app.quit() })
     }
 
@@ -148,22 +149,23 @@ export default class AppHandler {
       const checkMetaInfoExistence = ({ name, path }:IProjectMeta) => {
 
       }
+
       ipcMain.handle(ProjectsEvents.OPEN_PROJECT, (event, args: IProjectMeta) => {
         console.log(args)
+        this.win.setTitle(args.name)
       })
     }
 
     public handleProjectIO() {
       const write = true
       ipcMain.handle(ReadWriteEvents.WRITE_PROJECT, (events, args: IProjectData) => {
-        console.log('handleProjectIO: ', args)
+        console.log('IOStream: ', args)
         const { path } = args
         try {
-          console.log(toolboxPath(path, 'nodes.json'))
           jetpack.file(toolboxPath(path, 'nodes.json'), { content: args })
-          return 'write nodes'
+          return true
         } catch (error) {
-          return error
+          return false
         }
       })
     }

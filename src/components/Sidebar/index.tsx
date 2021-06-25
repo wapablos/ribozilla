@@ -37,7 +37,7 @@ export function Routes({ main, extras } : ISidebar) {
   return (
     <RoutesScreen>
       <Switch>
-        {routes.map(({ href, component }, index) => (
+        {routes?.map(({ href, component }, index) => (
           <Route exact path={href || '?'} component={component || PageTemplate} key={`${index.toString()}`} />
         ))}
         <Redirect exact from="/" to="projects" />
@@ -49,7 +49,7 @@ export function Routes({ main, extras } : ISidebar) {
 export default function Sidebar({ main, extras, needsProj } : ISidebar) {
   const { pathname } = useLocation()
   const [selected, setSelected] = useState(pathname === '/' ? '/projects' : pathname)
-  const { projectIsOpen } = useSelector<ApplicationState, ApplicationState['projects']>((state) => state.projects)
+  const { currentProject } = useSelector<ApplicationState, ApplicationState['system']>((state) => state.system)
 
   const handleListItemClick = (href: string, onClick?: () => void) => {
     if (href === undefined && typeof onClick === 'function') onClick()
@@ -58,10 +58,10 @@ export default function Sidebar({ main, extras, needsProj } : ISidebar) {
 
   const ActivityList = ({ tasks, needsProj } : ISidebar) => (
     <List>
-      {tasks.map(({ id, title, href, icon, onClick, hasProj }, index) => (
+      {tasks?.map(({ id, title, href, icon, onClick, hasProj }, index) => (
         <StyledTooltip title={title} key={index.toString()}>
           <StyledListItem
-            disabled={!projectIsOpen && (hasProj || false)}
+            disabled={(currentProject.currentPath === undefined) && (hasProj || false)}
             selected={selected === href}
             component={Link}
             to={href || '?'}
@@ -78,7 +78,7 @@ export default function Sidebar({ main, extras, needsProj } : ISidebar) {
   return (
     <StyledSidebar>
       <ActivityList tasks={main} />
-      <ActivityList tasks={extras} />
+      {/* <ActivityList tasks={extras} /> */}
     </StyledSidebar>
   )
 }

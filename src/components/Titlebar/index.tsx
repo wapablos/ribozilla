@@ -4,6 +4,8 @@ import { VscChromeClose, VscChromeMaximize, VscChromeMinimize, VscChromeRestore 
 import sharedOptions from '@electron/menu/shared'
 import { IconButtonProps } from '@material-ui/core'
 import { WindowControlsEvents } from '@constants/events'
+import { useSelector } from 'react-redux'
+import { ApplicationState } from '@store/.'
 import { StyledAppBar, MenuBarContainer, MenubarStyles, WindowControlsContainer, StyledIconButton } from './styles'
 
 interface ITitleText extends React.HTMLAttributes<HTMLDivElement> {
@@ -50,11 +52,12 @@ function WindowControls() {
   )
 }
 function AppMenu() {
+  const { currentProject } = useSelector<ApplicationState, ApplicationState['system']>((state) => state.system)
   return (
     <MenuBarContainer>
       <TitleText text="Ribozilla" className="app-name" />
       <MenuBar items={sharedOptions} />
-      <TitleText text="Project Title" className="project-title" />
+      <TitleText text={currentProject.name || 'No Project'} className="project-title" />
       <WindowControls />
     </MenuBarContainer>
   )

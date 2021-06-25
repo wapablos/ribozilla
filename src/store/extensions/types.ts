@@ -10,4 +10,5 @@ export interface ExtensionsState {
     readonly extensions: RibozillaSchema[]
     readonly loading: boolean
     readonly error: boolean
+    readonly success: boolean
 }

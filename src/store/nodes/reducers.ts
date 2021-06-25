@@ -6,23 +6,23 @@ import { NodesState, NodesActionTypes } from './types'
 
 const initialState: NodesState = {
   nodes: [],
-  updateProject: false
+  update: true
 }
 
 const nodesReducer : Reducer<NodesState, PayloadAction<NodesActionTypes, RibozillaNode & Edge>> = (state = initialState, action) => {
   switch (action.type) {
     case NodesActionTypes.ADD_NODE:
-      return { ...state, nodes: [...state.nodes, action.payload], updateProject: !state.updateProject }
+      return { ...state, nodes: [...state.nodes, action.payload], update: true }
 
     case NodesActionTypes.DELETE_NODE:
       const deleteElements = state.nodes.filter(({ id }) => id === action.payload.id)
-      return { ...state, nodes: removeElements(deleteElements, state.nodes), updateProject: !state.updateProject }
+      return { ...state, nodes: removeElements(deleteElements, state.nodes), update: true }
 
     case NodesActionTypes.LOAD_NODES:
-      return state
+      return { ...state, update: false }
 
     case NodesActionTypes.LINK_NODES:
-      return { ...state, nodes: addEdge(action.payload as Edge, state.nodes), updateProject: !state.updateProject }
+      return { ...state, nodes: addEdge(action.payload as Edge, state.nodes), update: true }
 
     default:
       return state

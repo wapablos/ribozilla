@@ -14,5 +14,4 @@ export enum ProjectActionTypes {
 export interface ProjectState {
     readonly toggleCard: boolean
     readonly recentProjects: IProjectMeta[]
-    readonly projectIsOpen: boolean
 }

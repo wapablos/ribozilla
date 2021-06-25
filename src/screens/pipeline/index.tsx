@@ -4,8 +4,8 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import React, { useState, useEffect, useCallback, useRef, useMemo, Fragment } from 'react'
+import { useSelector, useDispatch, shallowEqual } from 'react-redux'
 import { ApplicationState } from '@store/.'
 import { extensionsActions } from '@store/extensions'
 import { nodesActions } from '@store/nodes'
@@ -104,20 +104,23 @@ const edgeTypes: EdgeTypesType = {
 
 function NodeSurface() {
   const dispatch = useDispatch()
-  const { nodes, updateProject } = useSelector<ApplicationState, ApplicationState['nodes']>((state) => state.nodes)
+  const { nodes, update } = useSelector<ApplicationState, ApplicationState['nodes']>((state) => state.nodes)
+  const { writeRequest } = useSelector<ApplicationState, ApplicationState['system']>((state) => state.system)
 
-  const handleOnLoad = (reactFlowInstance: OnLoadParams) => { reactFlowInstance.setTransform({ x: 0, y: 0, zoom: 0.9 }) }
-
+  const onLoad = (reactFlowInstance: OnLoadParams) => { reactFlowInstance.setTransform({ x: 0, y: 0, zoom: 0.9 }) }
   const onConnect = (connection: Edge | Connection) => { dispatch(nodesActions.linkNodes({ ...connection, type: 'custom' })) }
 
   useEffect(() => {
-    console.log('Atualização')
-    dispatch(systemActions.updateProjectFiles())
-  }, [updateProject])
+    if (update) {
+      console.log('(Node Surface)', nodes)
+      dispatch(nodesActions.loadNodes)
+      dispatch(systemActions.updateProjectFiles())
+    }
+  }, [nodes])
 
   return (
     <SurfaceDiv>
-      <ReactFlow elements={nodes} onLoad={handleOnLoad} nodeTypes={nodeTypes} onConnect={onConnect} edgeTypes={edgeTypes}>
+      <ReactFlow elements={nodes} nodeTypes={nodeTypes} edgeTypes={edgeTypes} onLoad={onLoad} onConnect={onConnect}>
         <Controls />
         <Background color="black" gap={16} />
       </ReactFlow>
@@ -172,7 +175,6 @@ function SoftwareInputType({ type, values } : Partial<InputProps> & Partial<JSX.
   }
 }
 
-// FIX: Icon change, function and scoket typoeß
 function switchRoles() {
   const readWriteIcons = {
     lock: <FiLock />,
@@ -315,7 +317,7 @@ function SoftwareCategoryList(categKey: KeyofCategories, softwareList: EnumCateg
       </StyledListItem>
       <Collapse in={isOpen} unmountOnExit>
         {softwareList[categKey].map(({ command, software, params }, index) => (
-          <StyledListItem key={`${command}-${index.toString()}`} className="software">
+          <StyledListItem key={`${command}-${index}`} className="software">
 
             {`${software} (${command})`}
 
@@ -331,12 +333,14 @@ function SoftwareCategoryList(categKey: KeyofCategories, softwareList: EnumCateg
 
 function SoftwaresListContainer() {
   const dispatch = useDispatch()
-  const { extensions } = useSelector<ApplicationState, ApplicationState['extensions']>((state) => state.extensions)
+  const { extensions, success, error } = useSelector<ApplicationState, ApplicationState['extensions']>((state) => state.extensions)
 
   useEffect(() => {
-    console.log('Reload Effect')
-    dispatch(extensionsActions.loadRequest())
-  }, [])
+    if (!success || error) {
+      console.log('(Software List) useEffect')
+      dispatch(extensionsActions.loadRequest())
+    }
+  }, [success])
 
   const softwareList = getSoftwareListByCategory(extensions)
 

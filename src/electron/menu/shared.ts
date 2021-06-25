@@ -12,7 +12,9 @@ export const fileMenu: RibozillaMenu = {
   submenu: [
     { label: 'New Project', accelerator: 'CmdOrCtrl+N' },
     { type: 'separator' },
-    { label: 'Open Project', accelerator: 'CmdOrCtrl+O' }
+    { label: 'Open Project', accelerator: 'CmdOrCtrl+O' },
+    { type: 'separator' },
+    { label: 'Save', accelerator: 'CmdOrCtrl+S' }
   ]
 }
 

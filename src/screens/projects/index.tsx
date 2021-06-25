@@ -15,9 +15,7 @@ export default function Projects() {
   const [update, setUpdate] = useState(false)
 
   useEffect(() => {
-    window.electron.ipcRenderer.once(ProjectsEvents.UPDATE, (e, res) => {
-      setUpdate(!update)
-    })
+    window.electron.ipcRenderer.once(ProjectsEvents.UPDATE, () => { setUpdate(!update) })
     dispatch(projectActions.loadProjects())
     dispatch(projectActions.createNewProject(false))
   }, [update])

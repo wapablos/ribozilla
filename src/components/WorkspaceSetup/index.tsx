@@ -5,6 +5,9 @@ import { FileBrowserEvents, ReadWriteEvents, ProjectsEvents } from '@constants/e
 import { IProjectMeta, IReadWrite } from '@constants/interfaces'
 import { useSnackbar } from 'notistack'
 import * as path from 'path'
+import { useSelector, useDispatch } from 'react-redux'
+import { ApplicationState } from '@store/.'
+import { systemActions } from '@store/system'
 import { StyledCard, ActionButton } from './styles'
 import { toggleProjectCard, handleState } from './internals'
 
@@ -82,19 +85,22 @@ export function SetupProjectCard() {
 
 export function ProjectCard({ id, name, description, path, file } : Partial<IProjectMeta>) {
   const args: IProjectMeta = { id, name, description, path, file }
+  const dispatch = useDispatch()
   const deleteProjectMeta = () => {
-    window.electron.ipcRenderer.invoke(ProjectsEvents.DELETE_RECENT, id).then((res) => {
-      console.log('Deleted: ', res)
+    console.log(id)
+    window.electron.ipcRenderer.invoke(ProjectsEvents.DELETE_RECENT, { id }).then((res) => {
+      console.log('(Delete Project) ', res)
     })
   }
 
   const openProjectMeta = () => {
+    dispatch(systemActions.openProjectPath(path, name))
+
     window.electron.ipcRenderer.invoke(ProjectsEvents.OPEN_PROJECT, args).then((res) => {
-      console.log('res: ', res)
+      console.log('(Open project) ', res)
     })
   }
 
-  console.log('Id:', id)
   return (
     <StyledCard className="project">
       <div className="project-name">{name}</div>

@@ -46,7 +46,7 @@ export const MenuBarContainer = styled.div`
     }
     
     .project-title {
-        color: yellowgreen;
+        color: white;
         margin: auto;
     }
 `

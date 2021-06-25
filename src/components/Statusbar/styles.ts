@@ -17,7 +17,7 @@ export const StyledToolbar = styled(Toolbar)`
     background-color: aliceblue;
     min-height: ${baseFeatures.statusbarHeight}px;
     padding: 0;
-    color: black;
+    color: #FFF;
     background-color: transparent;
     font-family: Helvetica;
     font-size: 0.85em;
@@ -25,7 +25,6 @@ export const StyledToolbar = styled(Toolbar)`
     .hostname-chip {
       display: flex;
       align-items: center;
-      background-color: #AAA;
       height: 100%;
       /* margin: 0 10px;*/
       padding: 0 8px;

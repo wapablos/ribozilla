@@ -18,7 +18,7 @@ function createWindow() {
     width: 1100,
     height: 740,
     minHeight: 740,
-    frame: !(isMac && isDevelopment),
+    frame: isMac && !isDevelopment,
     maximizable: true,
     fullscreenable: false,
     webPreferences: {

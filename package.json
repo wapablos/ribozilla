@@ -16,7 +16,7 @@
     "server:main": "cross-env NODE_ENV='development' DEV_SERVER=enable webpack --color --progress --config webpack/webpack.config.main.js",
     "server:renderer": "cross-env NODE_ENV='development' webpack-dev-server --color --progress --config webpack/webpack.config.server.js",
     "server:all": "concurrently \"yarn server:renderer\" \"wait-on http://localhost:4000 && yarn server:main\"",
-    "pkg-mac:x64": "yarn electron-builder build --mac --x64"
+    "pkg-mac:x64": "yarn clean && yarn build:all && yarn electron-builder build --mac --x64"
   },
   "husky": {
     "hooks": {

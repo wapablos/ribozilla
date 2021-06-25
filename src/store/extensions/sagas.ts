@@ -1,4 +1,4 @@
-import { call, put } from 'redux-saga/effects'
+import { put } from 'redux-saga/effects'
 import { PipelineEvents } from '@constants/events'
 import { extensionsActions } from '.'
 

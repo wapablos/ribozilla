@@ -11,6 +11,6 @@ export const GlobalStyle = createGlobalStyle`
 
 export const baseFeatures = {
   drawerWidth: 48,
-  titlebarHeight: isMac && !isDevelopment ? 0 : 22,
+  titlebarHeight: isMac && !isDevelopment ? 0 : 30,
   statusbarHeight: 22
 }

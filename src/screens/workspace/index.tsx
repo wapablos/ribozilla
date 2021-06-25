@@ -15,7 +15,7 @@ import Projects from '@screens/projects'
 import { toggleDevTools } from './internals'
 import { WorkspaceLayout } from './styles'
 
-const hasProj = false
+const hasProj = true
 const main: ISidebar['tasks'] = [
   /* { id: 'hosts', title: 'Hosts', href: '', icon: CgArrowsExchange } */
   { id: 'projects', title: 'Projects', href: '/projects', icon: BsGridFill, component: Projects },
