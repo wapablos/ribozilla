@@ -18,7 +18,7 @@ export const extensionsPath = resolve(appPath, 'extensions')
 export const recentsBasename = 'recents'
 export const recentProjects = resolve(appPath, `${recentsBasename}.json`)
 export const appConfig = resolve(appPath, 'config.json')
-export const toolboxPath = (path: string, file: string) => join(path, '.toolbox', file)
+export const toolboxPath = (path: string, file?: string) => join(path, '.toolbox', file)
 
 export function checkAppConfigFiles() {
   if (!jetpack.exists(appPath) && !jetpack.exists(extensionsPath)) {

@@ -4,8 +4,8 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import React, { useState, useEffect, useCallback, useRef, useMemo, Fragment } from 'react'
-import { useSelector, useDispatch, shallowEqual } from 'react-redux'
+import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import { ApplicationState } from '@store/.'
 import { extensionsActions } from '@store/extensions'
 import { nodesActions } from '@store/nodes'
@@ -14,7 +14,7 @@ import { Divider, Collapse } from '@material-ui/core'
 import { VscChevronRight, VscChevronDown, VscChromeClose } from 'react-icons/vsc'
 import { BiRightArrowCircle } from 'react-icons/bi'
 import { IconBaseProps } from 'react-icons/lib'
-import ReactFlow, { Controls, Background, NodeTypesType, OnLoadParams, Handle, Position, Edge, Connection, isNode, getBezierPath, EdgeProps, EdgeTypesType, getEdgeCenter } from 'react-flow-renderer'
+import ReactFlow, { Controls, Background, NodeTypesType, OnLoadParams, Handle, Position, Edge, Connection, isNode, getBezierPath, EdgeProps, EdgeTypesType, getEdgeCenter, Node } from 'react-flow-renderer'
 import { MosaicBranch, MosaicWindow, MosaicNode } from 'react-mosaic-component'
 import * as lo from 'lodash'
 import { FiLock, FiEdit3, FiFolderPlus, FiFilePlus } from 'react-icons/fi'
@@ -105,22 +105,25 @@ const edgeTypes: EdgeTypesType = {
 function NodeSurface() {
   const dispatch = useDispatch()
   const { nodes, update } = useSelector<ApplicationState, ApplicationState['nodes']>((state) => state.nodes)
-  const { writeRequest } = useSelector<ApplicationState, ApplicationState['system']>((state) => state.system)
 
   const onLoad = (reactFlowInstance: OnLoadParams) => { reactFlowInstance.setTransform({ x: 0, y: 0, zoom: 0.9 }) }
   const onConnect = (connection: Edge | Connection) => { dispatch(nodesActions.linkNodes({ ...connection, type: 'custom' })) }
+  const onNodeDragStop = (event: React.MouseEvent, node: Node) => {
+    console.log(node)
+  }
 
   useEffect(() => {
+    console.log(nodes)
     if (update) {
       console.log('(Node Surface)', nodes)
-      dispatch(nodesActions.loadNodes)
+      dispatch(nodesActions.updateNodes)
       dispatch(systemActions.updateProjectFiles())
     }
   }, [nodes])
 
   return (
     <SurfaceDiv>
-      <ReactFlow elements={nodes} nodeTypes={nodeTypes} edgeTypes={edgeTypes} onLoad={onLoad} onConnect={onConnect}>
+      <ReactFlow elements={nodes} nodeTypes={nodeTypes} edgeTypes={edgeTypes} onLoad={onLoad} onConnect={onConnect} onNodeDragStop={onNodeDragStop}>
         <Controls />
         <Background color="black" gap={16} />
       </ReactFlow>

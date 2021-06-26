@@ -1,3 +1,4 @@
+/* eslint-disable no-case-declarations */
 /* eslint-disable class-methods-use-this */
 /* eslint-disable no-console */
 import { App, BrowserWindow, ipcMain, dialog, ipcRenderer } from 'electron'
@@ -131,14 +132,13 @@ export default class AppHandler {
     public updateRecentProjects() {
       console.log('----Will update-----')
       this.recents.onDidChange(recentsBasename, () => {
-        console.log('Update')
         this.win.webContents.send(ProjectsEvents.UPDATE, 0)
       })
     }
 
     public deleteRecentProjects() {
       ipcMain.handle(ProjectsEvents.DELETE_RECENT, (event, { id }: IProjectMeta) => {
-        console.log('Project ID: ', id)
+        console.log('(Deleted)', id)
         const projects = this.getRecentProjects()
         this.recents.set('recents', projects.filter((value) => value.id !== id))
         return id
@@ -146,13 +146,40 @@ export default class AppHandler {
     }
 
     public checkIfProjectExists() {
-      const checkMetaInfoExistence = ({ name, path }:IProjectMeta) => {
+      const readProjError: (path: string) => IReadWrite = (p) => ({
+        status: 'error',
+        message: `This project doesn't exists at ${p}`
+      })
 
+      const readProjSuccess: IReadWrite = {
+        status: 'success',
+        message: 'Loading'
       }
 
       ipcMain.handle(ProjectsEvents.OPEN_PROJECT, (event, args: IProjectMeta) => {
-        console.log(args)
-        this.win.setTitle(args.name)
+        console.log('(Electron Project)', args)
+        switch (jetpack.exists(args.file)) {
+          case undefined:
+            return readProjError(args.path)
+          case false:
+            return readProjError(args.path)
+          default:
+            return readProjSuccess
+        }
+      })
+
+      // TODO: Checar integridade
+      ipcMain.handle(ReadWriteEvents.READ_FILE, async (event, projectPath: string) => {
+        const nodes = toolboxPath(projectPath, 'nodes.json')
+        switch (jetpack.exists(nodes)) {
+          case 'file':
+            console.log('Loading nodes from', nodes)
+            return jetpack.readAsync(nodes, 'json')
+          default:
+            console.log('Creating node files to', nodes)
+            jetpack.writeAsync(nodes, { nodes: [] })
+            return jetpack.readAsync(nodes, 'json')
+        }
       })
     }
 
@@ -160,12 +187,12 @@ export default class AppHandler {
       const write = true
       ipcMain.handle(ReadWriteEvents.WRITE_PROJECT, (events, args: IProjectData) => {
         console.log('IOStream: ', args)
-        const { path } = args
+        const { path, nodes } = args
         try {
-          jetpack.file(toolboxPath(path, 'nodes.json'), { content: args })
-          return true
+          jetpack.write(toolboxPath(path, 'nodes.json'), { nodes })
+          return write
         } catch (error) {
-          return false
+          return !write
         }
       })
     }

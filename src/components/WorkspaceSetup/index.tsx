@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from 'react'
-import { FiSave, FiPlay, FiTrash2, FiFolderPlus, FiX, FiCopy } from 'react-icons/fi'
+import React, { useState } from 'react'
+import { FiSave, FiPlay, FiTrash2, FiFolderPlus, FiX } from 'react-icons/fi'
 import { ButtonBaseProps } from '@material-ui/core'
 import { FileBrowserEvents, ReadWriteEvents, ProjectsEvents } from '@constants/events'
 import { IProjectMeta, IReadWrite } from '@constants/interfaces'
 import { useSnackbar } from 'notistack'
-import * as path from 'path'
-import { useSelector, useDispatch } from 'react-redux'
-import { ApplicationState } from '@store/.'
+import { useDispatch } from 'react-redux'
 import { systemActions } from '@store/system'
 import { StyledCard, ActionButton } from './styles'
 import { toggleProjectCard, handleState } from './internals'
@@ -46,6 +44,7 @@ export function SetupProjectCard() {
   }
 
   console.log(projectMeta)
+
   return (
     <StyledCard className="project edit-project">
       <div className="card-item-input">
@@ -86,18 +85,28 @@ export function SetupProjectCard() {
 export function ProjectCard({ id, name, description, path, file } : Partial<IProjectMeta>) {
   const args: IProjectMeta = { id, name, description, path, file }
   const dispatch = useDispatch()
+
+  const { enqueueSnackbar } = useSnackbar()
+
   const deleteProjectMeta = () => {
-    console.log(id)
     window.electron.ipcRenderer.invoke(ProjectsEvents.DELETE_RECENT, { id }).then((res) => {
       console.log('(Delete Project) ', res)
     })
   }
 
   const openProjectMeta = () => {
-    dispatch(systemActions.openProjectPath(path, name))
-
-    window.electron.ipcRenderer.invoke(ProjectsEvents.OPEN_PROJECT, args).then((res) => {
-      console.log('(Open project) ', res)
+    window.electron.ipcRenderer.invoke(ProjectsEvents.OPEN_PROJECT, args).then(({ status, message }: IReadWrite) => {
+      switch (status) {
+        case 'error':
+          enqueueSnackbar(message, { variant: status, style: { whiteSpace: 'pre-line' } })
+          break
+        case 'success':
+          dispatch(systemActions.loadProjectFiles(path, name))
+          break
+        default:
+          enqueueSnackbar('Unexpected Error - Report to developers', { variant: 'error', style: { whiteSpace: 'pre-line' } })
+          break
+      }
     })
   }
 

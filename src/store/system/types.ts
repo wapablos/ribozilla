@@ -5,7 +5,9 @@ export enum SystemActionTypes {
     WRITE_REQ='@@system/WRITE_REQ',
     WRITE_OK='@@system/WRITE_OK',
     WRITE_ERROR='@@system/WRITE_ERROR',
-    OPEN_PROJECT='@@system/OPEN_PROJECT'
+    SET_PROJECT='@@system/SET_PROJECT',
+    LOAD_FILES='@@system/LOAD_FILES',
+    LOAD_ERROR='@@system/LOAD_ERROR'
 }
 
 interface ProjectData {
