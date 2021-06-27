@@ -4,7 +4,7 @@ import { ProjectDataState, SystemActionTypes } from './types'
 const initialState: ProjectDataState = {
   currentProject: {
     name: undefined,
-    currentPath: '/Users/wapablos/Downloads/Projectyo1'
+    currentPath: undefined
   },
   writeRequest: false,
   writeError: false

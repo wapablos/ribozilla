@@ -1,7 +1,7 @@
 /* eslint-disable lines-between-class-members */
 /* eslint-disable array-callback-return */
 import { RibozillaSchema, Categories, CommandProps, IParameter } from '@ribozilla/extension-api'
-import { Node } from 'react-flow-renderer'
+import { Node, NodeProps } from 'react-flow-renderer'
 
 export type KeyofCategories = keyof typeof Categories
 
@@ -16,11 +16,13 @@ export type EnumCategories = {
     [category in KeyofCategories]? : CategoryList[]
 }
 
-export class RibozillaNode implements Node {
+export class RibozillaNode implements Node, Partial<NodeProps> {
   id: Node['id']
   type: Node['type']
   position: Node['position']
   data: CategoryList
+  xPos: NodeProps['xPos']
+  yPos: NodeProps['yPos']
 
   constructor({ ...props }: Partial<Node>) {
     this.id = props.id

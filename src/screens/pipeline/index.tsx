@@ -8,19 +8,20 @@ import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { ApplicationState } from '@store/.'
 import { extensionsActions } from '@store/extensions'
-import { nodesActions } from '@store/nodes'
+import { nodesActions, NodesActionTypes } from '@store/nodes'
 import { Categories, IParameter, RequiredTypes, InputTypes, InputProps } from '@ribozilla/extension-api'
 import { Divider, Collapse } from '@material-ui/core'
 import { VscChevronRight, VscChevronDown, VscChromeClose } from 'react-icons/vsc'
 import { BiRightArrowCircle } from 'react-icons/bi'
 import { IconBaseProps } from 'react-icons/lib'
-import ReactFlow, { Controls, Background, NodeTypesType, OnLoadParams, Handle, Position, Edge, Connection, isNode, getBezierPath, EdgeProps, EdgeTypesType, getEdgeCenter, Node } from 'react-flow-renderer'
+import ReactFlow, { Controls, Background, NodeTypesType, OnLoadParams, Handle, Position, Edge, Connection, isNode, getBezierPath, EdgeProps, EdgeTypesType, getEdgeCenter, Node, useUpdateNodeInternals } from 'react-flow-renderer'
 import { MosaicBranch, MosaicWindow, MosaicNode } from 'react-mosaic-component'
 import * as lo from 'lodash'
 import { FiLock, FiEdit3, FiFolderPlus, FiFilePlus } from 'react-icons/fi'
 import { RiUser4Line, RiCheckboxBlankCircleLine, RiSubtractLine, RiCloseLine } from 'react-icons/ri'
 import { MosaicParent } from 'react-mosaic-component/lib/types'
 import { systemActions } from '@store/system'
+import { useHotkeys } from 'react-hotkeys-hook'
 import { PipelineScreen, StyledList, StyledListItem, StyledListItemIcon, SurfaceDiv, ListContainer, StyledMosaic, StyledNode, TheDivider, CardsContainer, StyledCard, SoftwareList, SoftwareListItem, MiniSwitch, MiniButton, StyledParamInput, StyledParamSelect, StyledSVG } from './styles'
 import { getSoftwareListByCategory, EnumCategories, KeyofCategories, RibozillaNode } from './internals'
 
@@ -108,18 +109,21 @@ function NodeSurface() {
 
   const onLoad = (reactFlowInstance: OnLoadParams) => { reactFlowInstance.setTransform({ x: 0, y: 0, zoom: 0.9 }) }
   const onConnect = (connection: Edge | Connection) => { dispatch(nodesActions.linkNodes({ ...connection, type: 'custom' })) }
-  const onNodeDragStop = (event: React.MouseEvent, node: Node) => {
-    console.log(node)
-  }
+  const onNodeDragStop = (event: React.MouseEvent, node: Node) => { dispatch(nodesActions.updateFlow(node)) }
+
+  const handleSave = useHotkeys('ctrl+s, command+s', () => {
+    console.log('just once')
+    dispatch(nodesActions.updateNodes)
+    dispatch(systemActions.updateProjectFiles())
+  }, {
+    filter: () => update
+  })
 
   useEffect(() => {
     console.log(nodes)
-    if (update) {
-      console.log('(Node Surface)', nodes)
-      dispatch(nodesActions.updateNodes)
-      dispatch(systemActions.updateProjectFiles())
-    }
-  }, [nodes])
+    console.log(update)
+    handleSave
+  }, [nodes, update])
 
   return (
     <SurfaceDiv>

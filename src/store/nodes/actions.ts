@@ -8,3 +8,4 @@ export const deleteNode = (id: string) => action<any, Partial<RibozillaNode>>(No
 export const loadNodes = (nodes: Elements) => action(NodesActionTypes.LOAD_NODES, nodes)
 export const linkNodes = (connection: Edge | Connection) => action(NodesActionTypes.LINK_NODES, connection)
 export const updateNodes = action(NodesActionTypes.UPDATE_NODES)
+export const updateFlow = (nodes: FlowElement) => action(NodesActionTypes.UPDATE_FLOW, nodes)

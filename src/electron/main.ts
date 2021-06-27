@@ -3,6 +3,7 @@ import { app, BrowserWindow, Menu } from 'electron'
 import * as path from 'path'
 import AppHandler, { isDevelopment, isMac } from './app-handler'
 import { loadExtensions, checkAppConfigFiles } from './storage'
+import appMenu from './menu'
 // import appMenu from './menu'
 
 const outputFolder = (file: string) => path.join(app.getAppPath(), isDevelopment ? '' : 'build', file)

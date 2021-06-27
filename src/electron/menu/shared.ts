@@ -1,24 +1,20 @@
 import { IREWMenu } from 'react-electron-window-menu'
-import { Menu, MenuItemConstructorOptions } from 'electron'
-
-type RibozillaMenu = IREWMenu.IMenuItem & MenuItemConstructorOptions
-
 /**
  * Use just the options that both share
  */
 
-export const fileMenu: RibozillaMenu = {
+export const fileMenu: IREWMenu.IMenuItem = {
   label: 'File',
   submenu: [
     { label: 'New Project', accelerator: 'CmdOrCtrl+N' },
     { type: 'separator' },
     { label: 'Open Project', accelerator: 'CmdOrCtrl+O' },
     { type: 'separator' },
-    { label: 'Save', accelerator: 'CmdOrCtrl+S' }
+    { label: 'Save', accelerator: 'CmdOrCtrl+S', click: (args) => { console.log(args) } }
   ]
 }
 
-export const helpMenu: RibozillaMenu = {
+export const helpMenu: IREWMenu.IMenuItem = {
   label: 'Help',
   submenu: [
     { label: 'About Ribozilla' },
@@ -26,7 +22,7 @@ export const helpMenu: RibozillaMenu = {
   ]
 }
 
-export const terminalMenu: RibozillaMenu = {
+export const terminalMenu: IREWMenu.IMenuItem = {
   label: 'Terminal',
   submenu: [
     { label: 'New Terminal' },
@@ -34,4 +30,4 @@ export const terminalMenu: RibozillaMenu = {
   ]
 }
 
-export default [fileMenu, terminalMenu, helpMenu]
+export const sharedOptions = [fileMenu, terminalMenu, helpMenu]

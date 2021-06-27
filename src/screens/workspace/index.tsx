@@ -12,6 +12,7 @@ import Statusbar from '@components/Statusbar'
 import Titlebar from '@components/Titlebar'
 import Pipeline from '@screens/pipeline'
 import Projects from '@screens/projects'
+import { SnackbarProvider } from 'notistack'
 import { toggleDevTools } from './internals'
 import { WorkspaceLayout } from './styles'
 
@@ -39,12 +40,14 @@ export default function Workspace() {
   return (
     <ThemeProvider theme={BaseTheme}>
       <GlobalStyle />
-      <WorkspaceLayout>
-        {isMac && isDevelopment ? <Titlebar /> : <></>}
-        <Sidebar main={main} extras={extras} />
-        <Routes main={main} extras={extras} />
-        <Statusbar />
-      </WorkspaceLayout>
+      <SnackbarProvider maxSnack={1} autoHideDuration={2200} anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}>
+        <WorkspaceLayout>
+          { isMac && isDevelopment ? <Titlebar /> : <></>}
+          <Sidebar main={main} extras={extras} />
+          <Routes main={main} extras={extras} />
+          <Statusbar />
+        </WorkspaceLayout>
+      </SnackbarProvider>
     </ThemeProvider>
   )
 }

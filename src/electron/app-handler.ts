@@ -188,10 +188,15 @@ export default class AppHandler {
       ipcMain.handle(ReadWriteEvents.WRITE_PROJECT, (events, args: IProjectData) => {
         console.log('IOStream: ', args)
         const { path, nodes } = args
+        const exists = jetpack.find(path, { matching: '*.ribozilla' })
         try {
-          jetpack.write(toolboxPath(path, 'nodes.json'), { nodes })
-          return write
+          if (exists.length > 0) {
+            jetpack.write(toolboxPath(path, 'nodes.json'), { nodes })
+            return write
+          }
+          throw new Error('Ops')
         } catch (error) {
+          console.log(error)
           return !write
         }
       })
