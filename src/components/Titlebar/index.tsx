@@ -1,21 +1,25 @@
 import React, { useState } from 'react'
 import { MenuBar, IREWMenu } from 'react-electron-window-menu'
-import { VscChromeClose, VscChromeMaximize, VscChromeMinimize, VscChromeRestore } from 'react-icons/vsc'
-import sharedOptions from '@electron/menu/shared'
+import { VscChromeClose, VscChromeMaximize, VscChromeMinimize, VscChromeRestore, VscCircleFilled } from 'react-icons/vsc'
+import { sharedOptions } from '@electron/menu/shared'
 import { IconButtonProps } from '@material-ui/core'
 import { WindowControlsEvents } from '@constants/events'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { ApplicationState } from '@store/.'
+import { useSnackbar } from 'notistack'
+import { systemActions } from '@store/system'
 import { StyledAppBar, MenuBarContainer, MenubarStyles, WindowControlsContainer, StyledIconButton } from './styles'
 
 interface ITitleText extends React.HTMLAttributes<HTMLDivElement> {
   text: string
+  icon?: React.ReactNode
 }
 
-function TitleText({ text, ...props } : ITitleText) {
+function TitleText({ text, icon, ...props } : ITitleText) {
   return (
-    <div {...props}>
+    <div {...props} style={{ display: 'flex', alignItems: 'center' }}>
       {text}
+      {icon}
     </div>
   )
 }
@@ -51,13 +55,23 @@ function WindowControls() {
     </WindowControlsContainer>
   )
 }
+
 function AppMenu() {
-  const { currentProject } = useSelector<ApplicationState, ApplicationState['system']>((state) => state.system)
+  const dispatch = useDispatch()
+  const { enqueueSnackbar } = useSnackbar()
+  const { update } = useSelector<ApplicationState, ApplicationState['nodes']>((state) => state.nodes)
+  const { currentProject, writeError } = useSelector<ApplicationState, ApplicationState['system']>((state) => state.system)
+
+  if (writeError) {
+    enqueueSnackbar('Check your read/write permissions', { variant: 'warning', style: { whiteSpace: 'pre-line' } })
+    dispatch(systemActions.writeProjectSuccess())
+  }
+
   return (
     <MenuBarContainer>
       <TitleText text="Ribozilla" className="app-name" />
       <MenuBar items={sharedOptions} />
-      <TitleText text={currentProject.name || 'No Project'} className="project-title" />
+      <TitleText text={currentProject.name || 'No Project'} icon={update ? <VscCircleFilled /> : null} className="project-title" />
       <WindowControls />
     </MenuBarContainer>
   )
