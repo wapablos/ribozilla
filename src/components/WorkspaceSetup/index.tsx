@@ -39,7 +39,6 @@ export function SetupProjectCard() {
   const saveProjectMeta = () => {
     window.electron.ipcRenderer.invoke(ReadWriteEvents.WRITE_FILE, projectMeta).then(({ status, message }: IReadWrite) => {
       enqueueSnackbar(message, { variant: status, style: { whiteSpace: 'pre-line' } })
-      console.log(status)
     })
   }
 

@@ -21,7 +21,8 @@ export enum FileBrowserEvents {
 export enum ReadWriteEvents {
   WRITE_FILE='@@RW/WRITE_FILE',
   READ_FILE='@@RW/READ_FILE',
-  WRITE_PROJECT='@@RW/WRITE_PROJECT'
+  WRITE_PROJECT='@@RW/WRITE_PROJECT',
+  UPDATE_FILES='@@RW/UPDATE_FILES'
 }
 
 export enum ProjectsEvents {

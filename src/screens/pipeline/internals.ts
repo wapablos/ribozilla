@@ -5,7 +5,7 @@ import { Node, NodeProps } from 'react-flow-renderer'
 
 export type KeyofCategories = keyof typeof Categories
 
-export type CategoryList = {
+export interface CategoryList {
   software?: string,
   version?: string,
   command?: string,
@@ -21,10 +21,8 @@ export class RibozillaNode implements Node, Partial<NodeProps> {
   type: Node['type']
   position: Node['position']
   data: CategoryList
-  xPos: NodeProps['xPos']
-  yPos: NodeProps['yPos']
 
-  constructor({ ...props }: Partial<Node>) {
+  constructor({ ...props }: Partial<Node<CategoryList>>) {
     this.id = props.id
     this.type = props.type
     this.position = props.position

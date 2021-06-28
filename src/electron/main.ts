@@ -1,7 +1,7 @@
 /* eslint-disable array-callback-return */
 import { app, BrowserWindow, Menu } from 'electron'
 import * as path from 'path'
-import AppHandler, { isDevelopment, isMac } from './app-handler'
+import AppHandler, { isDevelopment, isMac, isWindows, isLinux } from './app-handler'
 import { loadExtensions, checkAppConfigFiles } from './storage'
 import appMenu from './menu'
 // import appMenu from './menu'
@@ -19,7 +19,7 @@ function createWindow() {
     width: 1100,
     height: 740,
     minHeight: 740,
-    frame: isMac && !isDevelopment,
+    frame: isDevelopment || isMac,
     maximizable: true,
     fullscreenable: false,
     webPreferences: {
@@ -59,11 +59,7 @@ app.on('ready', async () => {
   createWindow()
 })
 
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
-})
+app.on('window-all-closed', app.quit)
 
 app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) {

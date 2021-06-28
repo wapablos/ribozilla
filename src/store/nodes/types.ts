@@ -1,6 +1,4 @@
 import { Elements } from 'react-flow-renderer'
-import { RibozillaNode } from '@screens/pipeline/internals'
-import { ParamsTypes, InputTypes, RequiredTypes } from '@ribozilla/extension-api'
 
 export enum NodesActionTypes {
     ADD_NODE='@@nodes/ADD_NODE',

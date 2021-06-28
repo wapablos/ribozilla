@@ -4,7 +4,7 @@ import { GoMortarBoard, GoGear } from 'react-icons/go'
 import { SiNodeRed, SiGnubash } from 'react-icons/si'
 import { BsGridFill } from 'react-icons/bs'
 import { GiToolbox } from 'react-icons/gi'
-import { isDevelopment, isMac } from '@constants/environment'
+import { isDevelopment, isMac, isWindows } from '@constants/environment'
 import { GlobalStyle } from '@constants/styles'
 import { BaseTheme } from '@constants/themes'
 import Sidebar, { Routes, ISidebar } from '@components/Sidebar'
@@ -42,7 +42,7 @@ export default function Workspace() {
       <GlobalStyle />
       <SnackbarProvider maxSnack={1} autoHideDuration={2200} anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}>
         <WorkspaceLayout>
-          { isMac && isDevelopment ? <Titlebar /> : <></>}
+          { isWindows || isDevelopment ? <Titlebar /> : <></>}
           <Sidebar main={main} extras={extras} />
           <Routes main={main} extras={extras} />
           <Statusbar />

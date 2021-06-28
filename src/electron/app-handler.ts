@@ -34,7 +34,7 @@ export default class AppHandler {
 
     public appQuit() {
       this.win.setTitle('No Project')
-      ipcMain.on(AppEvents.QUIT, () => { this.app.quit() })
+      ipcMain.on(AppEvents.QUIT, () => { this.app.exit() })
     }
 
     public showDevTools() {
@@ -164,6 +164,7 @@ export default class AppHandler {
           case false:
             return readProjError(args.path)
           default:
+            this.win.setTitle(args.name)
             return readProjSuccess
         }
       })
@@ -198,6 +199,13 @@ export default class AppHandler {
         } catch (error) {
           console.log(error)
           return !write
+        }
+      })
+
+      ipcMain.handle(ReadWriteEvents.UPDATE_FILES, (events, title: string) => {
+        console.log('Needs save')
+        if (title !== undefined) {
+          this.win.setTitle(title)
         }
       })
     }

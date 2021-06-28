@@ -10,8 +10,8 @@ import { ProjectsEvents } from '@constants/events'
 
 export default function Projects() {
   const dispatch = useDispatch()
-  const { toggleCard, recentProjects } = useSelector<ApplicationState, ApplicationState['projects']>((state) => state.projects)
   const [update, setUpdate] = useState(false)
+  const { toggleCard, recentProjects } = useSelector<ApplicationState, ApplicationState['projects']>((state) => state.projects)
 
   useEffect(() => {
     window.electron.ipcRenderer.once(ProjectsEvents.UPDATE, () => { setUpdate(!update) })

@@ -1,13 +1,14 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { MenuBar, IREWMenu } from 'react-electron-window-menu'
 import { VscChromeClose, VscChromeMaximize, VscChromeMinimize, VscChromeRestore, VscCircleFilled } from 'react-icons/vsc'
 import { sharedOptions } from '@electron/menu/shared'
 import { IconButtonProps } from '@material-ui/core'
-import { WindowControlsEvents } from '@constants/events'
+import { WindowControlsEvents, ReadWriteEvents } from '@constants/events'
 import { useSelector, useDispatch } from 'react-redux'
 import { ApplicationState } from '@store/.'
 import { useSnackbar } from 'notistack'
 import { systemActions } from '@store/system'
+import { isMac } from '@constants/environment'
 import { StyledAppBar, MenuBarContainer, MenubarStyles, WindowControlsContainer, StyledIconButton } from './styles'
 
 interface ITitleText extends React.HTMLAttributes<HTMLDivElement> {
@@ -58,14 +59,8 @@ function WindowControls() {
 
 function AppMenu() {
   const dispatch = useDispatch()
-  const { enqueueSnackbar } = useSnackbar()
   const { update } = useSelector<ApplicationState, ApplicationState['nodes']>((state) => state.nodes)
-  const { currentProject, writeError } = useSelector<ApplicationState, ApplicationState['system']>((state) => state.system)
-
-  if (writeError) {
-    enqueueSnackbar('Check your read/write permissions', { variant: 'warning', style: { whiteSpace: 'pre-line' } })
-    dispatch(systemActions.writeProjectSuccess())
-  }
+  const { currentProject } = useSelector<ApplicationState, ApplicationState['system']>((state) => state.system)
 
   return (
     <MenuBarContainer>
