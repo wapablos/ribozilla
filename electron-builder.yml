@@ -4,14 +4,14 @@ copyright: Copyright © 2021 wapablos, contributors
 
 directories:
   buildResources: public/
-  output: dist/ 
+  output: dist/
 
 files:
   - package.json
   - build/
   - node_modules/
 
-dmg: 
+dmg:
   contents:
     - type: link
       path: /Applications
@@ -24,4 +24,4 @@ dmg:
 mac:
   target: dmg
   category: public.app-category.developer-tools
-
+  icon: public/icon/ribozilla.icns
