@@ -1,7 +1,6 @@
 /* eslint-disable max-classes-per-file */
 import * as jetpack from 'fs-jetpack'
 import Ajv, { JSONSchemaType, ValidateFunction } from 'ajv'
-import { basename } from 'path'
 
 export enum RequiredTypes {
   COMMON_IN = 'common/in',
@@ -47,6 +46,7 @@ export interface IParameter {
   inputs: InputProps[]
   isRequired: RequiredTypes
   description: string
+  lastValues: (string | number | boolean)[]
 }
 export interface CommandProps {
   name: string
@@ -94,7 +94,13 @@ const RibozillaValidationSchema: JSONSchemaType<RibozillaSchema> = {
                     required: ['type']
                   } },
                 isRequired: { type: 'string', enum: Object.values(RequiredTypes).map((value) => value) },
-                description: { type: 'string' }
+                description: { type: 'string' },
+                lastValues: {
+                  type: 'array',
+                  items: {
+                    type: ['boolean', 'integer', 'string']
+                  }
+                }
               },
               required: ['type', 'label', 'places', 'signature', 'inputs']
             } }
@@ -204,7 +210,8 @@ export default class RibozillaExtension {
    * @param description Flag information
    */
 
-  public param(type: ParamsTypes, signature: string, label: string, places: number, inputs: [InputTypes, string[]?][], isRequired = RequiredTypes.COMMON_IN, description = 'No description') {
+  // eslint-disable-next-line max-len
+  public param(type: ParamsTypes, signature: string, label: string, places: number, inputs: [InputTypes, string[]?][], isRequired = RequiredTypes.COMMON_IN, description = 'No description', lastValues: string [] = []) {
     const handleInputs = () : InputProps[] => {
       if (inputs.length === 0) return [{ type: InputTypes.BOOLEAN }]
 
@@ -216,7 +223,7 @@ export default class RibozillaExtension {
 
     const inputProps = handleInputs()
 
-    const param: IParameter = { type, signature, label, places, inputs: inputProps, isRequired, description }
+    const param: IParameter = { type, signature, label, places, inputs: inputProps, isRequired, description, lastValues }
     this.params = [...this.params, param]
     return this
   }
