@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Link, Route, Switch, Redirect, useLocation } from 'react-router-dom'
-import { List, ListItemProps } from '@material-ui/core'
+import { List } from '@material-ui/core'
 import { IconBaseProps } from 'react-icons/lib/cjs'
 import { PageTemplate } from '@screens/template'
 import { useSelector } from 'react-redux'
@@ -46,7 +46,7 @@ export function Routes({ main, extras } : ISidebar) {
   )
 }
 
-export default function Sidebar({ main, extras, needsProj } : ISidebar) {
+export default function Sidebar({ main } : ISidebar) {
   const { pathname } = useLocation()
   const [selected, setSelected] = useState(pathname === '/' ? '/projects' : pathname)
   const { currentProject } = useSelector<ApplicationState, ApplicationState['system']>((state) => state.system)
@@ -56,7 +56,7 @@ export default function Sidebar({ main, extras, needsProj } : ISidebar) {
     else setSelected(href || selected)
   }
 
-  const ActivityList = ({ tasks, needsProj } : ISidebar) => (
+  const ActivityList = ({ tasks } : ISidebar) => (
     <List>
       {tasks?.map(({ id, title, href, icon, onClick, hasProj }, index) => (
         <StyledTooltip title={title} key={index.toString()}>

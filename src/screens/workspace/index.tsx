@@ -4,7 +4,7 @@ import { GoMortarBoard, GoGear } from 'react-icons/go'
 import { SiNodeRed, SiGnubash } from 'react-icons/si'
 import { BsGridFill } from 'react-icons/bs'
 import { GiToolbox } from 'react-icons/gi'
-import { isDevelopment, isMac, isWindows } from '@constants/environment'
+import { isDevelopment, isWindows, isLinux } from '@constants/environment'
 import { GlobalStyle } from '@constants/styles'
 import { BaseTheme } from '@constants/themes'
 import Sidebar, { Routes, ISidebar } from '@components/Sidebar'
@@ -13,6 +13,7 @@ import Titlebar from '@components/Titlebar'
 import Pipeline from '@screens/pipeline'
 import Projects from '@screens/projects'
 import { SnackbarProvider } from 'notistack'
+import Toolbox from '@screens/toolbox'
 import { toggleDevTools } from './internals'
 import { WorkspaceLayout } from './styles'
 
@@ -21,7 +22,7 @@ const main: ISidebar['tasks'] = [
   /* { id: 'hosts', title: 'Hosts', href: '', icon: CgArrowsExchange } */
   { id: 'projects', title: 'Projects', href: '/projects', icon: BsGridFill, component: Projects },
   { id: 'pipelines', title: 'Pipelines', href: '/pipelines', icon: SiNodeRed, component: Pipeline, hasProj },
-  { id: 'analysis', title: 'Toolbox', href: '/analysis', icon: GiToolbox, hasProj }
+  { id: 'analysis', title: 'Toolbox', href: '/toolbox', icon: GiToolbox, component: Toolbox, hasProj }
 ]
 
 const extras: ISidebar['tasks'] = [
@@ -42,7 +43,7 @@ export default function Workspace() {
       <GlobalStyle />
       <SnackbarProvider maxSnack={1} autoHideDuration={2200} anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}>
         <WorkspaceLayout>
-          { isWindows || isDevelopment ? <Titlebar /> : <></>}
+          { isWindows || isLinux || isDevelopment ? <Titlebar /> : <></>}
           <Sidebar main={main} extras={extras} />
           <Routes main={main} extras={extras} />
           <Statusbar />

@@ -29,6 +29,8 @@ const nodesReducer : Reducer<NodesState, PayloadAction<NodesActionTypes, Ribozil
       return { ...state, nodes: addEdge(action.payload as Edge, state.nodes), update: true }
 
     case NodesActionTypes.UPDATE_FLOW:
+      if (action.payload === undefined) return { ...state, update: true }
+
       const index = state.nodes.findIndex(({ id }) => id === action.payload.id)
       const lastState = state.nodes
       lastState[index] = action.payload

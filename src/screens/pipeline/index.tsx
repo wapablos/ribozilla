@@ -8,13 +8,13 @@ import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { ApplicationState } from '@store/.'
 import { extensionsActions } from '@store/extensions'
-import { nodesActions, NodesActionTypes } from '@store/nodes'
+import { nodesActions } from '@store/nodes'
 import { Categories, IParameter, RequiredTypes, InputTypes, InputProps } from '@ribozilla/extension-api'
 import { Divider, Collapse } from '@material-ui/core'
 import { VscChevronRight, VscChevronDown, VscChromeClose } from 'react-icons/vsc'
 import { BiRightArrowCircle } from 'react-icons/bi'
 import { IconBaseProps } from 'react-icons/lib'
-import ReactFlow, { Controls, Background, NodeTypesType, OnLoadParams, Handle, Position, Edge, Connection, isNode, getBezierPath, EdgeProps, EdgeTypesType, getEdgeCenter, Node, useUpdateNodeInternals } from 'react-flow-renderer'
+import ReactFlow, { Controls, Background, NodeTypesType, OnLoadParams, Handle, Position, Edge, Connection, isNode, getBezierPath, EdgeProps, EdgeTypesType, getEdgeCenter, Node } from 'react-flow-renderer'
 import { MosaicBranch, MosaicWindow, MosaicNode } from 'react-mosaic-component'
 import * as lo from 'lodash'
 import { FiLock, FiEdit3, FiFolderPlus, FiFilePlus } from 'react-icons/fi'
@@ -25,7 +25,7 @@ import { useHotkeys } from 'react-hotkeys-hook'
 import { ReadWriteEvents } from '@constants/events'
 import { useSnackbar } from 'notistack'
 import { PipelineScreen, StyledList, StyledListItem, StyledListItemIcon, SurfaceDiv, ListContainer, StyledMosaic, StyledNode, TheDivider, CardsContainer, StyledCard, SoftwareList, SoftwareListItem, MiniSwitch, MiniButton, StyledParamInput, StyledParamSelect, StyledSVG } from './styles'
-import { getSoftwareListByCategory, EnumCategories, KeyofCategories, RibozillaNode, CategoryList } from './internals'
+import { getSoftwareListByCategory, EnumCategories, KeyofCategories, RibozillaNode } from './internals'
 
 function CustomEdge({ id, sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, style = {} }: EdgeProps) {
   const dispatch = useDispatch()
@@ -132,7 +132,7 @@ function NodeSurface() {
     console.log(nodes)
     console.log(update)
     handleSave
-    if (update) { window.electron.ipcRenderer.invoke(ReadWriteEvents.UPDATE_FILES, update ? `${currentProject.name} •` : currentProject.name) }
+    window.electron.ipcRenderer.invoke(ReadWriteEvents.UPDATE_FILES, update ? `${currentProject.name} •` : currentProject.name)
   }, [nodes, update])
 
   return (
@@ -147,16 +147,19 @@ function NodeSurface() {
 
 function SoftwareInputType({ type, values, node, inputIndex, placement } : Partial<InputProps> & { node: RibozillaNode, inputIndex?: number, placement?: number }) {
   const dispatch = useDispatch()
-  const lastValue = node.data.params[inputIndex].lastValues[placement]
+  const [lastValue, setLastValue] = useState<any>(null)
 
   const handleOnChange = (value: string | boolean | number) => {
-    const lastNode = node
-    lastNode.data.params[inputIndex].lastValues[placement] = value
-    console.log(lastNode.data.params[inputIndex].lastValues)
-    dispatch(nodesActions.updateFlow(lastNode))
+    // eslint-disable-next-line no-param-reassign
+    node.data.params[inputIndex].lastValues[placement] = value
+    console.log(node.data.params[inputIndex])
+    setLastValue(node.data.params[inputIndex].lastValues[placement])
   }
 
-  const handleFiles = () => 0
+  useEffect(() => {
+    setLastValue(node.data.params[inputIndex].lastValues[placement])
+  }, [])
+
   switch (type) {
     case InputTypes.BOOLEAN:
       return <MiniSwitch onChange={(e, c) => handleOnChange(c)} checked={lastValue as boolean} />
@@ -174,7 +177,8 @@ function SoftwareInputType({ type, values, node, inputIndex, placement } : Parti
     case InputTypes.DIR:
       return (
         <>
-          <StyledParamInput type="text" placeholder="select folder" value={lastValue as string} />
+          {/* <StyledParamInput type="text" placeholder="select folder" value={lastValue as string} /> */}
+          <StyledParamInput type="text" placeholder="select folder" />
           <MiniButton className="card-button">
             <FiFolderPlus />
           </MiniButton>
@@ -183,6 +187,7 @@ function SoftwareInputType({ type, values, node, inputIndex, placement } : Parti
 
     case InputTypes.NUMBER:
       return <StyledParamInput type="number" size={2} placeholder="2" onChange={(e) => handleOnChange(e.target.value)} value={lastValue as number} />
+      // return <StyledParamInput type="number" size={2} placeholder="2" />
 
     case InputTypes.ENUM:
       if (values === undefined || values.length === 0) break
@@ -262,7 +267,7 @@ function SoftwareCard({ node }: {node: RibozillaNode}) {
 
   const Content = () => (
     <SoftwareList>
-      {data?.params.map(({ label, signature, inputs, isRequired, lastValues }, dataIndex) => (
+      {data?.params.map(({ label, signature, inputs, isRequired }, dataIndex) => (
         <SoftwareListItem key={`sw-${dataIndex}-${signature}`}>
           <div className="param-label" key={`label-${dataIndex}-${signature}`}>
             {checkIsRequired(isRequired)}
