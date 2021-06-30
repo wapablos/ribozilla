@@ -1,4 +1,30 @@
-# Ribozilla
+<h1 align="center">
+  <img src="public/images/ribozilla-logo.png" alt="Ribozilla">
+   <br>
+  Ribozilla
+  <br>
+  <h4 align="center">Flexible architecture for RNA-Seq pipeline development</h4>
+</h1>
+  <div align="center">
+    <a target="_blank" href="https://github.com/wapablos/ribozilla">
+      <img src="https://img.shields.io/github/license/wapablos/ribozilla?style=plastic">
+    </a>
+    <a target="_blank" href="https://github.com/wapablos/ribozilla">
+      <img src="https://img.shields.io/powershellgallery/p/DNS.1.1.1.1?style=plastic">
+    </a>
+    <a target="_blank" href="https://github.com/wapablos/ribozilla">
+      <img src="https://img.shields.io/github/package-json/v/wapablos/ribozilla?style=plastic">
+    </a>
+    <a target="_blank" href="https://github.com/wapablos/ribozilla">
+      <img src="https://img.shields.io/github/contributors-anon/wapablos/ribozilla?style=plastic">
+    </a>
+     <a target="_blank" href="https://github.com/wapablos/ribozilla">
+      <img src="https://img.shields.io/github/issues/wapablos/ribozilla?style=plastic">
+    </a>  
+    <br>
+</div>
+</p>
+<br>
 
 ## Table of contents
 
@@ -39,8 +65,9 @@ You should be able to build Ribozilla on the following platforms:
 Build software base and extensions API
 ```
 $ cd ribozilla
-$ yarn install && yarn install-dev
+$ yarn install-dev
 ```
+
 Then, build the extensions
 ```
 $ cd extensions
@@ -48,12 +75,11 @@ $ yarn install && yarn build
 ```
 
 ## Development
-
 You can use any CLI software inside Ribozilla, using the `ribozilla-extension-api` to create it.
 
 ## Screenshots
   Projects Management      |  Pipelines Development 
 :-------------------------:|:-------------------------:
- ![](screenshots/recent-projects-screen.png)|  ![](screenshots/pipelines-screen.png)
+ ![](public/images/recent-projects-screen.png)|  ![](public/images/pipelines-screen.png)
 
 
