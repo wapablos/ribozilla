@@ -4,7 +4,7 @@
   "description": "Dependencies shared by all extensions",
   "license": "MIT",
   "scripts": {
-    "clean": "rimraf out node_modules",
+    "clean": "rimraf out",
     "build": "tsc"
   },
   "devDependencies": {
