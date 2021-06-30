@@ -3,9 +3,8 @@ import * as jetpack from 'fs-jetpack'
 import Ajv, { JSONSchemaType, ValidateFunction } from 'ajv'
 
 export enum RequiredTypes {
-  COMMON_IN = 'common/in',
-  COMMON_OUT = 'common/out',
-  MAIN_IN = ' main/in',
+  OPT_PARAM = 'opt/param',
+  MAIN_IN = 'main/in',
   MAIN_OUT = 'main/out',
   REQ_IN = 'req/in',
   REQ_OUT = 'req/out'
@@ -46,7 +45,8 @@ export interface IParameter {
   inputs: InputProps[]
   isRequired: RequiredTypes
   description: string
-  lastValues: (string | number | boolean)[]
+  lastValues: string[]
+  separator: string[]
 }
 export interface CommandProps {
   name: string
@@ -98,7 +98,13 @@ const RibozillaValidationSchema: JSONSchemaType<RibozillaSchema> = {
                 lastValues: {
                   type: 'array',
                   items: {
-                    type: ['boolean', 'integer', 'string']
+                    type: 'string'
+                  }
+                },
+                separator: {
+                  type: 'array',
+                  items: {
+                    type: 'string'
                   }
                 }
               },
@@ -211,7 +217,7 @@ export default class RibozillaExtension {
    */
 
   // eslint-disable-next-line max-len
-  public param(type: ParamsTypes, signature: string, label: string, places: number, inputs: [InputTypes, string[]?][], isRequired = RequiredTypes.COMMON_IN, description = 'No description', lastValues: string [] = []) {
+  public param(type: ParamsTypes, signature: string, label: string, places: number, inputs: [InputTypes, string[]?][], isRequired = RequiredTypes.OPT_PARAM, separator = [' ', ' '], description = 'No description', lastValues: string [] = []) {
     const handleInputs = () : InputProps[] => {
       if (inputs.length === 0) return [{ type: InputTypes.BOOLEAN }]
 
@@ -223,7 +229,7 @@ export default class RibozillaExtension {
 
     const inputProps = handleInputs()
 
-    const param: IParameter = { type, signature, label, places, inputs: inputProps, isRequired, description, lastValues }
+    const param: IParameter = { type, signature, label, places, inputs: inputProps, isRequired, description, lastValues, separator }
     this.params = [...this.params, param]
     return this
   }

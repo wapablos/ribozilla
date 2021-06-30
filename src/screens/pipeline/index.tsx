@@ -151,9 +151,10 @@ function SoftwareInputType({ type, values, node, inputIndex, placement } : Parti
 
   const handleOnChange = (value: string | boolean | number) => {
     // eslint-disable-next-line no-param-reassign
-    node.data.params[inputIndex].lastValues[placement] = value
+    node.data.params[inputIndex].lastValues[placement] = value as string
     console.log(node.data.params[inputIndex])
     setLastValue(node.data.params[inputIndex].lastValues[placement])
+    // dispatch(systemActions.updateProjectFiles())
   }
 
   useEffect(() => {
@@ -162,7 +163,7 @@ function SoftwareInputType({ type, values, node, inputIndex, placement } : Parti
 
   switch (type) {
     case InputTypes.BOOLEAN:
-      return <MiniSwitch onChange={(e, c) => handleOnChange(c)} checked={lastValue as boolean} />
+      return <MiniSwitch onChange={(e, c) => handleOnChange(c)} checked={lastValue as boolean ?? false} />
 
     case InputTypes.FILE:
       return (
@@ -186,7 +187,7 @@ function SoftwareInputType({ type, values, node, inputIndex, placement } : Parti
       )
 
     case InputTypes.NUMBER:
-      return <StyledParamInput type="number" size={2} placeholder="2" onChange={(e) => handleOnChange(e.target.value)} value={lastValue as number} />
+      return <StyledParamInput type="number" size={2} placeholder="2" onChange={(e) => handleOnChange(e.target.value)} value={lastValue as number || ''} />
       // return <StyledParamInput type="number" size={2} placeholder="2" />
 
     case InputTypes.ENUM:

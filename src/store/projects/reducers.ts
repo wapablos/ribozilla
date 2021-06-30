@@ -13,7 +13,7 @@ const projectsReducer: Reducer<ProjectState, PayloadAction<ProjectActionTypes, P
       return { ...state, toggleCard: action.payload.toggleCard }
 
     case ProjectActionTypes.REQ_SUCCESS:
-      console.log(action.payload)
+      // console.log(action.payload)
       return { ...state, recentProjects: action.payload.recentProjects }
 
     default:
