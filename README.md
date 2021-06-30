@@ -7,7 +7,7 @@
 </h1>
   <div align="center">
     <a target="_blank" href="https://github.com/wapablos/ribozilla">
-      <img src="https://img.shields.io/github/license/wapablos/ribozilla?style=plastic">
+      <img src="https://img.shields.io/github/license/wapablos/ribozilla?style=flat">
     </a>
     <a target="_blank" href="https://github.com/wapablos/ribozilla">
       <img src="https://img.shields.io/powershellgallery/p/DNS.1.1.1.1?style=plastic">
