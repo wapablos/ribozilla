@@ -1,12 +1,16 @@
+/* eslint-disable semi */
+const lightCodeTheme = require('prism-react-renderer/themes/github');
+const darkCodeTheme = require('prism-react-renderer/themes/dracula');
+
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 module.exports = {
   title: 'Ribozilla',
   tagline: 'Playing with genetics',
-  url: 'https://your-docusaurus-test-site.com',
+  url: 'https://ribozilla.netlify.app',
   baseUrl: '/',
-  onBrokenLinks: 'throw',
+  onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'warn',
-  favicon: 'img/medusa.svg',
+  favicon: 'img/ribozilla.ico',
   organizationName: 'wapablos', // Usually your GitHub org/user name.
   projectName: 'ribozilla', // Usually your repo name.
   themeConfig: {
@@ -14,19 +18,18 @@ module.exports = {
       title: 'Ribozilla',
       logo: {
         alt: 'Ribozilla Logo',
-        src: 'img/medusa.svg'
+        src: 'img/ribozilla.ico'
       },
       items: [
         { type: 'doc', docId: 'intro', position: 'left', label: 'Docs' },
-        { to: '/api/getting-started', activeBaseRegex: '/api/', position: 'left', label: 'API' },
+        { type: 'doc', docId: 'api/intro', position: 'left', label: 'API' },
         { to: '/blog', label: 'Blog', position: 'left' },
         { to: '/ux-research', label: 'UX Research', position: 'right' },
         { to: '/downloads', label: 'Downloads', position: 'right' },
         {
           href: 'https://github.com/wapablos/ribozilla',
-          position: 'right',
-          className: 'header-github-link',
-          'aria-label': 'GitHub repository'
+          label: 'GitHub',
+          position: 'right'
         }
       ]
     },
@@ -66,20 +69,12 @@ module.exports = {
         }
       ],
       copyright: `Copyright © ${new Date().getFullYear()} Tunguska Cyberpunk, Inc. Built with Docusaurus.`
+    },
+    prism: {
+      theme: lightCodeTheme,
+      darkTheme: darkCodeTheme
     }
   },
-  plugins: [
-    [
-      '@docusaurus/plugin-content-docs',
-      {
-        id: 'api',
-        path: 'docs/api',
-        routeBasePath: 'api',
-        include: ['**/*.md', '**/*.mdx'],
-        sidebarPath: require.resolve('./sidebarsApi.js')
-      }
-    ]
-  ],
   presets: [
     [
       '@docusaurus/preset-classic',

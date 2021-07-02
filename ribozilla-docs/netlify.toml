@@ -1,0 +1,15 @@
+[build]
+  base = "ribozilla-docs"
+  command = "yarn build"
+  publish = "build"
+
+[build.environment]
+  NETLIFY_USE_YARN = "true"
+  YARN_VERSION = "1.22.10"
+  NODE_VERSION = "12"
+
+[context.production]
+  command = "yarn build"
+
+[context.deploy-preview]
+  command = "yarn build"
