@@ -4,52 +4,36 @@ sidebar_position: 1
 
 # Setup Development Enviroment
 
-Docusaurus can manage multiple versions of your docs.
+## Platforms
+You should be able to compile Ribozilla successfully on the following platforms:
 
-## Create a docs version
+* Windows 10
+* macOS 10.12 Sierra or later
+* Linux
 
-Release a version 1.0 of your project:
+## Pre-requisites
+Ribozilla just compiles if Node.js, Yarn and Python is installed on the machine.
 
-```bash
-npm run docusaurus docs:version 1.0
-```
+* [Git](https://git-scm.com/)
+* [Node.js](https://nodejs.org/en/) `x64` version `>= 12.14.1`
+* [Yarn](https://classic.yarnpkg.com/en/docs/install)
+* [Python](https://www.python.org/) `x64` version `>= 3.6.x`
 
-The `docs` folder is copied into `versioned_docs/version-1.0` and `versions.json` is created.
+Recommended installation:
+* Git:
+  - [Getting started installing Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
 
-Your docs now have 2 versions:
+* Node:
+  - `Mac & Linux` [nvm](https://github.com/nvm-sh/nvm)  
+  - `Windows` [nvm-windows](https://github.com/coreybutler/nvm-windows)
 
-- `1.0` at `http://localhost:3000/docs/` for the version 1.0 docs
-- `current` at `http://localhost:3000/docs/next/` for the **upcoming, unreleased docs**
+* Yarn
+  ```
+  npm install --global yarn
+  ```
 
-## Add a Version Dropdown
+* Python
+  - [Miniconda Installation](https://conda.io/projects/conda/en/latest/user-guide/install/index.html#regular-installation)
+## Recommended code editor
 
-To navigate seamlessly across versions, add a version dropdown.
-
-Modify the `docusaurus.config.js` file:
-
-```js title="docusaurus.config.js"
-module.exports = {
-  themeConfig: {
-    navbar: {
-      items: [
-        // highlight-start
-        {
-          type: 'docsVersionDropdown',
-        },
-        // highlight-end
-      ],
-    },
-  },
-};
-```
-
-The docs version dropdown appears in your navbar:
-
-![Docs Version Dropdown](/img/tutorial/docsVersionDropdown.png)
-
-## Update an existing version
-
-It is possible to edit versioned docs in their respective folder:
-
-- `versioned_docs/version-1.0/hello.md` updates `http://localhost:3000/docs/hello`
-- `docs/hello.md` updates `http://localhost:3000/docs/next/hello`
+`VSCode` - https://code.visualstudio.com/#alt-downloads
