@@ -5,8 +5,6 @@ export const WorkspaceWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-
-  max-height: 100%;
   overflow-y: auto;
   padding: 5px;
 `
@@ -56,7 +54,7 @@ export const ActionButton = styled(Button).attrs({
       :hover {
         background-color: rgba(255, 255, 255, 0.2);
 
-        &.cancel * {
+        &.copy * {
           color: #FF6347;
         }
 

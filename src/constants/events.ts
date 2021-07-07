@@ -22,7 +22,8 @@ export enum ReadWriteEvents {
   WRITE_FILE='@@RW/WRITE_FILE',
   READ_FILE='@@RW/READ_FILE',
   WRITE_PROJECT='@@RW/WRITE_PROJECT',
-  UPDATE_FILES='@@RW/UPDATE_FILES'
+  UPDATE_FILES='@@RW/UPDATE_FILES',
+  SAVE_FILE='@@RW/SAVE_FILE'
 }
 
 export enum ProjectsEvents {

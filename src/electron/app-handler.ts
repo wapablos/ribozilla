@@ -208,6 +208,21 @@ export default class AppHandler {
           this.win.setTitle(title)
         }
       })
+
+      ipcMain.handle(ReadWriteEvents.SAVE_FILE, async (event, script: string) => {
+        const dir = await dialog
+          .showSaveDialog(this.win, {
+            properties: ['createDirectory', 'showHiddenFiles', 'showOverwriteConfirmation'],
+            defaultPath: 'script.sh'
+          })
+          .then(({ filePath, canceled }) => {
+            if (canceled) return canceled
+            return filePath
+          })
+          .catch((errno) => { console.log(errno) })
+
+        return dir
+      })
     }
 
     public initAllListeners() {
