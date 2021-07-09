@@ -1,6 +1,6 @@
 /* eslint-disable lines-between-class-members */
 /* eslint-disable array-callback-return */
-import { RibozillaSchema, Categories, CommandProps, IParameter } from '@ribozilla/extension-api'
+import { RibozillaSchema, Categories, CommandProps, IParameter } from '@ribozilla/clui-api'
 import { Node, NodeProps } from 'react-flow-renderer'
 
 export type KeyofCategories = keyof typeof Categories

@@ -1,4 +1,4 @@
-import { RibozillaSchema } from '@ribozilla/extension-api'
+import { RibozillaSchema } from '@ribozilla/clui-api'
 
 export enum ExtensionsActionTypes {
     LOAD_REQUEST='@@extensions/LOAD_REQUEST',

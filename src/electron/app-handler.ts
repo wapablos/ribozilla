@@ -227,7 +227,9 @@ export default class AppHandler {
           })
           .then(({ filePath, canceled }) => {
             console.log('Save to: ', filePath)
-            if (canceled) { return canceled }
+            if (canceled) {
+              return { status: 'default' } as IReadWrite
+            }
             jetpack.write(filePath, script)
             return writeFileSuccess(filePath)
           })

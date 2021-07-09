@@ -6,7 +6,7 @@
   "main": "./build/main.js",
   "scripts": {
     "clean": "rimraf ./build",
-    "install-dev": "yarn install && yarn --cwd packages/ribozilla-extension-api install",
+    "install-dev": "yarn install && yarn --cwd packages/ribozilla-clui-api install",
     "start": "electron .",
     "build:main": "cross-env NODE_ENV=production webpack --config webpack/webpack.config.main.js",
     "build:renderer": "cross-env NODE_ENV=production webpack --config webpack/webpack.config.renderer.js",

@@ -75,7 +75,7 @@ $ yarn install && yarn build
 ```
 
 ## Development
-You can use any CLI software inside Ribozilla, using the `ribozilla-extension-api` to create it.
+You can use any CLI software inside Ribozilla, using the `ribozilla-clui-api` to create it.
 
 ## Screenshots
   Projects Management      |  Pipelines Development 

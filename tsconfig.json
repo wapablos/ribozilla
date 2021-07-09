@@ -36,8 +36,8 @@
       "@store/*": [
         "src/store/*"
       ],
-      "@ribozilla/extension-api": [
-        "packages/ribozilla-extension-api"
+      "@ribozilla/clui-api": [
+        "packages/ribozilla-clui-api"
       ]
     },
     "allowSyntheticDefaultImports": true,

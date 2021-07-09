@@ -1,7 +1,7 @@
 {
-  "name": "ribozilla-extension-api",
+  "name": "ribozilla-clui-api",
   "version": "1.0.0",
-  "description": "Ribozilla extensions API definitions",
+  "description": "Ribozilla CLI to GUI Converter API definitions",
   "author": "Pablo Wesley",
   "license": "MIT",
   "main": "./lib/index.js",

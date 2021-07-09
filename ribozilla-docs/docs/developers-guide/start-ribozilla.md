@@ -36,7 +36,7 @@ touch my-extension.ts
 ```
 ```ts
 /* my-extension.ts */
-import RibozillaExtension, { Categories, ParamsTypes, InputTypes, RequiredTypes } from '../../packages/ribozilla-extension-api/lib'
+import RibozillaExtension, { Categories, ParamsTypes, InputTypes, RequiredTypes } from '../../packages/ribozilla-clui-api/lib'
 
 const extension = new RibozillaExtension('Software Name', '1.0.0')
 

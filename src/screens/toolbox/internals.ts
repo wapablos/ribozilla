@@ -1,5 +1,5 @@
 import { RibozillaNode } from '@screens/pipeline/internals'
-import { ParamsTypes, InputTypes } from '@ribozilla/extension-api'
+import { ParamsTypes, InputTypes } from '@ribozilla/clui-api'
 
 export function buildCommandLine({ id, data }: RibozillaNode) {
   const { software, command, params } = data

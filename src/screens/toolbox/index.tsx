@@ -21,8 +21,14 @@ function ScriptCard({ id, data, script }: Partial<RibozillaNode> & { script: str
 
   const handleSave = () => {
     window.electron.ipcRenderer.invoke(ReadWriteEvents.SAVE_FILE, { script: currentScript, command: data.command, id }).then(({ status, message }: IReadWrite) => {
-      enqueueSnackbar(message, { variant: status, style: { whiteSpace: 'pre-line' } })
       console.log(status)
+      switch (status) {
+        case 'default':
+          break
+        default:
+          enqueueSnackbar(message, { variant: status, style: { whiteSpace: 'pre-line' } })
+          break
+      }
     })
   }
 
