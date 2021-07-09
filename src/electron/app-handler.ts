@@ -185,6 +185,16 @@ export default class AppHandler {
     }
 
     public handleProjectIO() {
+      const writeFileError: IReadWrite = {
+        status: 'error',
+        message: 'Cannot write file, check your read/write permission'
+      }
+
+      const writeFileSuccess: (path: string) => IReadWrite = (p) => ({
+        status: 'info',
+        message: `Saved ${p}`
+      })
+
       const write = true
       ipcMain.handle(ReadWriteEvents.WRITE_PROJECT, (events, args: IProjectData) => {
         console.log('IOStream: ', args)
@@ -209,17 +219,22 @@ export default class AppHandler {
         }
       })
 
-      ipcMain.handle(ReadWriteEvents.SAVE_FILE, async (event, script: string) => {
+      ipcMain.handle(ReadWriteEvents.SAVE_FILE, async (event, { script, command, id }) => {
         const dir = await dialog
           .showSaveDialog(this.win, {
             properties: ['createDirectory', 'showHiddenFiles', 'showOverwriteConfirmation'],
-            defaultPath: 'script.sh'
+            defaultPath: `${command}-${id}.sh`.toLowerCase()
           })
           .then(({ filePath, canceled }) => {
-            if (canceled) return canceled
-            return filePath
+            console.log('Save to: ', filePath)
+            if (canceled) { return canceled }
+            jetpack.write(filePath, script)
+            return writeFileSuccess(filePath)
           })
-          .catch((errno) => { console.log(errno) })
+          .catch((errno) => {
+            console.log(errno)
+            return writeFileError
+          })
 
         return dir
       })

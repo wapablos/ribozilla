@@ -292,6 +292,7 @@ function SoftwareCard({ node }: {node: RibozillaNode}) {
   )
 }
 
+// TODO: Add memo
 function SoftwaresCardListContainer() {
   const containerRef = useRef<HTMLDivElement>()
 

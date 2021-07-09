@@ -5,20 +5,24 @@ import { isNode } from 'react-flow-renderer'
 import { RibozillaNode } from '@screens/pipeline/internals'
 import { FiSave, FiEdit } from 'react-icons/fi'
 import { ReadWriteEvents } from '@constants/events'
+import { IReadWrite } from '@constants/interfaces'
+import { useSnackbar } from 'notistack'
 import { ToolboxWrapper, StyledCard } from './styles'
 import { buildCommandLine } from './internals'
 
-function ScriptCard({ id, script }: Partial<RibozillaNode> & { script: string }) {
+function ScriptCard({ id, data, script }: Partial<RibozillaNode> & { script: string }) {
   const [edit, setEdit] = useState(true)
   const [currentScript, setCurrentScript] = useState(script)
+  const { enqueueSnackbar } = useSnackbar()
 
   const handleEdit = () => {
     setEdit(!edit)
   }
 
-  const handleSave = (script: string) => {
-    window.electron.ipcRenderer.invoke(ReadWriteEvents.SAVE_FILE, script).then((res) => {
-      console.log(res)
+  const handleSave = () => {
+    window.electron.ipcRenderer.invoke(ReadWriteEvents.SAVE_FILE, { script: currentScript, command: data.command, id }).then(({ status, message }: IReadWrite) => {
+      enqueueSnackbar(message, { variant: status, style: { whiteSpace: 'pre-line' } })
+      console.log(status)
     })
   }
 
@@ -27,7 +31,7 @@ function ScriptCard({ id, script }: Partial<RibozillaNode> & { script: string })
       <div className="node-label">
         <div className="label">{id}</div>
         <div className="button-group">
-          <FiSave className="card-button save" size="1.1em" onClick={() => handleSave(currentScript)} />
+          <FiSave className="card-button save" size="1.1em" onClick={() => handleSave()} />
           {/* <FiCopy className="card-button copy" size="1.1em" /> */}
           <FiEdit className="card-button edit" size="1.1em" onClick={handleEdit} />
         </div>
@@ -44,7 +48,7 @@ export default function Toolbox() {
     <ToolboxWrapper>
       {nodes.map((node) => {
         if (isNode(node)) {
-          return <ScriptCard key={`script-${node.id}`} id={node.id} script={buildCommandLine(node as RibozillaNode)} />
+          return <ScriptCard key={`script-${node.id}`} id={node.id} script={buildCommandLine(node as RibozillaNode)} data={node.data} />
         }
         return null
       })}
