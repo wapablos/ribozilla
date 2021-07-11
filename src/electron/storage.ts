@@ -14,7 +14,7 @@ export interface RecentsSchema {
 // TODO: Add json validator to the software files
 export const homePath = homedir()
 export const appPath = resolve(homePath, '.ribozilla')
-export const extensionsPath = resolve(appPath, 'extensions')
+export const extensionsPath = resolve(appPath, 'ribozilla-extensions')
 export const recentsBasename = 'recents'
 export const recentProjects = resolve(appPath, `${recentsBasename}.json`)
 export const appConfig = resolve(appPath, 'config.json')
@@ -36,7 +36,7 @@ export function checkAppConfigFiles() {
 }
 
 export async function loadExtensions() {
-  const extensionsPath = jetpack.find('extensions', { matching: ['*manifest.json', '!node_modules/**/*'], directories: false })
+  const extensionsPath = jetpack.find('ribozilla-extensions/cli', { matching: ['*manifest.json', '!node_modules/**/*'], directories: false })
   const extensionValidator = new RibozillaExtensionValidator()
 
   const extensions = await Promise.all(extensionsPath.map(async (extensionsPath) => jetpack
