@@ -1,7 +1,7 @@
 {
   "name": "ribozilla-extensions",
   "version": "1.0.0",
-  "description": "Dependencies shared by all extensions",
+  "description": "Extensions to be used on Ribozilla",
   "license": "MIT",
   "scripts": {
     "clean": "rimraf out",
