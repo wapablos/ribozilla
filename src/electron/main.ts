@@ -56,6 +56,9 @@ app.allowRendererProcessReuse = true
 app.on('ready', async () => {
   checkAppConfigFiles()
   loadExtensions()
+})
+
+app.whenReady().then(() => {
   createWindow()
 })
 

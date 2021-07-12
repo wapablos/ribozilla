@@ -30,4 +30,4 @@ export const terminalMenu: IREWMenu.IMenuItem = {
   ]
 }
 
-export const sharedOptions = [fileMenu, terminalMenu, helpMenu]
+export const sharedOptions = [helpMenu]

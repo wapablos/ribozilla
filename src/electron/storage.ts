@@ -6,6 +6,7 @@ import { RibozillaExtensionValidator } from '@ribozilla/clui-api'
 import { PipelineEvents, FileBrowserEvents } from '@constants/events'
 import Store from 'electron-store'
 import { IProjectMeta } from '@constants/interfaces'
+import { fetchExtensions } from './extensionsFromGithub'
 
 export interface RecentsSchema {
   recents: IProjectMeta[]
@@ -19,8 +20,10 @@ export const recentsBasename = 'recents'
 export const recentProjects = resolve(appPath, `${recentsBasename}.json`)
 export const appConfig = resolve(appPath, 'config.json')
 export const toolboxPath = (path: string, file?: string) => join(path, '.toolbox', file)
+export const extensionCache = resolve(appPath, 'extensions.cache.json')
+export const installedExtensions = resolve(appPath, 'extensions.list.json')
 
-export function checkAppConfigFiles() {
+export async function checkAppConfigFiles() {
   if (!jetpack.exists(appPath) && !jetpack.exists(extensionsPath)) {
     jetpack.cwd(homePath).dir(appPath).dir(extensionsPath)
   }
@@ -31,6 +34,12 @@ export function checkAppConfigFiles() {
       name: recentsBasename,
       fileExtension: 'json',
       defaults: { recents: [] }
+    })
+  }
+
+  if (!jetpack.exists(extensionCache)) {
+    fetchExtensions().then((res) => {
+      jetpack.cwd(homePath).file(extensionCache, { content: res })
     })
   }
 }
@@ -49,4 +58,8 @@ export async function loadExtensions() {
 
   console.log(extensions)
   ipcMain.handle(PipelineEvents.GET_EXTENSIONS, async () => extensions)
+}
+
+export async function showExtensions() {
+  const extensionsPath = jetpack.find(installedExtensions, { matching: ['*manifest.json', '!node_modules/**/*'], directories: false })
 }
