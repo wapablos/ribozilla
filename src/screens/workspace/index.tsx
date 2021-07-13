@@ -4,6 +4,7 @@ import { GoMortarBoard, GoGear } from 'react-icons/go'
 import { SiNodeRed, SiGnubash } from 'react-icons/si'
 import { BsGridFill } from 'react-icons/bs'
 import { GiToolbox } from 'react-icons/gi'
+import { MdExtension } from 'react-icons/md'
 import { isDevelopment, isWindows, isLinux } from '@constants/environment'
 import { GlobalStyle } from '@constants/styles'
 import { BaseTheme } from '@constants/themes'
@@ -14,6 +15,7 @@ import Pipeline from '@screens/pipeline'
 import Projects from '@screens/projects'
 import { SnackbarProvider } from 'notistack'
 import Toolbox from '@screens/toolbox'
+import Extensions from '@screens/extensions'
 import { toggleDevTools } from './internals'
 import { WorkspaceLayout } from './styles'
 
@@ -26,8 +28,9 @@ const main: ISidebar['tasks'] = [
 ]
 
 const extras: ISidebar['tasks'] = [
-  { id: 'learn', title: 'Learn', icon: GoMortarBoard, href: '/docs' },
-  { id: 'settings', title: 'Settings', icon: GoGear }
+  /* { id: 'learn', title: 'Learn', icon: GoMortarBoard, href: '/docs' },
+  { id: 'settings', title: 'Settings', icon: GoGear } */
+  { id: 'extensions', title: 'Extensions', href: '/extensions', icon: MdExtension, component: Extensions }
 ]
 
 if (isDevelopment) {

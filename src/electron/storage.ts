@@ -1,21 +1,25 @@
-import { BrowserWindow, ipcMain } from 'electron'
+/* eslint-disable array-callback-return */
+/* eslint-disable camelcase */
+import { ipcMain } from 'electron'
 import { homedir } from 'os'
 import { resolve, basename, join } from 'path'
 import * as jetpack from 'fs-jetpack'
 import { RibozillaExtensionValidator } from '@ribozilla/clui-api'
-import { PipelineEvents, FileBrowserEvents } from '@constants/events'
+import { PipelineEvents } from '@constants/events'
 import Store from 'electron-store'
-import { IProjectMeta } from '@constants/interfaces'
+import { IProjectMeta, IExtensionList } from '@constants/interfaces'
+import { keyBy } from 'lodash'
+import { exists } from 'fs-jetpack'
 import { fetchExtensions } from './extensionsFromGithub'
 
 export interface RecentsSchema {
   recents: IProjectMeta[]
 }
 
-// TODO: Add json validator to the software files
 export const homePath = homedir()
 export const appPath = resolve(homePath, '.ribozilla')
 export const extensionsPath = resolve(appPath, 'ribozilla-extensions')
+export const extensionsPathProd = resolve(appPath, 'extensions')
 export const recentsBasename = 'recents'
 export const recentProjects = resolve(appPath, `${recentsBasename}.json`)
 export const appConfig = resolve(appPath, 'config.json')
@@ -40,6 +44,8 @@ export async function checkAppConfigFiles() {
   if (!jetpack.exists(extensionCache)) {
     fetchExtensions().then((res) => {
       jetpack.cwd(homePath).file(extensionCache, { content: res })
+    }).catch((error) => {
+      console.log(error)
     })
   }
 }
@@ -56,10 +62,59 @@ export async function loadExtensions() {
     .catch((errno) => { console.log('File error: ', basename(extensionsPath)) })))
     .then((extensionArray) => extensionArray.filter((extension) => typeof extension !== 'undefined'))
 
-  console.log(extensions)
-  ipcMain.handle(PipelineEvents.GET_EXTENSIONS, async () => extensions)
+  // console.log(extensions)
+  // ipcMain.handle(PipelineEvents.GET_EXTENSIONS, async () => extensions)
 }
 
-export async function showExtensions() {
-  const extensionsPath = jetpack.find(installedExtensions, { matching: ['*manifest.json', '!node_modules/**/*'], directories: false })
+export async function showInstalledExtensions() {
+  const fetchFiles = await jetpack.find(extensionsPathProd, { matching: ['*.manifest.json', '!node_modules/**/*'], directories: false })
+  const extensionValidator = new RibozillaExtensionValidator()
+
+  const installedBasename = fetchFiles.map((v) => basename(v))
+
+  const installed = await Promise.all(fetchFiles.map(async (path) => jetpack
+    .readAsync(path, 'json')
+    .then((extension) => {
+      if (extensionValidator.validate(extension)) return extension
+    })
+    .catch((errno) => { console.log('File error: ', basename(path)) })))
+    .then((extensionArray) => extensionArray.filter((extension) => typeof extension !== 'undefined'))
+
+  const mapAllExtensions: IExtensionList = {
+    available: [],
+    installed: []
+  }
+
+  await fetchExtensions().then((res) => {
+    res.map((value: any) => {
+      switch (installedBasename.includes(value.filename)) {
+        case true:
+          mapAllExtensions.installed.push(value)
+          break
+        default:
+          mapAllExtensions.available.push(value)
+          break
+      }
+    })
+  }).catch((error) => {
+    installed.map((value) => {
+      mapAllExtensions.installed.push({
+        name: value.name,
+        version: value.version
+      })
+    })
+  })
+  // .then(() => {
+  //   ipcMain.handle(PipelineEvents.GET_EXTENSIONS, async () => installed)
+  //   ipcMain.handle(PipelineEvents.GET_EXTENSIONS_FROM_GITHUB, async () => mapAllExtensions)
+  // })
+
+  return { installed, mapAllExtensions }
+}
+
+export async function handleExtensions() {
+  showInstalledExtensions().then(({ installed, mapAllExtensions }) => {
+    ipcMain.handle(PipelineEvents.GET_EXTENSIONS, async () => installed)
+    ipcMain.handle(PipelineEvents.GET_EXTENSIONS_FROM_GITHUB, async () => mapAllExtensions)
+  })
 }

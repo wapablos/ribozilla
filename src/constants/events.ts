@@ -10,7 +10,8 @@ export enum WindowControlsEvents {
 }
 
 export enum PipelineEvents {
-  GET_EXTENSIONS='@@PIPE/GET_EXTENSIONS'
+  GET_EXTENSIONS='@@PIPE/GET_EXTENSIONS',
+  GET_EXTENSIONS_FROM_GITHUB='@@PIPE/GET_EXTENSIONS_FROM_GITHUB'
 }
 
 export enum FileBrowserEvents {

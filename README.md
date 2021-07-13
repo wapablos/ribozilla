@@ -60,6 +60,8 @@ You should be able to build Ribozilla on the following platforms:
   You can get the source code cloning the repository using the following command:
 
     git clone https://github.com/wapablos/ribozilla.git
+    cd ribozilla
+    git submodule update --init
 
 ## Building
 Build software base and clui API

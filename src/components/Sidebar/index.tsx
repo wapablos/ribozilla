@@ -46,7 +46,7 @@ export function Routes({ main, extras } : ISidebar) {
   )
 }
 
-export default function Sidebar({ main } : ISidebar) {
+export default function Sidebar({ main, extras } : ISidebar) {
   const { pathname } = useLocation()
   const [selected, setSelected] = useState(pathname === '/' ? '/projects' : pathname)
   const { currentProject } = useSelector<ApplicationState, ApplicationState['system']>((state) => state.system)
@@ -78,7 +78,7 @@ export default function Sidebar({ main } : ISidebar) {
   return (
     <StyledSidebar>
       <ActivityList tasks={main} />
-      {/* <ActivityList tasks={extras} /> */}
+      <ActivityList tasks={extras} />
     </StyledSidebar>
   )
 }

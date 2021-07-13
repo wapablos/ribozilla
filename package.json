@@ -96,6 +96,7 @@
     "husky": "^4.2.5",
     "lint-staged": "^10.2.11",
     "react-hot-loader": "^4.12.21",
+    "redux-devtools-extension": "^2.13.9",
     "rimraf": "^3.0.2",
     "ssh2": "^0.8.9",
     "style-loader": "^2.0.0",

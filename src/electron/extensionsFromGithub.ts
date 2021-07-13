@@ -20,16 +20,13 @@ export async function fetchExtensions() {
         }
       ]
     })
-    .then((res) => {
-      console.log('CLI Folder', res)
-      return res.data
-    })
+    .then((res) => res.data /* console.log('CLI Folder', res) */)
     .catch((error) => {
       console.error(error)
-      return []
+      return error
     })
 
-  const manifestMeta = extensionsUrlPath.then(async (res: any) => {
+  const manifestMeta = extensionsUrlPath?.then(async (res: any) => {
     const files = await axios
       .all(
         res.map((link: any, index: number) => axios.get(link, {
@@ -53,10 +50,12 @@ export async function fetchExtensions() {
       .then((res: any) => res)
     const manifest = jsonpath.query(files, '$[*].data')
     return manifest
+  }).catch((error) => {
+    console.log('Error: Manifest fetch failed')
+    return error
   })
 
   const extensionMetadata = manifestMeta.then(async (res: any) => {
-    console.log(res)
     const metadata = await axios
       .all(
         res.map((value: any) => axios.get(value.download_url, {
@@ -77,8 +76,11 @@ export async function fetchExtensions() {
       )
       .then((res) => res)
     const md = jsonpath.query(metadata, '$[*].data')
-    console.log('Metadata: ', md)
+    // console.log('Metadata: ', md)
     return md
+  }).catch((error) => {
+    console.log('Error: No metadata')
+    return error
   })
 
   return extensionMetadata

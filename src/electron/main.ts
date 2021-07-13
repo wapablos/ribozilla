@@ -1,9 +1,8 @@
 /* eslint-disable array-callback-return */
-import { app, BrowserWindow, Menu } from 'electron'
+import { app, BrowserWindow, session } from 'electron'
 import * as path from 'path'
-import AppHandler, { isDevelopment, isMac, isWindows, isLinux } from './app-handler'
-import { loadExtensions, checkAppConfigFiles } from './storage'
-import appMenu from './menu'
+import AppHandler, { isDevelopment, isMac } from './app-handler'
+import { checkAppConfigFiles, handleExtensions } from './storage'
 // import appMenu from './menu'
 
 const outputFolder = (file: string) => path.join(app.getAppPath(), isDevelopment ? '' : 'build', file)
@@ -55,10 +54,11 @@ app.allowRendererProcessReuse = true
 
 app.on('ready', async () => {
   checkAppConfigFiles()
-  loadExtensions()
+  handleExtensions()
 })
 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
+  await session.defaultSession.loadExtension('/Users/wapablos/Library/Application Support/Google/Chrome/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd/2.17.2_0')
   createWindow()
 })
 
