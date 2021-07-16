@@ -131,7 +131,8 @@ export const StyledListItem: typeof ListItem = styled(ListItem).attrs({
   disableGutters: true
 })`
   &.MuiListItem-root {
-    height: 24px;
+    min-height: 24px;
+    max-height: 24px;
     padding: 0 4px;
   }
 
