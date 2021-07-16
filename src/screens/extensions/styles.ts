@@ -49,5 +49,16 @@ export const StyledList = styled(List).attrs({
 export const ExtensionsStyledListItem: typeof ListItem = styled(StyledListItem)`
   &.MuiListItem-root {
     margin-top: 1px;
+
+    &.MuiListItem-button {
+    &.software {
+      .mini-action {
+        :hover {
+          &.installed { color: #FF6347; }
+          &.available { color: #1aa8f5; }
+        }
+      }
+    }
+  }
   }
 `

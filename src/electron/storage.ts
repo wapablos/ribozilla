@@ -80,6 +80,7 @@ export async function showInstalledExtensions() {
     .catch((errno) => { console.log('File error: ', basename(path)) })))
     .then((extensionArray) => extensionArray.filter((extension) => typeof extension !== 'undefined'))
 
+  console.log(fetchFiles)
   const mapAllExtensions: IExtensionList = {
     available: [],
     installed: []
@@ -97,10 +98,11 @@ export async function showInstalledExtensions() {
       }
     })
   }).catch((error) => {
-    installed.map((value) => {
+    installed.map((value, index) => {
       mapAllExtensions.installed.push({
         name: value.name,
-        version: value.version
+        version: value.version,
+        filename: installedBasename[index]
       })
     })
   })

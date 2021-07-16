@@ -54,7 +54,7 @@ export const ActionButton = styled(Button).attrs({
       :hover {
         background-color: rgba(255, 255, 255, 0.2);
 
-        &.copy * {
+        &.cancel * {
           color: #FF6347;
         }
 

@@ -17,6 +17,8 @@ export const fileMenu: IREWMenu.IMenuItem = {
 export const helpMenu: IREWMenu.IMenuItem = {
   label: 'Help',
   submenu: [
+    { label: 'Reload Extensions' },
+    { type: 'separator' },
     { label: 'About Ribozilla' },
     { label: 'Help' }
   ]

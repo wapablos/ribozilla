@@ -33,7 +33,7 @@ export const StyledCard = styled(StyledNode)`
           color: #1aa8f5;
         }
 
-        &.copy {
+        &.cancel {
           color: #FFD700;
         }
 
