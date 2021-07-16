@@ -1,9 +1,9 @@
 /* eslint-disable array-callback-return */
-import { app, BrowserWindow, session } from 'electron'
+import { app, BrowserWindow, session, Menu } from 'electron'
 import * as path from 'path'
 import AppHandler, { isDevelopment, isMac } from './app-handler'
-import { checkAppConfigFiles, handleExtensions } from './storage'
-// import appMenu from './menu'
+import { checkAppConfigFiles, handleExtensions, handleExtensionsStorage } from './storage'
+import appMenu from './menu'
 
 const outputFolder = (file: string) => path.join(app.getAppPath(), isDevelopment ? '' : 'build', file)
 
@@ -34,7 +34,7 @@ function createWindow() {
     }
   })
 
-  // if (isMac) {
+  // if (isMac && !isDevelopment) {
   //   Menu.setApplicationMenu(appMenu)
   // } else {
   //   Menu.setApplicationMenu(null)
@@ -55,6 +55,7 @@ app.allowRendererProcessReuse = true
 app.on('ready', async () => {
   checkAppConfigFiles()
   handleExtensions()
+  handleExtensionsStorage()
 })
 
 app.whenReady().then(async () => {

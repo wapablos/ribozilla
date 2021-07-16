@@ -2,7 +2,7 @@
 /* eslint-disable class-methods-use-this */
 /* eslint-disable no-console */
 import { App, BrowserWindow, ipcMain, dialog, ipcRenderer } from 'electron'
-import { AppEvents, WindowControlsEvents, FileBrowserEvents, ReadWriteEvents, ProjectsEvents } from '@constants/events'
+import { AppEvents, WindowControlsEvents, FileBrowserEvents, ReadWriteEvents, ProjectsEvents, PipelineEvents } from '@constants/events'
 import { IProjectMeta, IReadWrite, IProjectData } from '@constants/interfaces'
 import jetpack from 'fs-jetpack'
 import Store from 'electron-store'

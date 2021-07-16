@@ -9,7 +9,8 @@ import { PipelineEvents } from '@constants/events'
 import Store from 'electron-store'
 import { IProjectMeta, IExtensionList } from '@constants/interfaces'
 import { keyBy } from 'lodash'
-import { exists } from 'fs-jetpack'
+import { exists, write } from 'fs-jetpack'
+import axios from 'axios'
 import { fetchExtensions } from './extensionsFromGithub'
 
 export interface RecentsSchema {
@@ -115,8 +116,39 @@ export async function showInstalledExtensions() {
 }
 
 export async function handleExtensions() {
-  showInstalledExtensions().then(({ installed, mapAllExtensions }) => {
-    ipcMain.handle(PipelineEvents.GET_EXTENSIONS, async () => installed)
-    ipcMain.handle(PipelineEvents.GET_EXTENSIONS_FROM_GITHUB, async () => mapAllExtensions)
+  ipcMain.handle(PipelineEvents.GET_EXTENSIONS, async () => showInstalledExtensions().then((res) => res.installed))
+  ipcMain.handle(PipelineEvents.GET_EXTENSIONS_FROM_GITHUB, async () => showInstalledExtensions().then((res) => res.mapAllExtensions))
+}
+
+export async function handleExtensionsStorage() {
+  ipcMain.handle(PipelineEvents.DOWNLOAD_EXTENSION, async (e, [downloadUrl, filename]: Array<string>) => {
+    console.log(filename)
+
+    axios.get(downloadUrl, {
+      responseType: 'stream'
+    })
+      .then((res) => {
+        const writer = jetpack.createWriteStream(join(extensionsPathProd, filename))
+        console.log(res.data)
+        res.data.pipe(writer)
+
+        return new Promise(() => {
+          writer.on('finish', () => 'finish')
+          writer.on('error', () => 'error')
+        })
+      })
+      .catch((error) => {
+        console.log('Download failed')
+        return 'errordl'
+      })
+      .then((res) => {
+        console.log(res)
+      })
   })
+
+  ipcMain.handle(PipelineEvents.DELETE_EXTENSION, async (e, filename: string) => jetpack
+    .cwd(extensionsPathProd)
+    .removeAsync(filename)
+    .then(() => 'deleted')
+    .catch(() => 'error'))
 }

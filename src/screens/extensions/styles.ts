@@ -51,6 +51,18 @@ export const ExtensionsStyledListItem: typeof ListItem = styled(StyledListItem)`
     margin-top: 1px;
 
     &.MuiListItem-button {
+      &.pane-header {
+        padding: 0 8px;
+        display: flex;
+        justify-content: space-between;
+        
+        .icon.refresh {
+          :hover {
+          color: #00fa9a;
+        }
+        }
+      }
+
     &.software {
       .mini-action {
         :hover {

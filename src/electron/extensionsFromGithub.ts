@@ -6,7 +6,7 @@ export async function fetchExtensions() {
 
   const githubApi = axios.create({
     baseURL: rootExtensionsUrl,
-    timeout: 5000,
+    timeout: 1000,
     params: { ref: 'main' }
   })
 

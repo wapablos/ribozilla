@@ -6,20 +6,31 @@ import { useDispatch, useSelector } from 'react-redux'
 import { ApplicationState } from '@store/.'
 import { servicesActions } from '@store/services'
 import { IExtensionCache, IExtensionList } from '@constants/interfaces'
-import { FiDownloadCloud, FiTrash } from 'react-icons/fi'
+import { FiDownloadCloud, FiTrash, FiRefreshCw } from 'react-icons/fi'
 import { PipelineEvents } from '@constants/events'
+import { extensionsActions } from '@store/extensions'
 import { ExtensionsWrapper, ExtensionsStyledListItem, ListWrapper, StyledList } from './styles'
 
 function setMiniButton(title: keyof IExtensionList, filename?: string, download_url?:string) {
+  const dispatch = useDispatch()
+
   const handleDownload = () => {
-    window.electron.ipcRenderer.invoke(PipelineEvents.DOWNLOAD_EXTENSION, download_url).then((res) => {
-      console.log(res)
+    window.electron.ipcRenderer.invoke(PipelineEvents.DOWNLOAD_EXTENSION, [download_url, filename]).then(async (res) => {
+      console.log(await res)
+      if (res === 'finish') {
+        dispatch(extensionsActions.loadRequest())
+        dispatch(servicesActions.githubLoadRequest())
+      }
     })
   }
 
   const handleDelete = () => {
-    window.electron.ipcRenderer.invoke(PipelineEvents.DELETE_EXTENSION, filename).then((res) => {
-      console.log(res)
+    window.electron.ipcRenderer.invoke(PipelineEvents.DELETE_EXTENSION, filename).then(async (res) => {
+      console.log('Deleted', await res)
+      if (res === 'deleted') {
+        dispatch(extensionsActions.loadRequest())
+        dispatch(servicesActions.githubLoadRequest())
+      }
     })
   }
 
@@ -27,14 +38,14 @@ function setMiniButton(title: keyof IExtensionList, filename?: string, download_
     case 'installed':
       return (
         <div className="mini-action installed" onClick={handleDelete}>
-          <FiTrash size="1.6em" />
+          <FiTrash size="1.2em" />
         </div>
       )
 
     case 'available':
       return (
         <div className="mini-action available" onClick={handleDownload}>
-          <FiDownloadCloud size="1.6em" />
+          <FiDownloadCloud size="1.2em" />
         </div>
       )
 
@@ -44,11 +55,23 @@ function setMiniButton(title: keyof IExtensionList, filename?: string, download_
 }
 
 function getExtensionList(list: Partial<IExtensionCache>[], title: keyof IExtensionList) {
+  const dispatch = useDispatch()
+
+  const handleRefresh = () => {
+    dispatch(extensionsActions.loadRequest())
+    dispatch(servicesActions.githubLoadRequest())
+  }
+
   return (
     <>
-      <ExtensionsStyledListItem>{title.toUpperCase()}</ExtensionsStyledListItem>
+      <ExtensionsStyledListItem className="pane-header">
+        {title.toUpperCase()}
+        <div className="icon refresh" onClick={handleRefresh}>
+          <FiRefreshCw size="1.2em" />
+        </div>
+      </ExtensionsStyledListItem>
       <StyledList>
-        {list.map(({ name, filename, download_url }, index) => (
+        {list?.map(({ name, filename, download_url }, index) => (
           <ExtensionsStyledListItem className="software" key={`${title}-${index}`}>
             {name}
             {setMiniButton(title, filename, download_url)}
@@ -61,10 +84,10 @@ function getExtensionList(list: Partial<IExtensionCache>[], title: keyof IExtens
 
 function ExtensionsList() {
   const dispatch = useDispatch()
-  const { extensions, success, error } = useSelector<ApplicationState, ApplicationState['githubApi']>((state) => state.githubApi)
+  const { extensions, success, error, loading } = useSelector<ApplicationState, ApplicationState['githubApi']>((state) => state.githubApi)
 
   useEffect(() => {
-    if (!success || error) {
+    if (!success || loading) {
       console.log('(Software List) useEffect')
       dispatch(servicesActions.githubLoadRequest())
     }
