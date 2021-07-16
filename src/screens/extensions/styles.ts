@@ -13,7 +13,7 @@ export const ListWrapper = styled.div`
   flex-direction: column;
   background-color: #282a36;
   
-  width: 220px;
+  width: 250px;
   max-height: 100%;
 
   font-family: --apple-system, BlinkMacSystemFont, sans-serif;

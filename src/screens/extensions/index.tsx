@@ -1,7 +1,8 @@
+/* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable camelcase */
-import React, { useEffect } from 'react'
+import React, { useEffect, memo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { ApplicationState } from '@store/.'
 import { servicesActions } from '@store/services'
@@ -9,6 +10,7 @@ import { IExtensionCache, IExtensionList } from '@constants/interfaces'
 import { FiDownloadCloud, FiTrash, FiRefreshCw } from 'react-icons/fi'
 import { PipelineEvents } from '@constants/events'
 import { extensionsActions } from '@store/extensions'
+import { Link } from 'react-router-dom'
 import { ExtensionsWrapper, ExtensionsStyledListItem, ListWrapper, StyledList } from './styles'
 
 function setMiniButton(title: keyof IExtensionList, filename?: string, download_url?:string) {
@@ -101,13 +103,7 @@ function ExtensionsList() {
   )
 }
 
-function ExtensionInfo() {
-  return (
-    <>
-      Info
-    </>
-  )
-}
+const ExtensionInfo = memo(() => <object data="https://ribozilla-preview.netlify.app/" style={{ width: '100%' }} />)
 
 export default function Extensions() {
   return (

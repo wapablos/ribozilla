@@ -127,22 +127,14 @@ export async function handleExtensionsStorage() {
     axios.get(downloadUrl, {
       responseType: 'stream'
     })
-      .then((res) => {
+      .then(async (res) => {
         const writer = jetpack.createWriteStream(join(extensionsPathProd, filename))
-        console.log(res.data)
-        res.data.pipe(writer)
-
-        return new Promise(() => {
-          writer.on('finish', () => 'finish')
-          writer.on('error', () => 'error')
-        })
+        const status = await res.data.pipe(writer)
+        console.log('Writer ', status)
       })
       .catch((error) => {
         console.log('Download failed')
-        return 'errordl'
-      })
-      .then((res) => {
-        console.log(res)
+        return 'error'
       })
   })
 
