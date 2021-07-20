@@ -397,10 +397,14 @@ export const SoftwareListItem: typeof ListItem = styled(ListItem).attrs({
 
     color: #FFFFFF;
 
-    .param-label {
+    .param-label, .label-text, .icon.info {
       display: flex;
       align-items: center;
-      column-gap: 2px;
+      column-gap: 3px;
+
+      .icon.info:hover {
+        color: #00FFFF;
+      }
     }
 
     .param-input {

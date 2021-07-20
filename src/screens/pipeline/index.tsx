@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/mouse-events-have-key-events */
+/* eslint-disable no-param-reassign */
 /* eslint-disable max-len */
 /* eslint-disable array-callback-return */
 /* eslint-disable consistent-return */
@@ -10,20 +12,22 @@ import { ApplicationState } from '@store/.'
 import { extensionsActions } from '@store/extensions'
 import { nodesActions } from '@store/nodes'
 import { Categories, IParameter, RequiredTypes, InputTypes, InputProps } from '@ribozilla/clui-api'
-import { Divider, Collapse } from '@material-ui/core'
+import { Divider, Collapse, Tooltip } from '@material-ui/core'
 import { VscChevronRight, VscChevronDown, VscChromeClose } from 'react-icons/vsc'
 import { BiRightArrowCircle } from 'react-icons/bi'
 import { IconBaseProps } from 'react-icons/lib'
 import ReactFlow, { Controls, Background, NodeTypesType, OnLoadParams, Handle, Position, Edge, Connection, isNode, getBezierPath, EdgeProps, EdgeTypesType, getEdgeCenter, Node } from 'react-flow-renderer'
 import { MosaicBranch, MosaicWindow, MosaicNode } from 'react-mosaic-component'
 import * as lo from 'lodash'
-import { FiLock, FiEdit3, FiFolderPlus, FiFilePlus } from 'react-icons/fi'
+import { FiLock, FiEdit3, FiFolderPlus, FiFilePlus, FiInfo } from 'react-icons/fi'
 import { RiUser4Line, RiCheckboxBlankCircleLine, RiSubtractLine, RiCloseLine } from 'react-icons/ri'
 import { MosaicParent } from 'react-mosaic-component/lib/types'
 import { systemActions } from '@store/system'
 import { useHotkeys } from 'react-hotkeys-hook'
-import { ReadWriteEvents } from '@constants/events'
+import { ReadWriteEvents, FileBrowserEvents } from '@constants/events'
 import { useSnackbar } from 'notistack'
+import { isArray } from 'lodash'
+import { StyledTooltip } from '@components/Sidebar/styles'
 import { PipelineScreen, StyledList, StyledListItem, StyledListItemIcon, SurfaceDiv, ListContainer, StyledMosaic, StyledNode, TheDivider, CardsContainer, StyledCard, SoftwareList, SoftwareListItem, MiniSwitch, MiniButton, StyledParamInput, StyledParamSelect, StyledSVG } from './styles'
 import { getSoftwareListByCategory, EnumCategories, KeyofCategories, RibozillaNode } from './internals'
 
@@ -149,12 +153,29 @@ function SoftwareInputType({ type, values, node, inputIndex, placement } : Parti
   const dispatch = useDispatch()
   const [lastValue, setLastValue] = useState<any>(null)
 
-  const handleOnChange = (value: string | boolean | number) => {
-    // eslint-disable-next-line no-param-reassign
+  const handleOnChange = (value: string | boolean | number | (string | boolean | number)[]) => {
+    console.log('(on change)', value)
     node.data.params[inputIndex].lastValues[placement] = value as string
     console.log(node.data.params[inputIndex])
     setLastValue(node.data.params[inputIndex].lastValues[placement])
+    dispatch(nodesActions.updateFlow(node))
     // dispatch(systemActions.updateProjectFiles())
+  }
+
+  const handleDirs = async () => {
+    const dirs = await window.electron.ipcRenderer.invoke(FileBrowserEvents.CHOOSE_DIR).then((res) => res)
+    console.log(dirs)
+    if (dirs !== undefined) {
+      handleOnChange(dirs)
+    }
+  }
+
+  const handleFiles = async () => {
+    const files = await window.electron.ipcRenderer.invoke(FileBrowserEvents.CHOOSE_FILE).then((res) => res)
+    console.log(files)
+    if (files !== undefined) {
+      handleOnChange(files)
+    }
   }
 
   useEffect(() => {
@@ -168,8 +189,8 @@ function SoftwareInputType({ type, values, node, inputIndex, placement } : Parti
     case InputTypes.FILE:
       return (
         <>
-          <StyledParamInput type="text" placeholder="select files" />
-          <MiniButton className="card-button">
+          <StyledParamInput type="text" placeholder="select files" value={lastValue as string ?? ''} />
+          <MiniButton className="card-button" onClick={handleFiles}>
             <FiFilePlus />
           </MiniButton>
         </>
@@ -179,8 +200,8 @@ function SoftwareInputType({ type, values, node, inputIndex, placement } : Parti
       return (
         <>
           {/* <StyledParamInput type="text" placeholder="select folder" value={lastValue as string} /> */}
-          <StyledParamInput type="text" placeholder="select folder" />
-          <MiniButton className="card-button">
+          <StyledParamInput type="text" placeholder="select folder" value={lastValue as string ?? ''} />
+          <MiniButton className="card-button" onClick={handleDirs}>
             <FiFolderPlus />
           </MiniButton>
         </>
@@ -193,10 +214,14 @@ function SoftwareInputType({ type, values, node, inputIndex, placement } : Parti
     case InputTypes.ENUM:
       if (values === undefined || values.length === 0) break
 
+      if (lastValue as string === undefined) {
+        handleOnChange(values[0])
+      }
+
       return (
-        <StyledParamSelect>
+        <StyledParamSelect onChange={(e) => handleOnChange((e.target as any).value)} value={lastValue as string}>
           {values.map((value, index) => (
-            <option key={`value-${index}`}>{value.replace(/^[-]*/, '')}</option>
+            <option key={`value-${index}`} value={value}>{value.replace(/^[-]*/, '')}</option>
           ))}
         </StyledParamSelect>
       )
@@ -245,6 +270,7 @@ function switchRoles() {
 // function SoftwareCard({ id, data, nodeIndex } : Partial<RibozillaNode> & { nodeIndex?: number }) {
 function SoftwareCard({ node }: {node: RibozillaNode}) {
   const { id, data } = node
+
   const checkIsRequired = (isRequired: RequiredTypes) => {
     const { selectRwIcon, toggleIconsRw } = switchRoles()
 
@@ -268,20 +294,32 @@ function SoftwareCard({ node }: {node: RibozillaNode}) {
 
   const Content = () => (
     <SoftwareList>
-      {data?.params.map(({ label, signature, inputs, isRequired }, dataIndex) => (
-        <SoftwareListItem key={`sw-${dataIndex}-${signature}`}>
-          <div className="param-label" key={`label-${dataIndex}-${signature}`}>
-            {checkIsRequired(isRequired)}
-            {label}
-          </div>
-          <div className="param-input" key={`input-${dataIndex}-${signature}`}>
-            {inputs.map(({ type, values }, placeIndex) => (
+      {data?.params.map(({ label, signature, inputs, isRequired, description }, dataIndex) => {
+        const [isHover, setIsHover] = useState(false)
+        return (
+          <SoftwareListItem key={`sw-${dataIndex}-${signature}`}>
+            <div className="param-label" key={`label-${dataIndex}-${signature}`}>
+              {checkIsRequired(isRequired)}
+              <div className="label-text" onMouseOver={() => setIsHover(true)} onMouseLeave={() => setIsHover(false)}>
+                {label}
+                {isHover && (
+                <StyledTooltip title={description}>
+                  <div className=" icon info">
+                    <FiInfo />
+                  </div>
+                </StyledTooltip>
+                )}
+              </div>
+            </div>
+            <div className="param-input" key={`input-${dataIndex}-${signature}`}>
+              {inputs.map(({ type, values }, placeIndex) => (
               // <SoftwareInputType key={`input-${type}-${placeIndex}`} type={type} values={values} id={id} inputIndex={dataIndex} nodeIndex={nodeIndex} placement={placeIndex} />
-              <SoftwareInputType key={`input-${type}-${placeIndex}`} type={type} values={values} node={node} inputIndex={dataIndex} placement={placeIndex} />
-            ))}
-          </div>
-        </SoftwareListItem>
-      ))}
+                <SoftwareInputType key={`input-${type}-${placeIndex}`} type={type} values={values} node={node} inputIndex={dataIndex} placement={placeIndex} />
+              ))}
+            </div>
+          </SoftwareListItem>
+        )
+      })}
     </SoftwareList>
   )
   return (

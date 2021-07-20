@@ -65,6 +65,15 @@ export default class AppHandler {
 
         return dir
       })
+
+      ipcMain.handle(FileBrowserEvents.CHOOSE_FILE, async (e) => {
+        const dir = await dialog
+          .showOpenDialog(this.win, { properties: ['openFile', 'multiSelections'] })
+          .then(({ filePaths }) => filePaths)
+          .catch((errno) => { console.log(errno) })
+
+        return dir
+      })
     }
 
     public saveProjectMeta() {
