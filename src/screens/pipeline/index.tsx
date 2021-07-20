@@ -16,7 +16,7 @@ import { Divider, Collapse, Tooltip } from '@material-ui/core'
 import { VscChevronRight, VscChevronDown, VscChromeClose } from 'react-icons/vsc'
 import { BiRightArrowCircle } from 'react-icons/bi'
 import { IconBaseProps } from 'react-icons/lib'
-import ReactFlow, { Controls, Background, NodeTypesType, OnLoadParams, Handle, Position, Edge, Connection, isNode, getBezierPath, EdgeProps, EdgeTypesType, getEdgeCenter, Node } from 'react-flow-renderer'
+import ReactFlow, { Controls, Background, NodeTypesType, OnLoadParams, Handle, Position, Edge, Connection, isNode, getBezierPath, EdgeProps, EdgeTypesType, getEdgeCenter, Node, getOutgoers, FlowElement, getIncomers } from 'react-flow-renderer'
 import { MosaicBranch, MosaicWindow, MosaicNode } from 'react-mosaic-component'
 import * as lo from 'lodash'
 import { FiLock, FiEdit3, FiFolderPlus, FiFilePlus, FiInfo } from 'react-icons/fi'
@@ -26,7 +26,6 @@ import { systemActions } from '@store/system'
 import { useHotkeys } from 'react-hotkeys-hook'
 import { ReadWriteEvents, FileBrowserEvents } from '@constants/events'
 import { useSnackbar } from 'notistack'
-import { isArray } from 'lodash'
 import { StyledTooltip } from '@components/Sidebar/styles'
 import { PipelineScreen, StyledList, StyledListItem, StyledListItemIcon, SurfaceDiv, ListContainer, StyledMosaic, StyledNode, TheDivider, CardsContainer, StyledCard, SoftwareList, SoftwareListItem, MiniSwitch, MiniButton, StyledParamInput, StyledParamSelect, StyledSVG } from './styles'
 import { getSoftwareListByCategory, EnumCategories, KeyofCategories, RibozillaNode } from './internals'
@@ -116,7 +115,11 @@ function NodeSurface() {
   const { currentProject, writeError } = useSelector<ApplicationState, ApplicationState['system']>((state) => state.system)
 
   const onLoad = (reactFlowInstance: OnLoadParams) => { reactFlowInstance.setTransform({ x: 0, y: 0, zoom: 0.9 }) }
-  const onConnect = (connection: Edge | Connection) => { dispatch(nodesActions.linkNodes({ ...connection, type: 'custom' })) }
+  const onConnect = (connection: Edge | Connection) => {
+    dispatch(nodesActions.linkNodes({ ...connection, type: 'custom' }))
+    // const s = (nodes.filter(({ id }) => id === connection.source)[0] as RibozillaNode).data.params.filter(({ signature }) => signature === connection.sourceHandle)[0]
+    // nodes.filter(({ id }) => id === connection.target)[0].data.params.filter(({ signature } : any) => signature === connection.targetHandle)[0].lastValues = s.lastValues
+  }
   const onNodeDragStop = (event: React.MouseEvent, node: Node) => { dispatch(nodesActions.updateFlow(node)) }
 
   const handleSave = useHotkeys('ctrl+s, command+s', () => {

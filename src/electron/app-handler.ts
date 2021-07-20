@@ -8,6 +8,7 @@ import jetpack from 'fs-jetpack'
 import Store from 'electron-store'
 import { join } from 'path'
 import { appPath, RecentsSchema, recentsBasename, toolboxPath } from './storage'
+import { openRibozillaDocs, openAboutDialog } from './menu/menuFunctions'
 
 /**
  * Development variables
@@ -54,6 +55,14 @@ export default class AppHandler {
       ipcMain.on(WindowControlsEvents.MAXIMIZE, handleMax)
       ipcMain.on(WindowControlsEvents.MINIMIZE, () => this.win.minimize())
       ipcMain.on(WindowControlsEvents.CLOSE, () => this.app.quit())
+
+      ipcMain.handle('about-app', () => {
+        openAboutDialog(this.win)
+      })
+
+      ipcMain.handle('open-doc', () => {
+        openRibozillaDocs()
+      })
     }
 
     public chooseDir() {

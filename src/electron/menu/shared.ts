@@ -10,17 +10,15 @@ export const fileMenu: IREWMenu.IMenuItem = {
     { type: 'separator' },
     { label: 'Open Project', accelerator: 'CmdOrCtrl+O' },
     { type: 'separator' },
-    { label: 'Save', accelerator: 'CmdOrCtrl+S', click: (args) => { console.log(args) } }
+    { label: 'Save', accelerator: 'CmdOrCtrl+S' }
   ]
 }
 
-export const helpMenu: IREWMenu.IMenuItem = {
+export const windowsHelpMenu: IREWMenu.IMenuItem = {
   label: 'Help',
   submenu: [
-    { label: 'Reload Extensions', click: () => { console.log('reload') } },
-    { type: 'separator' },
-    { label: 'About Ribozilla' },
-    { label: 'Help' }
+    { label: 'About Ribozilla', click: () => window.electron.ipcRenderer.invoke('about-app') },
+    { label: 'Help', click: () => window.electron.ipcRenderer.invoke('open-doc') }
   ]
 }
 
@@ -32,4 +30,4 @@ export const terminalMenu: IREWMenu.IMenuItem = {
   ]
 }
 
-export const sharedOptions = [helpMenu]
+export const sharedOptions = [windowsHelpMenu]

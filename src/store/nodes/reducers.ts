@@ -1,6 +1,6 @@
 /* eslint-disable no-case-declarations */
 import { Reducer, PayloadAction } from 'typesafe-actions'
-import { addEdge, Edge, removeElements, Elements } from 'react-flow-renderer'
+import { addEdge, Edge, removeElements, Elements, getOutgoers } from 'react-flow-renderer'
 import { RibozillaNode } from '@screens/pipeline/internals'
 import { NodesState, NodesActionTypes } from './types'
 

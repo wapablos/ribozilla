@@ -34,11 +34,11 @@ function createWindow() {
     }
   })
 
-  // if (isMac && !isDevelopment) {
-  //   Menu.setApplicationMenu(appMenu)
-  // } else {
-  //   Menu.setApplicationMenu(null)
-  // }
+  if (isMac) {
+    Menu.setApplicationMenu(appMenu)
+  } else {
+    Menu.setApplicationMenu(null)
+  }
 
   if (isDevelopment) {
     win.loadURL('http://localhost:4000/')
@@ -59,7 +59,6 @@ app.on('ready', async () => {
 })
 
 app.whenReady().then(async () => {
-  await session.defaultSession.loadExtension('/Users/wapablos/Library/Application Support/Google/Chrome/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd/2.17.2_0')
   createWindow()
 })
 
