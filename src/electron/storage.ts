@@ -19,7 +19,7 @@ export interface RecentsSchema {
 
 export const homePath = homedir()
 export const appPath = resolve(homePath, '.ribozilla')
-export const extensionsPath = resolve(appPath, 'ribozilla-extensions')
+export const extensionsPathDev = resolve(appPath, 'ribozilla-extensions')
 export const extensionsPathProd = resolve(appPath, 'extensions')
 export const recentsBasename = 'recents'
 export const recentProjects = resolve(appPath, `${recentsBasename}.json`)
@@ -29,8 +29,8 @@ export const extensionCache = resolve(appPath, 'extensions.cache.json')
 export const installedExtensions = resolve(appPath, 'extensions.list.json')
 
 export async function checkAppConfigFiles() {
-  if (!jetpack.exists(appPath) && !jetpack.exists(extensionsPath)) {
-    jetpack.cwd(homePath).dir(appPath).dir(extensionsPath)
+  if (!jetpack.exists(appPath) && !jetpack.exists(extensionsPathProd)) {
+    jetpack.cwd(homePath).dir(appPath).dir(extensionsPathProd)
   }
 
   if (!jetpack.exists(recentProjects)) {
@@ -46,13 +46,13 @@ export async function checkAppConfigFiles() {
     fetchExtensions().then((res) => {
       jetpack.cwd(homePath).file(extensionCache, { content: res })
     }).catch((error) => {
-      console.log(error)
+      console.log('Cache')
     })
   }
 }
 
 export async function loadExtensions() {
-  const extensionsPath = jetpack.find('ribozilla-extensions/cli', { matching: ['*manifest.json', '!node_modules/**/*'], directories: false })
+  const extensionsPath = jetpack.find(extensionsPathProd, { matching: ['*manifest.json', '!node_modules/**/*'], directories: false })
   const extensionValidator = new RibozillaExtensionValidator()
 
   const extensions = await Promise.all(extensionsPath.map(async (extensionsPath) => jetpack

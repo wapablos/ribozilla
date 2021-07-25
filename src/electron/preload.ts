@@ -1,5 +1,4 @@
 import { contextBridge, ipcRenderer } from 'electron'
-import os from 'os'
 
 console.log('Electron preload was initialized')
 

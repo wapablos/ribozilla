@@ -16,6 +16,7 @@
     "server:main": "cross-env NODE_ENV='development' DEV_SERVER=enable webpack --color --progress --config webpack/webpack.config.main.js",
     "server:renderer": "cross-env NODE_ENV='development' webpack-dev-server --color --progress --config webpack/webpack.config.server.js",
     "server:all": "concurrently \"yarn server:renderer\" \"wait-on http://localhost:4000 && yarn server:main\"",
+    "test-prod:main": "cross-env NODE_ENV=production DEV_SERVER=enable webpack --color --progress --config webpack/webpack.config.main.prod.js",
     "pkg-mac:x64": "yarn clean && yarn build:all && yarn electron-builder build --mac --x64"
   },
   "husky": {
@@ -48,7 +49,7 @@
     "axios": "^0.21.1",
     "electron-store": "^6.0.1",
     "fs-jetpack": "^4.1.0",
-    "jsonpath": "^1.1.1",
+    "jsonpath-plus": "^6.0.1",
     "lodash": "^4.17.21",
     "notistack": "^1.0.9",
     "react": "^16.13.1",

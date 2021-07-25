@@ -1,5 +1,6 @@
 import axios from 'axios'
-import jsonpath from 'jsonpath'
+// import jsonpath from 'jsonpath'
+import { JSONPath } from 'jsonpath-plus'
 
 export async function fetchExtensions() {
   const rootExtensionsUrl = 'https://api.github.com/repos/wapablos/ribozilla-extensions/contents'
@@ -14,16 +15,24 @@ export async function fetchExtensions() {
     {
       transformResponse: [
         (data) => {
-          const json = JSON.parse(data)
-          const fetchExtensionsUrl = jsonpath.query(json, '$[*].url')
-          return fetchExtensionsUrl
+          try {
+            const json = JSON.parse(data)
+            const fetchExtensionsUrl = JSONPath({ json, path: '$[*].url' })
+            return fetchExtensionsUrl
+          } catch (error) {
+            console.log('(ERROR) Irregular response')
+            return []
+          }
         }
       ]
     })
-    .then((res) => res.data /* console.log('CLI Folder', res) */)
+    .then((res) => {
+      console.log('Fetch Success', res)
+      return res?.data
+    })
     .catch((error) => {
-      console.error(error)
-      return error
+      console.error('§ Fetch Error')
+      return []
     })
 
   const manifestMeta = extensionsUrlPath?.then(async (res: any) => {
@@ -33,10 +42,7 @@ export async function fetchExtensions() {
           transformResponse: [
             (data) => {
               const json = JSON.parse(data)
-              const manifestMeta = jsonpath.query(
-                json,
-                '$[?(/manifest.json/.test(@.name))]'
-              )[0]
+              const manifestMeta = JSONPath({ json, path: '$[?(/manifest.json/.test(@.name))]' })[0]
               const manifestRes = {
                 name: manifestMeta.name,
                 sha: manifestMeta.sha,
@@ -48,7 +54,7 @@ export async function fetchExtensions() {
         }))
       )
       .then((res: any) => res)
-    const manifest = jsonpath.query(files, '$[*].data')
+    const manifest = JSONPath({ json: files, path: '$[*].data' })
     return manifest
   }).catch((error) => {
     console.log('Error: Manifest fetch failed')
@@ -75,7 +81,7 @@ export async function fetchExtensions() {
         }))
       )
       .then((res) => res)
-    const md = jsonpath.query(metadata, '$[*].data')
+    const md = JSONPath({ json: metadata, path: '$[*].data' })
     // console.log('Metadata: ', md)
     return md
   }).catch((error) => {

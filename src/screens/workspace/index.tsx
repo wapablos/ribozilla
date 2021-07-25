@@ -5,7 +5,7 @@ import { SiNodeRed, SiGnubash } from 'react-icons/si'
 import { BsGridFill } from 'react-icons/bs'
 import { GiToolbox } from 'react-icons/gi'
 import { MdExtension } from 'react-icons/md'
-import { isDevelopment, isWindows, isLinux } from '@constants/environment'
+import { isDevelopment, isWindows, isLinux, isMac } from '@constants/environment'
 import { GlobalStyle } from '@constants/styles'
 import { BaseTheme } from '@constants/themes'
 import Sidebar, { Routes, ISidebar } from '@components/Sidebar'
@@ -46,7 +46,7 @@ export default function Workspace() {
       <GlobalStyle />
       <SnackbarProvider maxSnack={1} autoHideDuration={2200} anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}>
         <WorkspaceLayout>
-          { isWindows || isLinux || isDevelopment ? <Titlebar /> : <></>}
+          { (isWindows || isLinux || isDevelopment) && <Titlebar />}
           <Sidebar main={main} extras={extras} />
           <Routes main={main} extras={extras} />
           <Statusbar />

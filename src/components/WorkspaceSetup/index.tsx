@@ -120,9 +120,7 @@ export function ProjectCard({ id, name, description, path, file } : Partial<IPro
 
       <div className="card-item-input flex-column">
         Preview
-        <div className="item-wrapper img-area">
-          <img src="public/template-dna.png" alt="template" />
-        </div>
+        <div className="item-wrapper img-area" />
       </div>
 
       <div className="item-wrapper button-group">
