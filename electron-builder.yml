@@ -12,8 +12,13 @@ files:
   - node_modules/
   - public/template-dna.png
 
+mac:
+  target: dmg
+  category: public.app-category.developer-tools
+  icon: public/icon/ribozilla-mac.icns
+
 dmg:
-  background: public/background.tiff
+  background: public/dmg-background.tiff
   contents:
     - type: link
       path: /Applications
@@ -23,7 +28,27 @@ dmg:
       x: 130
       y: 250
 
-mac:
-  target: dmg
-  category: public.app-category.developer-tools
-  icon: public/icon/ribozilla.icns
+win:
+  target: nsis
+  icon: public/icon/ribozilla-win.ico
+  publisherName: github.com/wapablos
+
+nsis:
+  oneClick: false
+  perMachine: false
+  allowElevation: true
+  allowToChangeInstallationDirectory: true
+  installerIcon: public/icon/ribozilla-win-install.ico
+  uninstallerIcon: public/icon/ribozilla-win-uninstall.ico
+  installerSidebar: public/nsis-banner.png 
+  uninstallerSidebar: public/nsis-banner.png 
+
+linux:
+  target:
+    - target: AppImage
+    - target: deb
+    - target: pacman
+    - target: zip
+  icon: public/ribozilla-linux.png
+  category: Science
+  maintainer: wapablos
