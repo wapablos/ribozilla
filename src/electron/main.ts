@@ -52,6 +52,10 @@ function createWindow() {
 
 app.allowRendererProcessReuse = true
 
+if (process.platform === 'linux') {
+    app.disableHardwareAcceleration()
+}
+
 app.on('ready', async () => {
   checkAppConfigFiles()
   handleExtensions()
