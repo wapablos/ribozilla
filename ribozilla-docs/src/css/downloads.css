@@ -1,0 +1,141 @@
+.dl-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+  font-family: -apple-system, BlinkMacSystemFont;
+  margin: 1rem 0;
+}
+
+.dl-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 32px;
+  font-weight: 300;
+}
+
+.dl-header .title {
+  color: #bac8d1;
+}
+
+.dl-header .desc {
+  font-size: 48px;
+}
+
+.os-spec {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9em;
+  margin: 2rem;
+  padding: 10px;
+  border-radius: 10px;
+  font-weight: 300;
+}
+
+.download-link-button {
+  display: inline-flex !important;
+  background: #00c800;
+  color: #fff;
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+  height: 48px;
+  line-height: 48px;
+  max-width: 100%;
+  min-width: 150px;
+  outline: none;
+  padding: 0 32px;
+  touch-action: manipulation;
+  font-weight: 500;
+}
+
+.download-link-button:hover {
+    color: #fff;
+    background-color: rgb(0,188,0);
+    -webkit-text-decoration: none;
+    text-decoration: none;
+}
+
+.divider-with-text {
+  width: 100%;
+  border-bottom: 1px solid rgb(236, 240, 242);
+  line-height: 0;
+  margin: 30px 0;
+  text-align: center;
+}
+
+.divider-with-text .center-label {
+  background: #fff;
+  font-size: 32px;
+  line-height: 0;
+  padding: 0 24px;
+}
+
+html[data-theme='dark'] .divider-with-text .center-label {
+  background: #18191a;
+}
+
+.download-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+  flex-basis: auto;
+}
+
+
+.os-spec.mini {
+
+}
+
+.os-spec .os-name {
+  font-size: 24px;
+  font-weight: 300;
+}
+
+.os-spec .info {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  font-size: 12px;
+}
+
+.per-os-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  touch-action: manipulation;
+  cursor: pointer;
+  text-decoration: none;  
+  row-gap: 15px;
+}
+
+.per-os-list .dl-link {
+  display: flex;
+  color: rgb(52,56,59);
+  gap: 8px;
+  align-items: center;
+  height: 12px;
+}
+
+html[data-theme='dark'] .per-os-list .dl-link {
+  color: #fff;
+
+}
+
+.dl-link .href-arch {
+  display: inline-flex !important;
+  background: #00c800;
+  color: #fff;
+  border: 0;
+  border-radius: 2px;
+  cursor: pointer;
+  padding: 0 5px;
+}

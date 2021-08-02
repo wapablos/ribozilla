@@ -23,7 +23,7 @@ module.exports = {
       items: [
         { type: 'doc', docId: 'intro', position: 'left', label: 'Docs' },
         { type: 'doc', docId: 'api/intro', position: 'left', label: 'API' },
-        { to: '/blog', label: 'Blog', position: 'left' },
+        // { to: '/blog', label: 'Blog', position: 'left' },
         { to: '/ux-research', label: 'UX Research', position: 'right' },
         { to: '/downloads', label: 'Downloads', position: 'right' },
         {

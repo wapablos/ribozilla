@@ -36,4 +36,4 @@ Recommended installation:
   - [Miniconda Installation](https://conda.io/projects/conda/en/latest/user-guide/install/index.html#regular-installation)
 ## Recommended code editor
 
-`VSCode` - https://code.visualstudio.com/#alt-downloads
+`VSCode` - [Visual Studio Code](https://code.visualstudio.com/#alt-downloads)

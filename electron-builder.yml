@@ -23,10 +23,10 @@ dmg:
     - type: link
       path: /Applications
       x: 410
-      y: 250
+      y: 220
     - type: file
       x: 130
-      y: 250
+      y: 220
 
 win:
   target: nsis
