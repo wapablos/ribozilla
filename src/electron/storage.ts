@@ -121,21 +121,24 @@ export async function handleExtensions() {
 }
 
 export async function handleExtensionsStorage() {
-  ipcMain.handle(PipelineEvents.DOWNLOAD_EXTENSION, async (e, [downloadUrl, filename]: Array<string>) => {
-    console.log(filename)
+  ipcMain.handle(PipelineEvents.DOWNLOAD_EXTENSION, async (e, { download_url, filename }) => {
+    console.log('Details', download_url)
 
-    axios.get(downloadUrl, {
+    const res = await axios.get(download_url, {
       responseType: 'stream'
     })
       .then(async (res) => {
         const writer = jetpack.createWriteStream(join(extensionsPathProd, filename))
         const status = await res.data.pipe(writer)
-        console.log('Writer ', status)
+        console.log('Finish')
+        return 'finish'
       })
       .catch((error) => {
         console.log('Download failed')
         return 'error'
       })
+
+    return res
   })
 
   ipcMain.handle(PipelineEvents.DELETE_EXTENSION, async (e, filename: string) => jetpack

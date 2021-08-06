@@ -17,8 +17,8 @@ function setMiniButton(title: keyof IExtensionList, filename?: string, download_
   const dispatch = useDispatch()
 
   const handleDownload = () => {
-    window.electron.ipcRenderer.invoke(PipelineEvents.DOWNLOAD_EXTENSION, [download_url, filename]).then(async (res) => {
-      console.log(await res)
+    window.electron.ipcRenderer.invoke(PipelineEvents.DOWNLOAD_EXTENSION, { download_url, filename }).then((res) => {
+      console.log('Download', res)
       if (res === 'finish') {
         dispatch(extensionsActions.loadRequest())
         dispatch(servicesActions.githubLoadRequest())

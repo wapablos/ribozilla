@@ -27,7 +27,7 @@ export async function fetchExtensions() {
       ]
     })
     .then((res) => {
-      console.log('Fetch Success', res)
+      console.log('Fetch Success')
       return res?.data
     })
     .catch((error) => {
