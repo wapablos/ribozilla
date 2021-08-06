@@ -2,9 +2,18 @@ import React from 'react'
 import Layout from '@theme/Layout'
 import { SiWindows, SiApple, SiLinux } from 'react-icons/si'
 import PropTypes from 'prop-types'
-import { getOs } from './utils'
-import styles from '../index.module.css'
+import ExecutionEnvironment from '@docusaurus/ExecutionEnvironment'
+// import { getOs } from './utils'
+import '../index.module.css'
 import '../../css/downloads.css'
+
+export const getOs = () => {
+  if (navigator.platform.includes('Win')) { return 'win32' }
+  if (navigator.platform.includes('Mac')) { return 'darwin' }
+  if (navigator.platform.includes('Linux')) { return 'linux' }
+
+  return 'linux'
+}
 
 function Header() {
   return (
@@ -94,11 +103,11 @@ const platformProps = {
     name: 'Windows',
     icon: SiWindows,
     requirement: 'Windows 7, 8, 10',
-    href: 'https://github.com/wapablos/ribozilla/releases/download/v1.0.0-beta.0/Ribozilla.Setup.1.0.0.beta.0.exe',
+    href: 'https://github.com/wapablos/ribozilla/releases/download/v1.0.0-beta.0/ribozilla-setup-1.0.0-beta.0.exe',
     os: [{
       file: 'User Installer',
       arch: '64-bit',
-      href: 'https://github.com/wapablos/ribozilla/releases/download/v1.0.0-beta.0/Ribozilla.Setup.1.0.0.beta.0.exe'
+      href: 'https://github.com/wapablos/ribozilla/releases/download/v1.0.0-beta.0/ribozilla-setup-1.0.0-beta.0.exe'
     }]
   },
   linux: {
@@ -141,11 +150,13 @@ function DownloadAllOs() {
 }
 
 export default function Home() {
+  const location = ExecutionEnvironment.canUseDOM ? window.location.href : null
+
   return (
     <Layout title="Downloads" description="Get your Ribozilla release">
       <section className="dl-wrapper">
         <Header />
-        <DownloadPerOs />
+        {location && <DownloadPerOs />}
         <div className="divider-with-text">
           <span className="center-label">
             or
