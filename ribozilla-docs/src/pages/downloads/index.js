@@ -1,15 +1,16 @@
 import React from 'react'
 import Layout from '@theme/Layout'
-import { SiWindows, SiApple, SiDebian, SiArchlinux, SiLinux } from 'react-icons/si'
+import { SiWindows, SiApple, SiLinux } from 'react-icons/si'
 import PropTypes from 'prop-types'
 import { getOs } from './utils'
+import styles from '../index.module.css'
 import '../../css/downloads.css'
 
 function Header() {
   return (
     <header className="dl-header">
       <div className="title">
-        Download Ribozilla
+        Download Ribozilla 1.0.0-beta.0
       </div>
       <div className="desc">
         Works on all popular platforms
@@ -35,7 +36,7 @@ function Binary({ name, icon, requirement, os }) {
           {os?.map(({ file, arch, href }) => (
             <div className="dl-link">
               {file}
-              <a href={href ?? '?'} className="href-arch">
+              <a href={href ?? '?'} className="button button--primary href-arch">
                 {arch}
               </a>
             </div>
@@ -64,7 +65,7 @@ function PlatformDownloader({ name, icon, requirement, href }) {
       <div>
         {React.createElement(icon, { size: '5em' })}
       </div>
-      <a href={href} className="download-link-button">{`Download for ${name}`.toUpperCase()}</a>
+      <a href={href} className="button button--primary  ">{`Download for ${name}`.toUpperCase()}</a>
       <div>
         {requirement}
       </div>
@@ -82,32 +83,39 @@ const platformProps = {
     name: 'MacOS',
     icon: SiApple,
     requirement: 'macOS 10.9+',
-    href: 'https://wire-app.wire.com/linux/Wire-3.26.2941_x86_64.AppImage',
+    href: 'https://github.com/wapablos/ribozilla/releases/download/v1.0.0-beta.0/ribozilla-1.0.0-beta.0.dmg',
     os: [{
       file: 'DMG (Intel)',
-      arch: '64-bit'
+      arch: '64-bit',
+      href: 'https://github.com/wapablos/ribozilla/releases/download/v1.0.0-beta.0/ribozilla-1.0.0-beta.0.dmg'
     }]
   },
   win: {
     name: 'Windows',
     icon: SiWindows,
     requirement: 'Windows 7, 8, 10',
+    href: 'https://github.com/wapablos/ribozilla/releases/download/v1.0.0-beta.0/Ribozilla.Setup.1.0.0.beta.0.exe',
     os: [{
       file: 'User Installer',
-      arch: '64-bit'
+      arch: '64-bit',
+      href: 'https://github.com/wapablos/ribozilla/releases/download/v1.0.0-beta.0/Ribozilla.Setup.1.0.0.beta.0.exe'
     }]
   },
   linux: {
     name: 'Linux',
     icon: SiLinux,
     requirement: 'LTS+',
+    href: 'https://github.com/wapablos/ribozilla/releases/download/v1.0.0-beta.0/ribozilla-1.0.0-beta.0.AppImage',
     os: [
       { file: '.deb',
-        arch: '64-bit' },
+        arch: '64-bit',
+        href: 'https://github.com/wapablos/ribozilla/releases/download/v1.0.0-beta.0/ribozilla_1.0.0_beta.0_amd64.deb' },
       { file: '.AppImage',
-        arch: '64-bit' },
+        arch: '64-bit',
+        href: 'https://github.com/wapablos/ribozilla/releases/download/v1.0.0-beta.0/ribozilla-1.0.0-beta.0.AppImage' },
       { file: '.pacman',
-        arch: '64-bit' }]
+        arch: '64-bit',
+        href: 'https://github.com/wapablos/ribozilla/releases/download/v1.0.0-beta.0/ribozilla-1.0.0-beta.0.pacman' }]
   }
 }
 
