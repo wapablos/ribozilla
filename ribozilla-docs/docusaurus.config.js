@@ -14,6 +14,9 @@ module.exports = {
   organizationName: 'wapablos', // Usually your GitHub org/user name.
   projectName: 'ribozilla', // Usually your repo name.
   themeConfig: {
+    colorMode: {
+      defaultMode: 'dark'
+    },
     navbar: {
       title: 'Ribozilla',
       logo: {
@@ -68,7 +71,7 @@ module.exports = {
           ]
         }
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} Tunguska Cyberpunk, Inc. Built with Docusaurus.`
+      copyright: `Copyright © 2020-${new Date().getFullYear()} wapablos & contributors. Built with Docusaurus.`
     },
     prism: {
       theme: lightCodeTheme,

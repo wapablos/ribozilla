@@ -1,0 +1,34 @@
+.page-wrapper {
+  display: flex;
+  flex-basis: 50vw;
+  flex-wrap: wrap;
+  margin: 5px 5px;
+  justify-content: center;
+  gap: 5px;
+}
+
+.ux-div-section {
+  display: flex;
+  width: calc(50% - 4px);
+  min-height: 200px;
+  height: 100%;
+  padding: 5px 10px;
+}
+
+.ux-div-banner {
+  display: flex;
+}
+
+.ux-script {
+  /* background: bisque; */
+}
+
+.ux-form {
+  background: cadetblue;
+}
+
+@media screen and (max-width: 966px) {
+  .ux-div-section {   
+    width: 100%;
+  }
+}
