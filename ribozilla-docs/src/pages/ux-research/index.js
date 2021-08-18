@@ -71,26 +71,46 @@ function UXInfo() {
 
 function UXScript() {
   const scriptItems = [
-    'Baixe a versão mais recente do Ribozilla e realize a instalação (Como instala?)',
-    'Baixe os dados de RNA-Seq. São levinhos não se preocupe',
-    'Abra o Ribozilla e crie um novo projeto clicando no botão "NEW PROJECT"',
-    'Após o projeto ser criado, inicie-o clicando em "Start"',
-    'Clique na seção de Pipelines. Para adicionar um nó (software) clique na seta ao lado dele',
-    'Monte a seguinte análise. Lembre de salvar o projeto, Ctrl+S (Windows) ou Cmd+S (Mac)',
-    'Ao concluir, vá até a seção Toolbox, você verá que os comandos já estarão montados para serem executados',
-    'Você pode editar (ícone com lápis) ou salvar (ícone de disquete).',
-    'Se você fechar o programa ou quiser reajustar alguma informação, os scripts serão reajustados também.',
-    'Se você chegou até aqui. Parabéns, você montou uma análise completa no Ribozilla, e pronta para ser executada.'
+    {
+      description: (<> Baixe a versão mais recente do Ribozilla e realize a instalação (Como instala?) </>)
+    },
+    {
+      description: (<> Baixe os dados de RNA-Seq. São levinhos não se preocupe</>)
+    },
+    {
+      description: (<> Abra o Ribozilla e crie um novo projeto clicando no botão &quot;NEW PROJECT&quot; </>)
+    },
+    {
+      description: (<> Após o projeto ser criado, inicie-o clicando em &quot;Start&quot;</>)
+    },
+    {
+      description: (<> Clique na seção de Pipelines. Para adicionar um nó (software) clique na seta ao lado dele</>)
+    },
+    {
+      description: (<> Monte a seguinte análise. Lembre de salvar o projeto, Ctrl+S (Windows) ou Cmd+S (Mac)</>)
+    },
+    {
+      description: (<> Ao concluir, vá até a seção Toolbox, você verá que os comandos já estarão montados para serem executados</>)
+    },
+    {
+      description: (<> Você pode editar (ícone com lápis) ou salvar (ícone de disquete).</>)
+    },
+    {
+      description: (<> Se você fechar o programa ou quiser reajustar alguma informação, os scripts serão reajustados também.</>)
+    },
+    {
+      description: (<> Se você chegou até aqui. Parabéns, você montou uma análise completa no Ribozilla, e pronta para ser executada.</>)
+    }
   ]
   return (
     <div className="ux-div-section  ux-script">
-      {/* <ol>
-        {scriptItems.map((value, index) => (
-          <li>
-            {value.concat(' ')}
+      <ol>
+        {scriptItems.map(({ description }, index) => (
+          <li className="ux-script-item">
+            {description}
           </li>
         ))}
-      </ol> */}
+      </ol>
     </div>
   )
 }

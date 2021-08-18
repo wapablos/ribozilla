@@ -22,7 +22,7 @@ function Header() {
         Download Ribozilla 1.0.0-beta.0
       </div>
       <div className="desc">
-        Works on all popular platforms
+        Disponível nas plataformas populares
       </div>
     </header>
   )
@@ -74,7 +74,7 @@ function PlatformDownloader({ name, icon, requirement, href }) {
       <div>
         {React.createElement(icon, { size: '5em' })}
       </div>
-      <a href={href} className="button button--primary  ">{`Download for ${name}`.toUpperCase()}</a>
+      <a href={href} className="button button--primary  ">{`Download para ${name}`.toUpperCase()}</a>
       <div>
         {requirement}
       </div>
@@ -105,7 +105,7 @@ const platformProps = {
     requirement: 'Windows 7, 8, 10',
     href: 'https://github.com/wapablos/ribozilla/releases/download/v1.0.0-beta.0/ribozilla-setup-1.0.0-beta.0.exe',
     os: [{
-      file: 'User Installer',
+      file: '.exe',
       arch: '64-bit',
       href: 'https://github.com/wapablos/ribozilla/releases/download/v1.0.0-beta.0/ribozilla-setup-1.0.0-beta.0.exe'
     }]
@@ -159,7 +159,7 @@ export default function Home() {
         {location && <DownloadPerOs />}
         <div className="divider-with-text">
           <span className="center-label">
-            or
+            ou
           </span>
         </div>
         <DownloadAllOs />

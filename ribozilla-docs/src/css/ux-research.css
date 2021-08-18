@@ -23,6 +23,10 @@
   /* background: bisque; */
 }
 
+.ux-script-item {
+  margin: 10px 0;
+}
+
 .ux-form {
   background: cadetblue;
 }
