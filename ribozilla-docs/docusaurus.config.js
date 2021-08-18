@@ -13,6 +13,10 @@ module.exports = {
   favicon: 'img/ribozilla.ico',
   organizationName: 'wapablos', // Usually your GitHub org/user name.
   projectName: 'ribozilla', // Usually your repo name.
+  i18n: {
+    defaultLocale: 'pt-BR',
+    locales: ['en', 'pt-BR']
+  },
   themeConfig: {
     colorMode: {
       defaultMode: 'dark'
@@ -27,6 +31,10 @@ module.exports = {
         { type: 'doc', docId: 'intro', position: 'left', label: 'Docs' },
         { type: 'doc', docId: 'api/intro', position: 'left', label: 'API' },
         // { to: '/blog', label: 'Blog', position: 'left' },
+        // {
+        //   type: 'localeDropdown',
+        //   position: 'right'
+        // },
         { to: '/ux-research', label: 'UX Research', position: 'right' },
         { to: '/downloads', label: 'Downloads', position: 'right' },
         {
@@ -75,7 +83,8 @@ module.exports = {
     },
     prism: {
       theme: lightCodeTheme,
-      darkTheme: darkCodeTheme
+      darkTheme: darkCodeTheme,
+      additionalLanguages: ['powershell']
     }
   },
   presets: [

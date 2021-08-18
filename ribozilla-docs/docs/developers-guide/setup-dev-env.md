@@ -2,10 +2,10 @@
 sidebar_position: 1
 ---
 
-# Setup Development Enviroment
+# Configurando ambiente de desenvolvimento
 
-## Platforms
-You should be able to compile Ribozilla successfully on the following platforms:
+## Platformas
+Você poderá compilar o código-fonte do Ribozilla nas seguintes platformas:
 
 * Windows 10
 * macOS 10.12 Sierra or later

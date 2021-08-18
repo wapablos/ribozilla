@@ -6,6 +6,9 @@
   <h4 align="center">Flexible architecture for RNA-Seq pipeline development</h4>
 </h1>
   <div align="center">
+     <a target="_blank" href="https://app.netlify.com/sites/ribozilla/deploys">
+      <img src="https://api.netlify.com/api/v1/badges/c448f0b6-a77b-45be-bdd3-20284b0ef3f8/deploy-status">
+    </a>  
     <a target="_blank" href="https://github.com/wapablos/ribozilla">
       <img src="https://img.shields.io/github/license/wapablos/ribozilla?style=flat">
     </a>
@@ -22,6 +25,7 @@
       <img src="https://img.shields.io/github/issues/wapablos/ribozilla?style=plastic">
     </a>  
     <br>
+    
 </div>
 </p>
 <br>
