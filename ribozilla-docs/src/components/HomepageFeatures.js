@@ -1,41 +1,40 @@
-import React from 'react';
-import clsx from 'clsx';
-import styles from './HomepageFeatures.module.css';
+import React from 'react'
+import clsx from 'clsx'
+import styles from './HomepageFeatures.module.css'
 
 const FeatureList = [
   {
-    title: 'Easy to Use',
+    title: 'Fácil de usar',
     Svg: require('../../static/img/undraw_docusaurus_mountain.svg').default,
     description: (
       <>
-        Docusaurus was designed from the ground up to be easily installed and
-        used to get your website up and running quickly.
+        Ribozilla foi projetado para realizar montagem de processos de sequenciamento de nova geração de forma simples e rápida
+        e para facilitar o entendimento dos recursos que o usuário está utilizando.
       </>
-    ),
+    )
   },
   {
-    title: 'Focus on What Matters',
+    title: 'Com foco no que importa',
     Svg: require('../../static/img/undraw_docusaurus_tree.svg').default,
     description: (
       <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
+        O Ribozilla disponibiliza um repositório de softwares CLI que pode ser baixado e
+        utilizado diretamente em sua interface sem se preocupar com problemas de compatibilidade e refatorações de scripts CLI.
       </>
-    ),
+    )
   },
   {
-    title: 'Powered by React',
+    title: 'Arquitetura Flexível',
     Svg: require('../../static/img/undraw_docusaurus_react.svg').default,
     description: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
+        O software foi projetado para que tanto usuário finais e desenvolvedores possam escalar o uso da aplicação de forma totalmente livre
       </>
-    ),
-  },
-];
+    )
+  }
+]
 
-function Feature({Svg, title, description}) {
+function Feature({ Svg, title, description }) {
   return (
     <div className={clsx('col col--4')}>
       <div className="text--center">
@@ -46,7 +45,7 @@ function Feature({Svg, title, description}) {
         <p>{description}</p>
       </div>
     </div>
-  );
+  )
 }
 
 export default function HomepageFeatures() {
@@ -60,5 +59,5 @@ export default function HomepageFeatures() {
         </div>
       </div>
     </section>
-  );
+  )
 }

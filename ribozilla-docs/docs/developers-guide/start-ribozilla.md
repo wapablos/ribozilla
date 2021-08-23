@@ -4,18 +4,18 @@ sidebar_position: 2
 
 # Ribozilla Development Mode
 
-## Get the source code
+## Obter o código-fonte
 
-  You can get the source code cloning the repository using the following command:
+  Você pode obter o código-fonte clonando o repositório usando o seguinte comando:
 
     git clone https://github.com/wapablos/ribozilla.git
 
-## Install dependencies and serve application
+## Instalar dependências e iniciar o aplicativo
 ```bash
 yarn install-dev
 yarn server:all
 ```
-## Run the docs
+## Inicializar a documentação
 ```bash
 cd ribozilla-docs
 yarn start
@@ -23,17 +23,22 @@ yarn start
 
 - On browser go to `http://localhost:3000/`
 
-## Setup extensions
+## Configurar as extensões
 ```bash
-cd extensions
+cd ribozilla-extensions
 yarn install 
 ```
-## Create new extension
+## Criar nova extensão
+Se você quiser adicionar um novo software para configurar na interface do Ribozilla
+
 ```bash
+cd cli
 mkdir my-extension
 cd my-extension
 touch my-extension.ts
 ```
+
+Para iniciar o código base, é necessário importar os métodos do pacote `ribozilla-clui-api`
 ```ts
 /* my-extension.ts */
 import RibozillaExtension, { Categories, ParamsTypes, InputTypes, RequiredTypes } from '../../packages/ribozilla-clui-api/lib'
@@ -57,4 +62,4 @@ yarn build
 node my-extension/my-extension.js
 ```
 
-Please check the [API](../api/intro.md) to get the functions parameters
+Verifique a  [API](../api/intro.md) para mais informações dos métodos disponíveis.
