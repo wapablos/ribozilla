@@ -56,15 +56,6 @@ module.exports = {
             }
           ]
         },
-        // {
-        //   title: 'Communidade',
-        //   items: [
-        //     {
-        //       label: 'Twitter',
-        //       href: 'https://twitter.com/ribozilla'
-        //     }
-        //   ]
-        // },
         {
           title: 'Contribuição',
           items: [
@@ -75,6 +66,15 @@ module.exports = {
             {
               label: 'GitHub',
               href: 'https://github.com/wapablos/ribozilla'
+            }
+          ]
+        },
+        {
+          title: 'Sobre Nós',
+          items: [
+            {
+              label: 'LGHM-UFPA',
+              href: 'https://www.lghm.com.br/'
             }
           ]
         }
