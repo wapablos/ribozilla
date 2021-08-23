@@ -59,7 +59,7 @@ Nesta seção todas os softwares e ajustes realizados são convertidos em um scr
 - **Lápis** edita o script.
 
 ## Extensões
-Você pode adicionar em seu pipeline qualquer software que estiver disponível ou até mesmo [criar uma nova extensão](/docs/developers-guide/start-ribozilla) para uso próprio.
+Você pode adicionar em seu pipeline qualquer software que estiver disponível ou até mesmo [criar uma nova extensão](/docs/developers-guide/start-ribozilla#criar-nova-extensão) para uso próprio.
 
 <img src="/static/img/interface/extensions.png" width="80%"/>
 
