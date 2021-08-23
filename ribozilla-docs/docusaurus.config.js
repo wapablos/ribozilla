@@ -56,17 +56,17 @@ module.exports = {
             }
           ]
         },
+        // {
+        //   title: 'Communidade',
+        //   items: [
+        //     {
+        //       label: 'Twitter',
+        //       href: 'https://twitter.com/ribozilla'
+        //     }
+        //   ]
+        // },
         {
-          title: 'Community',
-          items: [
-            {
-              label: 'Twitter',
-              href: 'https://twitter.com/ribozilla'
-            }
-          ]
-        },
-        {
-          title: 'More',
+          title: 'Contribuição',
           items: [
             {
               label: 'Blog',
