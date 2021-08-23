@@ -3,7 +3,7 @@ import * as lo from 'lodash'
 import * as os from 'os'
 
 export async function openRibozillaDocs() {
-  await shell.openExternal('https://ribozilla-preview.netlify.app/')
+  await shell.openExternal('https://ribozilla.netlify.app/')
 }
 
 export async function openAboutDialog(win: BrowserWindow) {
