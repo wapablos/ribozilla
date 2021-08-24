@@ -13,7 +13,7 @@ O **Ribozilla** ainda está em fase de desenvolvimento e nem todas as funcionali
 ## Elementos da Interface
 Para proseguir sua jornada com o uso do Ribozilla é essencial entender como funciona sua interface, que por sinal é bem simples.
 
-<img src="/static/img/interface/interface.png" width="80%"/>
+<img src="/img/interface/interface.png" width="80%"/>
 
 - **(A)** A **Barra de Menu** permite acessar recursos básicos da aplicação como projeto atuais,  informações, configuração e também gerenciamento de arquivos. No MacOS, as opções são exibidas no menu global.  
 - **(B)** A **Barra de Ferramentas** contém as funcionalidades da aplicação entre eles gerenciamento de **projetos**, montagem de **pipelines**, seção de **resultados** (Toolbox) e gerenciador de **extensões**. Se você pousar o mouse sobre os ícones será exibido o nome das seções.
@@ -26,7 +26,7 @@ Para proseguir sua jornada com o uso do Ribozilla é essencial entender como fun
 ## Projetos
 A seção onde você inicia seus experimentos dando um nome e uma descrição, além de escolher um lugar onde cada projeto vai ficar.
 
-<img src="../../static/img/interface/projects.png" width="80%"/>
+<img src="/img/interface/projects.png" width="80%"/>
 
 - **(A)** Ao clicar em 'NEW PROJECT' um *card* vai aparecer requisitando informações de um novo projeto  
 - **(B)** Todos os projetos criados ficarão disponíveis nessa inicial e serão sincronizados no diretório escolhido anteriormente.
@@ -39,7 +39,7 @@ Para desbloquear as outras funcionalidades é preciso inicar um projeto, com exc
 ## Pipelines
 Aqui você monta seu pipeline e configura seus parâmetros utilizando os softwares (extensões) disponíveis.
 
-<img src="../../static/img/interface/pipeline.png" width="80%"/>
+<img src="/img/interface/pipeline.png" width="80%"/>
 
 - **Marcador vermelho** aponta o **projeto** que está aberto, o ponto ao lado indica que ele possui alterações e precisa ser salvo.
 - **(A)** **Lista de softwares** que podem ser configurados no Ribozilla, aparecerão todas as que foram instaladas na seção de **Extensões**. Ao clicar ícone ao lado cada software ele adiciona um novo nó e consequentemente um novo card. 
@@ -53,7 +53,7 @@ Para salvar o arquivo utilize `Ctrl+S`
 ## Toolbox
 Nesta seção todas os softwares e ajustes realizados são convertidos em um script de linha de comando, obedecendo suas flags, parâmetros e sintaxe, que foram configuradas na extensão.
 
-<img src="/static/img/interface/toolbox.png" width="80%"/>
+<img src="/img/interface/toolbox.png" width="80%"/>
 
 - **Disquete** escolhe um local para salvar o script.
 - **Lápis** edita o script.
@@ -61,7 +61,7 @@ Nesta seção todas os softwares e ajustes realizados são convertidos em um scr
 ## Extensões
 Você pode adicionar em seu pipeline qualquer software que estiver disponível ou até mesmo [criar uma nova extensão](/docs/developers-guide/start-ribozilla#criar-nova-extensão) para uso próprio.
 
-<img src="/static/img/interface/extensions.png" width="80%"/>
+<img src="/img/interface/extensions.png" width="80%"/>
 
 - **(A)** As extensões instaladas do repositório de extensões, os mesmos estão disponíveis na seção **Pipelines**.
 - **(B)** As extensões disponíveis no repositório de extensões.
