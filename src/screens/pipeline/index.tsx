@@ -156,12 +156,17 @@ function SoftwareInputType({ type, values, node, inputIndex, placement } : Parti
   const dispatch = useDispatch()
   const [lastValue, setLastValue] = useState<any>(null)
 
+  const handleOnBlur = useHotkeys('ctrl+s, command+s', () => {
+    console.log('just once')
+    dispatch(nodesActions.updateFlow(node))
+  })
+
   const handleOnChange = (value: string | boolean | number | (string | boolean | number)[]) => {
     console.log('(on change)', value)
     node.data.params[inputIndex].lastValues[placement] = value as string
     console.log(node.data.params[inputIndex])
     setLastValue(node.data.params[inputIndex].lastValues[placement])
-    dispatch(nodesActions.updateFlow(node))
+    handleOnBlur
     // dispatch(systemActions.updateProjectFiles())
   }
 
@@ -192,7 +197,7 @@ function SoftwareInputType({ type, values, node, inputIndex, placement } : Parti
     case InputTypes.FILE:
       return (
         <>
-          <StyledParamInput type="text" placeholder="select files" value={lastValue as string ?? ''} />
+          <StyledParamInput type="text" placeholder="select files" value={lastValue as string ?? ''} onChange={(e) => handleOnChange(e.target.value)} />
           <MiniButton className="card-button" onClick={handleFiles}>
             <FiFilePlus />
           </MiniButton>
@@ -203,7 +208,7 @@ function SoftwareInputType({ type, values, node, inputIndex, placement } : Parti
       return (
         <>
           {/* <StyledParamInput type="text" placeholder="select folder" value={lastValue as string} /> */}
-          <StyledParamInput type="text" placeholder="select folder" value={lastValue as string ?? ''} />
+          <StyledParamInput type="text" placeholder="select folder" value={lastValue as string ?? ''} onChange={(e) => handleOnChange(e.target.value)} />
           <MiniButton className="card-button" onClick={handleDirs}>
             <FiFolderPlus />
           </MiniButton>
@@ -230,7 +235,7 @@ function SoftwareInputType({ type, values, node, inputIndex, placement } : Parti
       )
 
     case InputTypes.STRING:
-      return <StyledParamInput type="text" />
+      return <StyledParamInput type="text" onChange={(e) => handleOnChange(e.target.value)} />
 
     default:
       return <StyledParamInput size={5} disabled value={type} />

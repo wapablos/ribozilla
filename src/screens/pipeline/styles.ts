@@ -333,8 +333,8 @@ export const CardsContainer = styled.div`
 
 export const StyledCard = styled(StyledNode)`
   &.MuiPaper-root{
-    min-width: 280px;
-    max-width: 300px;
+    min-width: 320px;
+    max-width: 400px;
     min-height: 150px;
     margin: 5px 0 5px 5px;
     max-height: 400px;
