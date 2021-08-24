@@ -3,8 +3,8 @@
   flex-direction: column;
   width: 100%;
   align-items: center;
-  font-family: -apple-system, BlinkMacSystemFont;
   margin: 1rem 0;
+  font: var(--ifm-font-size-base)/var(--ifm-line-height-base) var(--ifm-font-family-base);
 }
 
 .dl-header {
