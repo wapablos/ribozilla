@@ -235,7 +235,7 @@ function SoftwareInputType({ type, values, node, inputIndex, placement } : Parti
       )
 
     case InputTypes.STRING:
-      return <StyledParamInput type="text" onChange={(e) => handleOnChange(e.target.value)} />
+      return <StyledParamInput type="text" className="single-string" onChange={(e) => handleOnChange(e.target.value)} value={lastValue as string} />
 
     default:
       return <StyledParamInput size={5} disabled value={type} />

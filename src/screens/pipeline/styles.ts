@@ -333,7 +333,7 @@ export const CardsContainer = styled.div`
 
 export const StyledCard = styled(StyledNode)`
   &.MuiPaper-root{
-    min-width: 320px;
+    min-width: 350px;
     max-width: 400px;
     min-height: 150px;
     margin: 5px 0 5px 5px;
@@ -518,8 +518,11 @@ export const StyledParamInput = styled.input.attrs(({ size }) => ({
     -webkit-appearance: none;
   }
 
-  &[type=text]  {
+  &[type=text] {
     border-radius: 5px 0 0 5px;
+    &.single-string {
+      border-radius: 5px 5px;
+    }
   }
 
   &[disabled] {
