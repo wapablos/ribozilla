@@ -15,7 +15,7 @@ export function buildCommandLine({ id, data }: RibozillaNode) {
         }
         return signature + separator[0] + lastValues.flat(1).join(separator[1])
       case ParamsTypes.ARG:
-        return lastValues.join(separator[0])
+        return lastValues.flat(1).join(separator[0])
       default:
         return signature
     }
