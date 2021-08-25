@@ -8,8 +8,7 @@ const FeatureList = [
     Svg: require('../../static/img/undraw_docusaurus_mountain.svg').default,
     description: (
       <>
-        Ribozilla foi projetado para realizar montagem de processos de sequenciamento de nova geração de forma simples e rápida
-        e para facilitar o entendimento dos recursos que o usuário está utilizando.
+        Ribozilla foi projetado para realizar montagem de pipelines utilizados na análise de sequenciamento de nova geração de forma fácil e rápida.
       </>
     )
   },
@@ -18,8 +17,8 @@ const FeatureList = [
     Svg: require('../../static/img/undraw_docusaurus_tree.svg').default,
     description: (
       <>
-        O Ribozilla disponibiliza um repositório de softwares CLI que pode ser baixado e
-        utilizado diretamente em sua interface sem se preocupar com problemas de compatibilidade e refatorações de scripts CLI.
+        O Ribozilla disponibiliza um repositório de extensões de softwares CLI que podem ser baixados e
+        utilizados diretamente em sua interface sem se preocupar com problemas de compatibilidade e refatorações e sintaxe dos scripts.
       </>
     )
   },
@@ -28,7 +27,7 @@ const FeatureList = [
     Svg: require('../../static/img/undraw_docusaurus_react.svg').default,
     description: (
       <>
-        O software foi projetado para que tanto usuário finais e desenvolvedores possam escalar o uso da aplicação de forma totalmente livre
+        O software foi projetado para que tanto usuários finais e desenvolvedores possam ampliar o uso da aplicação de forma totalmente livre e personalizada.
       </>
     )
   }

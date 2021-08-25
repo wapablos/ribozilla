@@ -2,12 +2,12 @@
 sidebar_position: 1
 ---
 
-# Configurando ambiente de desenvolvimento
+# Configurando o ambiente de desenvolvimento
 
-## Platformas
-Você poderá compilar o código-fonte do Ribozilla nas seguintes platformas:
+## Plataformas
+Você poderá compilar o código-fonte do Ribozilla nas seguintes plataformas:
 
-* Windows 10
+* Windows 7, 8 e 10
 * macOS 10.12+
 * Linux
 
