@@ -76,7 +76,7 @@ $ yarn install-dev
 
 Then, build the extensions
 ```
-$ cd extensions
+$ cd ribozilla-extensions
 $ yarn install && yarn build
 ```
 
