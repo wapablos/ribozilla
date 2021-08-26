@@ -8,7 +8,6 @@ import '../../css/ux-research.css'
 import PropTypes from 'prop-types'
 import styles from '../index.module.css'
 import homepageStyles from '../../components/HomepageFeatures.module.css'
-import ScriptImage from '../../../static/img/script-bioinfo.svg'
 
 const InstructionsList = [
   {
