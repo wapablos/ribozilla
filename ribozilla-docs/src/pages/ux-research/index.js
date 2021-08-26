@@ -151,7 +151,7 @@ function UXScript() {
       description: (
         <>
           Monte a seguinte análise e lembre de salvar o projeto, Ctrl+S (Windows) ou Cmd+S (Mac)
-          <img src="../../../static/img/script-bioinfo.png" style={{ width: '100%' }} />
+          <img src="/img/script-bioinfo.png" style={{ width: '100%' }} />
         </>)
     },
     {
