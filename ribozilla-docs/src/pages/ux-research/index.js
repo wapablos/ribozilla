@@ -87,22 +87,43 @@ function UXScript() {
           {' '}
           <a href="https://github.com/wapablos/ribozilla/releases/download/v1.0.0-beta.0/ux-extensions.zip">Baixe aqui</a>
           {' '}
-          e copie os arquivos
+          e copie a pasta
           {' '}
-          <b>.manifest.json</b>
+          <b>extensions</b>
           {' '}
           para:
           <ul>
             <li>
               (Mac & Windows ) -
               {' '}
-              <b>/Users/seu_usuario/.ribozilla/extensions</b>
+              <b>/Users/seu_usuario/.ribozilla</b>
               {' '}
             </li>
             <li>
               (Linux) -
               {' '}
-              <b>/home/seu_usuario/.ribozilla/extensions</b>
+              <b>/home/seu_usuario/.ribozilla</b>
+            </li>
+            <li>
+              ⚠️ Caso a pasta ainda não exista, você pode criá-la.
+            </li>
+            <li>
+              ⚠️ Caso não esteja visível, ative a visualização de arquivos ocultos.
+            </li>
+            <li>
+              ⚠️ Se tiver dificuldades em encontrar sua pasta de usuário, abra:
+              <ul>
+                <li>
+                  o Prompt de Comando (Windows) e execute:
+                  {' '}
+                  <b>echo %HOMEPATH%</b>
+                </li>
+                <li>
+                  o Terminal (Mac & Linux) e execute:
+                  {' '}
+                  <b>echo $HOME</b>
+                </li>
+              </ul>
             </li>
           </ul>
         </>)
@@ -126,7 +147,7 @@ function UXScript() {
           Abra o Ribozilla e crie um novo projeto clicando no botão
           {' '}
           <b>NEW PROJECT</b>
-          {' '}
+          . Pode ser criado em qualquer diretório.
         </>)
     },
     {
@@ -151,7 +172,13 @@ function UXScript() {
       description: (
         <>
           Monte a seguinte análise e lembre de salvar o projeto, Ctrl+S (Windows) ou Cmd+S (Mac)
+          <ul>
+            <li>
+              ⚠️ Para melhora a visualização, abra a imagem em uma nova guia.
+            </li>
+          </ul>
           <img src="/img/script-bioinfo.png" style={{ width: '100%' }} />
+
         </>)
     },
     {
